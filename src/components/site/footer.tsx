@@ -20,7 +20,7 @@ function FooterMarquee() {
   const text = "STUDIO / Design / Development BROG / Creative /\u00a0";
   const repeated = Array(6).fill(text).join("");
   return (
-    <div className="section-container" style={{ padding: 0, overflow: "hidden", paddingTop: 40, paddingBottom: 32 }}>
+    <div className="section-container" style={{ overflow: "hidden", paddingTop: 40, paddingBottom: 32 }}>
       <div
         style={{
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
