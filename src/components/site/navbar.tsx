@@ -170,10 +170,10 @@ export default function Navbar({ lang }: NavbarProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
             className="fixed inset-0 z-40 bg-black section-container"
-            style={{ display: "flex", alignItems: "stretch", paddingTop: "100px", paddingBottom: "60px", gap: "80px" }}
+            style={{ display: "flex", alignItems: "stretch", paddingTop: "100px", paddingBottom: "60px" }}
           >
             {/* LEFT: brand + clock + socials */}
-            <div className="flex flex-col justify-between w-1/2" style={{ gap: "24px" }}>
+            <div className="flex flex-col justify-center w-1/2" style={{ gap: "24px" }}>
               {/* Brand */}
               <div
                 className="text-white font-black leading-none tracking-tight"
@@ -204,7 +204,7 @@ export default function Navbar({ lang }: NavbarProps) {
             </div>
 
             {/* RIGHT: nav links */}
-            <nav className="flex flex-col justify-end items-end w-1/2">
+            <nav className="flex flex-col justify-center items-end w-1/2">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
