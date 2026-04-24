@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProjectsContent, type ProjectsContent, type ProjectItem } from "@/lib/content";
+import { getFeaturedProjects, getProjectsContent, type Project, type ProjectsContent } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
 
 interface Props { lang: string }
 
-function ProjectCard({ project }: { project: ProjectItem }) {
+function ProjectCard({ project }: { project: Project }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -26,11 +26,10 @@ function ProjectCard({ project }: { project: ProjectItem }) {
           background: "#e5e7eb",
         }}
       >
-        {/* Image */}
         {project.imageUrl && (
           <img
             src={project.imageUrl}
-            alt={project.brandName}
+            alt={project.brandName || project.title}
             style={{
               width: "100%",
               height: "100%",
@@ -76,7 +75,7 @@ function ProjectCard({ project }: { project: ProjectItem }) {
       {/* Below card: brand + year */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 2px" }}>
         <span style={{ fontSize: 14, fontWeight: 500, color: "#0a0a0a" }}>
-          {project.brandName}
+          {project.brandName || project.title}
         </span>
         <span style={{ fontSize: 14, color: "#6b7280", fontWeight: 400 }}>
           {project.year}
@@ -88,20 +87,18 @@ function ProjectCard({ project }: { project: ProjectItem }) {
 
 export default function ProjectsSection({ lang }: Props) {
   const [content, setContent] = useState<ProjectsContent | null>(null);
+  const [featured, setFeatured] = useState<Project[]>([]);
   const config = useSiteConfig();
 
   useEffect(() => {
     getProjectsContent().then(setContent);
+    getFeaturedProjects().then(setFeatured);
   }, []);
 
   if (config && !config.showProjects) return null;
 
   const title = lang === "tr" ? content?.title_tr : content?.title_en;
   const desc  = lang === "tr" ? content?.description_tr : content?.description_en;
-
-  const projects = (content?.projects ?? [])
-    .slice()
-    .sort((a, b) => a.order - b.order);
 
   return (
     <section className="w-full bg-white">
@@ -129,10 +126,10 @@ export default function ProjectsSection({ lang }: Props) {
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "#4b5563", marginBottom: 20 }}>
               {desc ?? (lang === "tr"
                 ? "Kendileri için konuşan dijital ürünler yaratıyoruz."
-                : "We craft digital products that speak for themselves — simple, fast, and user-focused. Here's a look at how we turn challenges into seamless design solutions.")}
+                : "We craft digital products that speak for themselves — simple, fast, and user-focused.")}
             </p>
             <Link
-              href={content?.viewAllLink ?? "/projects"}
+              href={content?.viewAllLink ?? `/${lang}/projeler`}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -150,19 +147,21 @@ export default function ProjectsSection({ lang }: Props) {
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#0a0a0a"; (e.currentTarget as HTMLElement).style.color = "#fff"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#0a0a0a"; }}
             >
-              VIEW ALL WORKS <span style={{ fontSize: 16 }}>↗</span>
+              {lang === "tr" ? "TÜMÜNÜ GÖR" : "VIEW ALL WORKS"} <span style={{ fontSize: 16 }}>↗</span>
             </Link>
           </div>
         </div>
 
-        {/* ── Project Grid ── */}
-        {projects.length === 0 ? (
+        {/* ── Featured Project Grid ── */}
+        {featured.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#9ca3af", fontSize: 14 }}>
-            Henüz proje eklenmedi — admin panelinden ekleyin
+            {lang === "tr"
+              ? "Henüz öne çıkan proje yok — admin/projeler'den öne çıkar işaretleyin"
+              : "No featured projects yet — mark projects as featured in admin/projeler"}
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
-            {projects.map((project) => (
+            {featured.map((project) => (
               project.link ? (
                 <Link key={project.id} href={project.link} style={{ textDecoration: "none" }}>
                   <ProjectCard project={project} />

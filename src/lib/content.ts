@@ -69,13 +69,17 @@ export interface SiteSettings {
 
 export interface Project {
   id?: string;
-  title: string;
+  title: string;          // project / brand name
+  brandName: string;      // shown below card
   description_tr: string;
   description_en: string;
-  image: string;
+  imageUrl: string;       // main image
+  year: string;
+  category: string;       // shown on hover
   tags: string[];
   link: string;
   order: number;
+  featured: boolean;      // show on homepage
 }
 
 export interface Service {
@@ -211,6 +215,14 @@ export async function getProjects(): Promise<Project[]> {
   const q = query(collection(db, "projects"), orderBy("order", "asc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Project));
+}
+
+export async function getFeaturedProjects(): Promise<Project[]> {
+  const q = query(collection(db, "projects"), orderBy("order", "asc"));
+  const snap = await getDocs(q);
+  return snap.docs
+    .map((d) => ({ id: d.id, ...d.data() } as Project))
+    .filter((p) => p.featured === true);
 }
 
 export async function addProject(data: Omit<Project, "id">): Promise<string> {
