@@ -98,12 +98,17 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           width: "38%",
           aspectRatio: "16/9",
           borderRadius: 10,
+          overflow: "hidden",
+          zIndex: 2,
+        }}
+      >
+        <div style={{
+          position: "absolute", inset: 0,
           backgroundImage: content?.card1Image ? `url(${content.card1Image})` : CARD_COLORS[0],
           backgroundSize: "cover",
           backgroundPosition: "center",
-          zIndex: 2,
-        }}
-      />
+        }} />
+      </motion.div>
 
       {/* ── Kart 2: orta boy, biraz altta ── */}
       <motion.div
@@ -121,22 +126,22 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           width: "50%",
           aspectRatio: "16/9",
           borderRadius: 10,
+          overflow: "hidden",
+          zIndex: 3,
+        }}
+      >
+        <div style={{
+          position: "absolute", inset: 0,
           backgroundImage: content?.card2Image ? `url(${content.card2Image})` : CARD_COLORS[1],
           backgroundSize: "cover",
           backgroundPosition: "center",
-          zIndex: 3,
-        }}
-      />
+        }} />
+      </motion.div>
 
       {/* ── Kart 3 / Hero: alttan gelir, sonra tam ekrana açılır ── */}
       <motion.div
         className="absolute inset-0"
-        style={{
-          backgroundImage: content?.card3Image ? `url(${content.card3Image})` : CARD_COLORS[2],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          originX: "50%", originY: "50%", zIndex: 4
-        }}
+        style={{ originX: "50%", originY: "50%", zIndex: 4, overflow: "hidden" }}
         initial={{ opacity: 0, scale: 0.65, y: 260, borderRadius: 12 }}
         animate={
           isExpanded
@@ -159,6 +164,15 @@ export default function HeroSection({ lang }: HeroSectionProps) {
               }
         }
       >
+        {/* Background image / gradient layer */}
+        <div
+          style={{
+            position: "absolute", inset: 0,
+            backgroundImage: content?.card3Image ? `url(${content.card3Image})` : CARD_COLORS[2],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
         {/* Vignette */}
         <div
           className="absolute inset-0"
