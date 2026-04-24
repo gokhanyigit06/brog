@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getNavbarContent, type NavbarContent } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/i18n";
 
@@ -75,21 +76,33 @@ function LiveClock() {
 export default function Navbar({ lang }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hovered, setHovered]   = useState(false);
+  const [nbData, setNbData]     = useState<NavbarContent | null>(null);
 
+  useEffect(() => {
+    getNavbarContent().then(setNbData);
+  }, []);
+
+  // Dynamic nav links — labels from Firebase, hrefs always correct
   const navLinks = [
-    { href: `/${lang}`,            label: lang === "tr" ? "Ana Sayfa"  : "Home"     },
-    { href: `/${lang}/projeler`,   label: lang === "tr" ? "Projeler"   : "Projects" },
-    { href: `/${lang}/hizmetler`,  label: lang === "tr" ? "Hizmetler"  : "Services" },
-    { href: `/${lang}/hakkimizda`, label: lang === "tr" ? "Hakkımızda" : "About"    },
-    { href: `/${lang}/iletisim`,   label: lang === "tr" ? "İletişim"   : "Contact"  },
+    { href: `/${lang}`,            label: nbData ? (lang === "tr" ? nbData.nav_home_tr     : nbData.nav_home_en)     : (lang === "tr" ? "Ana Sayfa"  : "Home")     },
+    { href: `/${lang}/projeler`,   label: nbData ? (lang === "tr" ? nbData.nav_projects_tr : nbData.nav_projects_en) : (lang === "tr" ? "Projeler"   : "Projects") },
+    { href: `/${lang}/hizmetler`,  label: nbData ? (lang === "tr" ? nbData.nav_services_tr : nbData.nav_services_en) : (lang === "tr" ? "Hizmetler"  : "Services") },
+    { href: `/${lang}/hakkimizda`, label: nbData ? (lang === "tr" ? nbData.nav_about_tr    : nbData.nav_about_en)    : (lang === "tr" ? "Hakkımızda" : "About")    },
+    { href: `/${lang}/iletisim`,   label: nbData ? (lang === "tr" ? nbData.nav_contact_tr  : nbData.nav_contact_en)  : (lang === "tr" ? "İletişim"   : "Contact")  },
   ];
 
   const socials = [
-    { href: "https://x.com",         label: "X.com"     },
-    { href: "https://dribbble.com",  label: "Dribbble"  },
-    { href: "https://instagram.com", label: "Instagram" },
-    { href: "https://linkedin.com",  label: "LinkedIn"  },
+    { href: nbData?.social_x         || "https://x.com",         label: "X.com"     },
+    { href: nbData?.social_dribbble  || "https://dribbble.com",  label: "Dribbble"  },
+    { href: nbData?.social_instagram || "https://instagram.com", label: "Instagram" },
+    { href: nbData?.social_linkedin  || "https://linkedin.com",  label: "LinkedIn"  },
   ];
+
+  const brandText   = nbData?.brandText   || "vogolab";
+  const email       = nbData?.email       || "hello@brog.com";
+  const phone       = nbData?.phone       || "+90 555 000 0000";
+  const location    = nbData?.location    || "Istanbul, Turkey";
+  const menuBgImage = nbData?.menuBgImage || "";
 
   return (
     <>
@@ -98,13 +111,13 @@ export default function Navbar({ lang }: NavbarProps) {
         {/* Logo */}
         <Link href={`/${lang}`} className="flex items-center gap-2.5">
           <img
-            src="/logo.png"
+            src={nbData?.logoUrl || "/logo.png"}
             alt="Vogo Lab Logo"
             className="h-7 w-auto object-contain"
-            style={{ filter: "brightness(0) invert(1)" }}
+            style={{ filter: nbData?.logoUrl ? "none" : "brightness(0) invert(1)" }}
           />
           <span className="text-white font-bold text-lg tracking-widest uppercase">
-            vogolab
+            {brandText}
           </span>
         </Link>
 
@@ -114,15 +127,15 @@ export default function Navbar({ lang }: NavbarProps) {
           <div className="hidden md:flex items-start gap-8">
             <div>
               <p className="text-white text-[14px] font-semibold mb-0.5">Email</p>
-              <p className="text-white text-[14px]">hello@brog.com</p>
+              <p className="text-white text-[14px]">{email}</p>
             </div>
             <div>
               <p className="text-white text-[14px] font-semibold mb-0.5">Phone</p>
-              <p className="text-white text-[14px]">+90 555 000 0000</p>
+              <p className="text-white text-[14px]">{phone}</p>
             </div>
             <div>
               <p className="text-white text-[14px] font-semibold mb-0.5">Location</p>
-              <p className="text-white text-[14px]">Istanbul, Turkey</p>
+              <p className="text-white text-[14px]">{location}</p>
             </div>
           </div>
 
@@ -165,8 +178,17 @@ export default function Navbar({ lang }: NavbarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="fixed inset-0 z-40 bg-black section-container"
-            style={{ display: "flex", alignItems: "stretch", paddingTop: "100px", paddingBottom: "60px" }}
+            className="fixed inset-0 z-40 section-container"
+            style={{
+              display: "flex",
+              alignItems: "stretch",
+              paddingTop: "100px",
+              paddingBottom: "60px",
+              backgroundColor: "#000",
+              backgroundImage: menuBgImage ? `url(${menuBgImage})` : "none",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
           >
             {/* LEFT: brand + clock + socials */}
             <div className="flex flex-col justify-center w-1/2" style={{ gap: "24px" }}>
@@ -175,8 +197,8 @@ export default function Navbar({ lang }: NavbarProps) {
                 className="text-white font-black leading-none tracking-tight"
                 style={{ fontSize: "clamp(48px, 6.4vw, 88px)", marginTop: "48px" }}
               >
-                <div>VOGO</div>
-                <div>lab.</div>
+                <div>{nbData?.brandText?.split(" ")[0] || "VOGO"}</div>
+                <div>{nbData?.brandText?.split(" ")[1] || "lab."}</div>
               </div>
 
               {/* Clock */}

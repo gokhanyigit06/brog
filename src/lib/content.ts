@@ -26,6 +26,30 @@ export interface HeroContent {
   slogan_tr: string;
   slogan_en: string;
   bgColor: string;
+  bgImage: string;          // hero background image URL
+}
+
+export interface NavbarContent {
+  logoUrl: string;
+  brandText: string;
+  email: string;
+  phone: string;
+  location: string;
+  menuBgImage: string;        // optional menu overlay background image
+  social_x: string;
+  social_dribbble: string;
+  social_instagram: string;
+  social_linkedin: string;
+  nav_home_tr: string;
+  nav_home_en: string;
+  nav_projects_tr: string;
+  nav_projects_en: string;
+  nav_services_tr: string;
+  nav_services_en: string;
+  nav_about_tr: string;
+  nav_about_en: string;
+  nav_contact_tr: string;
+  nav_contact_en: string;
 }
 
 export interface SiteSettings {
@@ -86,6 +110,7 @@ const HERO_DEFAULT: HeroContent = {
   slogan_tr: "Büyümeyi hızlandıran iş çözümleri üretiyoruz —\nverimli, ölçeklenebilir ve sonuç odaklı.",
   slogan_en: "We build business solutions that drive real growth —\nefficient, scalable, and profit-focused.",
   bgColor: "linear-gradient(160deg, #0a2540 0%, #07182a 100%)",
+  bgImage: "",
 };
 
 export async function getHeroContent(): Promise<HeroContent> {
@@ -96,6 +121,46 @@ export async function getHeroContent(): Promise<HeroContent> {
 
 export async function saveHeroContent(data: HeroContent): Promise<void> {
   await setDoc(doc(db, "siteContent", "hero"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+// ─────────────────────────────────────────────
+// NAVBAR
+// ─────────────────────────────────────────────
+
+const NAVBAR_DEFAULT: NavbarContent = {
+  logoUrl: "",
+  brandText: "vogolab",
+  email: "hello@brog.com",
+  phone: "+90 555 000 0000",
+  location: "Istanbul, Turkey",
+  menuBgImage: "",
+  social_x: "https://x.com",
+  social_dribbble: "https://dribbble.com",
+  social_instagram: "https://instagram.com",
+  social_linkedin: "https://linkedin.com",
+  nav_home_tr: "Ana Sayfa",
+  nav_home_en: "Home",
+  nav_projects_tr: "Projeler",
+  nav_projects_en: "Projects",
+  nav_services_tr: "Hizmetler",
+  nav_services_en: "Services",
+  nav_about_tr: "Hakkımızda",
+  nav_about_en: "About",
+  nav_contact_tr: "İletişim",
+  nav_contact_en: "Contact",
+};
+
+export async function getNavbarContent(): Promise<NavbarContent> {
+  const snap = await getDoc(doc(db, "siteContent", "navbar"));
+  if (!snap.exists()) return NAVBAR_DEFAULT;
+  return { ...NAVBAR_DEFAULT, ...snap.data() } as NavbarContent;
+}
+
+export async function saveNavbarContent(data: NavbarContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "navbar"), {
     ...data,
     updatedAt: new Date().toISOString(),
   });
