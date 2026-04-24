@@ -107,6 +107,7 @@ export default function AnasayfaAdmin() {
   const [hero, setHero] = useState<HeroContent | null>(null);
   const [navbar, setNavbar] = useState<NavbarContent | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [heroSaving, setHeroSaving] = useState(false);
   const [heroSaved, setHeroSaved] = useState(false);
@@ -114,9 +115,9 @@ export default function AnasayfaAdmin() {
   const [navSaved, setNavSaved] = useState(false);
 
   useEffect(() => {
-    Promise.all([getHeroContent(), getNavbarContent()]).then(([h, n]) => {
-      setHero(h); setNavbar(n); setLoading(false);
-    });
+    Promise.all([getHeroContent(), getNavbarContent()])
+      .then(([h, n]) => { setHero(h); setNavbar(n); setLoading(false); })
+      .catch((err) => { console.error("Firebase error:", err); setError(err?.message || "Firebase bağlantı hatası"); setLoading(false); });
   }, []);
 
   async function saveHero() {
@@ -144,6 +145,29 @@ export default function AnasayfaAdmin() {
 
   if (loading) {
     return <div className="p-8 flex items-center gap-3 text-zinc-500"><RefreshCw size={16} className="animate-spin" /> Yükleniyor...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 max-w-xl">
+        <div className="bg-red-950/50 border border-red-800 rounded-xl p-6">
+          <h2 className="text-red-400 font-semibold mb-2">Firebase Bağlantı Hatası</h2>
+          <p className="text-red-300 text-sm mb-4 font-mono">{error}</p>
+          <p className="text-zinc-400 text-sm mb-3">Firestore güvenlik kurallarını kontrol et. Test için aşağıdaki kuralları kullan:</p>
+          <pre className="bg-zinc-900 rounded-lg p-4 text-xs text-green-400 overflow-x-auto">{`rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}`}</pre>
+          <button onClick={() => { setError(null); setLoading(true); Promise.all([getHeroContent(), getNavbarContent()]).then(([h,n]) => { setHero(h); setNavbar(n); setLoading(false); }).catch(e => { setError(e?.message); setLoading(false); }); }} className="mt-4 flex items-center gap-2 px-4 py-2 bg-white text-zinc-900 rounded-lg text-sm font-semibold">
+            <RefreshCw size={14} /> Tekrar Dene
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const navLinks = [
