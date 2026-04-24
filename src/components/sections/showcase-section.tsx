@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { getShowcaseContent, type ShowcaseContent, type ShowcaseMediaItem } from "@/lib/content";
+import { useSiteConfig } from "@/hooks/use-site-config";
 
 interface Props { lang: string }
 
@@ -42,6 +43,7 @@ export default function ShowcaseSection({ lang }: Props) {
   const [content, setContent] = useState<ShowcaseContent | null>(null);
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const config = useSiteConfig();
 
   useEffect(() => {
     getShowcaseContent().then(setContent);
@@ -60,6 +62,8 @@ export default function ShowcaseSection({ lang }: Props) {
     }, ms);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [current, items.length]);
+
+  if (config && !config.showShowcase) return null;
 
   const title    = lang === "tr" ? content?.title_tr    : content?.title_en;
   const desc     = lang === "tr" ? content?.description_tr : content?.description_en;

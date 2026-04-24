@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getMarqueeContent, type MarqueeContent } from "@/lib/content";
+import { useSiteConfig } from "@/hooks/use-site-config";
 
 const SEPARATOR = "·";
 
@@ -11,9 +12,13 @@ export default function MarqueeSection() {
     speed: 30,
   });
 
+  const config = useSiteConfig();
+
   useEffect(() => {
     getMarqueeContent().then(setContent);
   }, []);
+
+  if (config && !config.showMarquee) return null;
 
   const items = content.items.length > 0 ? content.items : ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING"];
 

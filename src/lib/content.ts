@@ -515,3 +515,82 @@ export async function saveWhyContent(data: WhyContent): Promise<void> {
     updatedAt: new Date().toISOString(),
   });
 }
+
+// ─────────────────────────────────────────────
+// SITE CONFIG — section visibility
+// ─────────────────────────────────────────────
+
+export interface SiteConfig {
+  showShowcase: boolean;
+  showMarquee: boolean;
+  showProjects: boolean;
+  showWhy: boolean;
+  showServices: boolean;
+}
+
+const SITE_CONFIG_DEFAULT: SiteConfig = {
+  showShowcase: true,
+  showMarquee: true,
+  showProjects: true,
+  showWhy: true,
+  showServices: true,
+};
+
+export async function getSiteConfig(): Promise<SiteConfig> {
+  const snap = await getDoc(doc(db, "siteContent", "siteConfig"));
+  if (!snap.exists()) return SITE_CONFIG_DEFAULT;
+  return { ...SITE_CONFIG_DEFAULT, ...snap.data() } as SiteConfig;
+}
+
+export async function saveSiteConfig(data: SiteConfig): Promise<void> {
+  await setDoc(doc(db, "siteContent", "siteConfig"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+// ─────────────────────────────────────────────
+// SERVICES SECTION
+// ─────────────────────────────────────────────
+
+export interface ServiceItem {
+  id: string;
+  title_tr: string;
+  title_en: string;
+  description_tr: string;
+  description_en: string;
+  pills: string[];
+  order: number;
+}
+
+export interface ServicesContent {
+  label: string;
+  title_tr: string;
+  title_en: string;
+  items: ServiceItem[];
+}
+
+const SERVICES_DEFAULT: ServicesContent = {
+  label: "04",
+  title_tr: "Hizmetler",
+  title_en: "Services",
+  items: [
+    { id: "1", title_tr: "Art Direction", title_en: "Art Direction", description_tr: "Markanızın görsel hikayesini tanımlayan yaratıcı ve tutarlı sanat yönetimi. Dikkat çeken ve ilham veren estetikler üretiyoruz.", description_en: "Creative and cohesive art direction that defines your brand's visual story. We craft impactful aesthetics that capture attention.", pills: ["Visual Concept", "Style Development", "Campaign Art", "Creative Direction", "Photography"], order: 0 },
+    { id: "2", title_tr: "Brand Identity", title_en: "Brand Identity", description_tr: "Temel değerlerinizi yansıtan, hedef kitlenizle bağlantı kuran ayırt edici marka kimliği. Tutarlı ve akılda kalıcı bir kimlik şekillendiriyoruz.", description_en: "Distinctive branding that reflects your core values and connects with your audience. We shape a consistent and memorable identity.", pills: ["Animation Strategy", "Storyboarding", "2D / 3D Motion", "Visual Effects", "Transitions"], order: 1 },
+    { id: "3", title_tr: "Motion Direction", title_en: "Motion Direction", description_tr: "Görsellerinize hayat ve duygu katan dinamik hareket tasarımı. Sürükleyici, hikaye odaklı deneyimler yaratmak için hareketi ve ritmi yönlendiriyoruz.", description_en: "Dynamic motion design that adds life and emotion to your visuals. We guide movement and rhythm to create immersive experiences.", pills: ["Visual Concept", "Style Development", "Campaign Art", "Creative Direction"], order: 2 },
+    { id: "4", title_tr: "Web Geliştirme", title_en: "Web Development", description_tr: "Etkilemek için tasarlanmış modern, duyarlı ve yüksek performanslı web siteleri. Kusursuz etkileşim, hız ve dönüşüm için optimize edilmiştir.", description_en: "Modern, responsive, and high-performance websites built to impress. Designed for seamless interaction, speed, and conversion.", pills: ["Responsive Design", "Interactive Layouts", "CMS Integration", "SEO Optimization", "Performance Tuning"], order: 3 },
+  ],
+};
+
+export async function getServicesContent(): Promise<ServicesContent> {
+  const snap = await getDoc(doc(db, "siteContent", "services"));
+  if (!snap.exists()) return SERVICES_DEFAULT;
+  return { ...SERVICES_DEFAULT, ...snap.data() } as ServicesContent;
+}
+
+export async function saveServicesContent(data: ServicesContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "services"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}

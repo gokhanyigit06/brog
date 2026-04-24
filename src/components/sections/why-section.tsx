@@ -2,13 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { getWhyContent, type WhyContent } from "@/lib/content";
+import { useSiteConfig } from "@/hooks/use-site-config";
 
 interface Props { lang: string }
 
 export default function WhySection({ lang }: Props) {
   const [content, setContent] = useState<WhyContent | null>(null);
+  const config = useSiteConfig();
 
   useEffect(() => { getWhyContent().then(setContent); }, []);
+
+  if (config && !config.showWhy) return null;
 
   const title    = lang === "tr" ? content?.title_tr    : content?.title_en;
   const features = [...(content?.features ?? [])].sort((a, b) => a.order - b.order);

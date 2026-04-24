@@ -7,6 +7,8 @@ import {
   getShowcaseContent, saveShowcaseContent, type ShowcaseContent, type ShowcaseMediaItem,
   getProjectsContent, saveProjectsContent, type ProjectsContent, type ProjectItem,
   getWhyContent, saveWhyContent, type WhyContent, type WhyFeature,
+  getServicesContent, saveServicesContent, type ServicesContent, type ServiceItem,
+  getSiteConfig, saveSiteConfig, type SiteConfig,
   uploadImage,
 } from "@/lib/content";
 import { Save, Plus, Trash2, RefreshCw, Upload, Image as ImageIcon, ChevronDown, ChevronUp, Video, ArrowUp, ArrowDown } from "lucide-react";
@@ -112,6 +114,8 @@ export default function AnasayfaAdmin() {
   const [showcase, setShowcase] = useState<ShowcaseContent | null>(null);
   const [projects, setProjects] = useState<ProjectsContent | null>(null);
   const [why, setWhy] = useState<WhyContent | null>(null);
+  const [services, setServices] = useState<ServicesContent | null>(null);
+  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -125,10 +129,14 @@ export default function AnasayfaAdmin() {
   const [projectsSaved, setProjectsSaved] = useState(false);
   const [whySaving, setWhySaving] = useState(false);
   const [whySaved, setWhySaved] = useState(false);
+  const [servicesSaving, setServicesSaving] = useState(false);
+  const [servicesSaved, setServicesSaved] = useState(false);
+  const [configSaving, setConfigSaving] = useState(false);
+  const [configSaved, setConfigSaved] = useState(false);
 
   useEffect(() => {
-    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent(), getProjectsContent(), getWhyContent()])
-      .then(([h, n, s, p, w]) => { setHero(h); setNavbar(n); setShowcase(s); setProjects(p); setWhy(w); setLoading(false); })
+    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent(), getProjectsContent(), getWhyContent(), getServicesContent(), getSiteConfig()])
+      .then(([h, n, s, p, w, sv, sc]) => { setHero(h); setNavbar(n); setShowcase(s); setProjects(p); setWhy(w); setServices(sv); setSiteConfig(sc); setLoading(false); })
       .catch((err) => { console.error("Firebase error:", err); setError(err?.message || "Firebase bağlantı hatası"); setLoading(false); });
   }, []);
 
@@ -228,6 +236,49 @@ service cloud.firestore {
 
   return (
     <div className="p-8 max-w-3xl space-y-10">
+
+      {/* ── SECTION VISIBILITY ───────────────────────────────── */}
+      {siteConfig && (
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">Bölüm Görünürlüğü</h1>
+            <p className="text-zinc-500 text-sm mt-0.5">Hangi bölümlerin anasayfada görüneceğini belirle</p>
+          </div>
+          <SaveBar onSave={async () => { setConfigSaving(true); await saveSiteConfig(siteConfig); setConfigSaving(false); setConfigSaved(true); setTimeout(() => setConfigSaved(false), 2500); }} saving={configSaving} saved={configSaved} />
+        </div>
+        <Card title="Bölümler" subtitle="Kapalı bölümler anasayfada gösterilmez">
+          <div className="grid grid-cols-2 gap-3">
+            {([
+              { key: "showShowcase",  label: "Showcase (medya + içerik)" },
+              { key: "showMarquee",   label: "Marquee (kayan yazı)" },
+              { key: "showProjects",  label: "Projeler" },
+              { key: "showWhy",       label: "Neden Biz?" },
+              { key: "showServices",  label: "Hizmetler" },
+            ] as const).map(({ key, label }) => (
+              <label key={key} className="flex items-center gap-3 bg-zinc-800 rounded-lg px-4 py-3 cursor-pointer">
+                <div
+                  onClick={() => setSiteConfig({ ...siteConfig, [key]: !siteConfig[key] })}
+                  style={{
+                    width: 40, height: 22, borderRadius: 11,
+                    background: siteConfig[key] ? "#22c55e" : "#3f3f46",
+                    position: "relative", flexShrink: 0, cursor: "pointer",
+                    transition: "background 0.2s",
+                  }}
+                >
+                  <div style={{
+                    position: "absolute", top: 3, left: siteConfig[key] ? 21 : 3,
+                    width: 16, height: 16, borderRadius: 8,
+                    background: "#fff", transition: "left 0.2s",
+                  }} />
+                </div>
+                <span className="text-sm text-white">{label}</span>
+              </label>
+            ))}
+          </div>
+        </Card>
+      </section>
+      )}
 
       {/* ── NAVBAR SECTION ─────────────────────────────────── */}
       <section>
@@ -798,6 +849,101 @@ service cloud.firestore {
                 </div>
               ))}
             </div>
+          </Card>
+        </div>
+      </section>
+      )}
+
+      {/* ══ SERVICES SECTION ══════════════════════════════════ */}
+      {services && (
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">Hizmetler Bölümü</h1>
+            <p className="text-zinc-500 text-sm mt-0.5">Koyu arka plan, beyaz yazı, pill etiketleri</p>
+          </div>
+          <SaveBar onSave={async () => { setServicesSaving(true); await saveServicesContent(services); setServicesSaving(false); setServicesSaved(true); setTimeout(() => setServicesSaved(false), 2500); }} saving={servicesSaving} saved={servicesSaved} />
+        </div>
+        <div className="space-y-4">
+          {/* Başlık */}
+          <Card title="Başlık" subtitle="Bölüm üst kısım" defaultOpen={false}>
+            <div className="grid grid-cols-3 gap-3">
+              <Field label="Etiket (ör: 04)">
+                <input value={services.label} onChange={(e) => setServices({...services, label: e.target.value})} className={INPUT} placeholder="04" />
+              </Field>
+              <Field label="🇹🇷 Başlık TR">
+                <input value={services.title_tr} onChange={(e) => setServices({...services, title_tr: e.target.value})} className={INPUT} placeholder="Hizmetler" />
+              </Field>
+              <Field label="🇬🇧 Title EN">
+                <input value={services.title_en} onChange={(e) => setServices({...services, title_en: e.target.value})} className={INPUT} placeholder="Services" />
+              </Field>
+            </div>
+          </Card>
+
+          {/* Hizmet Satırları */}
+          <Card title="Hizmet Satırları" subtitle="Her satır: başlık + açıklama + pill etiketleri">
+            <div className="space-y-4 mb-4">
+              {[...services.items].sort((a,b)=>a.order-b.order).map((item) => (
+                <div key={item.id} className="bg-zinc-800 rounded-xl p-4 space-y-3">
+                  {/* Row header: order + delete */}
+                  <div className="flex items-center gap-2 justify-between">
+                    <span className="text-xs text-zinc-500 font-mono">{String(item.order+1).padStart(2,"0")}</span>
+                    <div className="flex gap-1 ml-auto">
+                      <button onClick={() => setServices(prev => { if(!prev) return prev; const arr=[...prev.items].sort((a,b)=>a.order-b.order); const i=arr.findIndex(x=>x.id===item.id); if(i<=0) return prev; [arr[i],arr[i-1]]=[arr[i-1],arr[i]]; return {...prev, items: arr.map((x,idx)=>({...x,order:idx}))}; })} className="p-1 text-zinc-500 hover:text-white"><ArrowUp size={12}/></button>
+                      <button onClick={() => setServices(prev => { if(!prev) return prev; const arr=[...prev.items].sort((a,b)=>a.order-b.order); const i=arr.findIndex(x=>x.id===item.id); if(i>=arr.length-1) return prev; [arr[i],arr[i+1]]=[arr[i+1],arr[i]]; return {...prev, items: arr.map((x,idx)=>({...x,order:idx}))}; })} className="p-1 text-zinc-500 hover:text-white"><ArrowDown size={12}/></button>
+                      <button onClick={() => setServices(prev => prev ? {...prev, items: prev.items.filter(x=>x.id!==item.id).map((x,i)=>({...x,order:i}))} : prev)} className="p-1 text-zinc-600 hover:text-red-400"><Trash2 size={12}/></button>
+                    </div>
+                  </div>
+                  {/* Titles */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <Field label="🇹🇷 Başlık TR">
+                      <input value={item.title_tr} onChange={(e) => setServices(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,title_tr:e.target.value}:x)} : p)} className={INPUT} />
+                    </Field>
+                    <Field label="🇬🇧 Title EN">
+                      <input value={item.title_en} onChange={(e) => setServices(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,title_en:e.target.value}:x)} : p)} className={INPUT} />
+                    </Field>
+                    <Field label="🇹🇷 Açıklama TR">
+                      <textarea value={item.description_tr} onChange={(e) => setServices(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,description_tr:e.target.value}:x)} : p)} rows={2} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                    <Field label="🇬🇧 Description EN">
+                      <textarea value={item.description_en} onChange={(e) => setServices(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,description_en:e.target.value}:x)} : p)} rows={2} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                  </div>
+                  {/* Pills */}
+                  <div>
+                    <p className="text-xs text-zinc-500 mb-2">Pill Etiketleri</p>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {(item.pills ?? []).map((pill, pi) => (
+                        <div key={pi} className="flex items-center gap-1 bg-zinc-700 rounded-full px-3 py-1">
+                          <span className="text-xs text-white">{pill}</span>
+                          <button onClick={() => setServices(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,pills:x.pills.filter((_,i)=>i!==pi)}:x)} : p)} className="text-zinc-500 hover:text-red-400 ml-1"><Trash2 size={9}/></button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        placeholder="Yeni pill ekle..."
+                        className="flex-1 bg-zinc-900 border border-zinc-700 rounded px-3 py-1.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                            const val = e.currentTarget.value.trim();
+                            setServices(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,pills:[...x.pills,val]}:x)} : p);
+                            e.currentTarget.value = "";
+                          }
+                        }}
+                      />
+                      <span className="text-xs text-zinc-600 self-center">Enter ile ekle</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => setServices(prev => prev ? {...prev, items: [...prev.items, { id: Date.now().toString(), title_tr: "", title_en: "", description_tr: "", description_en: "", pills: [], order: prev.items.length }]} : prev)}
+              className="flex items-center gap-2 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg transition-colors"
+            >
+              <Plus size={14} /> Yeni Hizmet Ekle
+            </button>
           </Card>
         </div>
       </section>

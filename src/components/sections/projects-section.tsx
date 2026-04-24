@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getProjectsContent, type ProjectsContent, type ProjectItem } from "@/lib/content";
+import { useSiteConfig } from "@/hooks/use-site-config";
 
 interface Props { lang: string }
 
@@ -87,10 +88,13 @@ function ProjectCard({ project }: { project: ProjectItem }) {
 
 export default function ProjectsSection({ lang }: Props) {
   const [content, setContent] = useState<ProjectsContent | null>(null);
+  const config = useSiteConfig();
 
   useEffect(() => {
     getProjectsContent().then(setContent);
   }, []);
+
+  if (config && !config.showProjects) return null;
 
   const title = lang === "tr" ? content?.title_tr : content?.title_en;
   const desc  = lang === "tr" ? content?.description_tr : content?.description_en;
