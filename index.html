@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BROG® Studio</title>
+    <link href="./dist/output.css" rel="stylesheet">
+</head>
+<body class="bg-[#0f0f0f] text-white font-sans antialiased overflow-x-hidden">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full flex justify-between items-center px-6 py-4 z-50 mix-blend-difference">
+        <div class="text-xl font-bold uppercase tracking-wider">
+            <a href="#">BROG®</a>
+        </div>
+        <nav class="hidden md:flex space-x-6 text-sm uppercase tracking-wide">
+            <a href="#" class="hover:opacity-70 transition-opacity">Studio</a>
+            <a href="#" class="hover:opacity-70 transition-opacity">Branding</a>
+            <a href="#" class="hover:opacity-70 transition-opacity">Design</a>
+            <a href="#" class="hover:opacity-70 transition-opacity">Development</a>
+        </nav>
+        <button id="menu-btn" class="md:hidden text-white uppercase text-sm">Menu</button>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-[#0f0f0f] z-40 hidden flex-col justify-center items-center space-y-8 text-2xl uppercase tracking-widest">
+        <a href="#" class="hover:opacity-70 transition-opacity">Studio</a>
+        <a href="#" class="hover:opacity-70 transition-opacity">Branding</a>
+        <a href="#" class="hover:opacity-70 transition-opacity">Design</a>
+        <a href="#" class="hover:opacity-70 transition-opacity">Development</a>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="h-screen flex flex-col justify-center items-center text-center px-4 relative">
+            <h1 class="text-6xl md:text-8xl lg:text-[10rem] font-bold uppercase leading-none tracking-tighter mb-6">
+                BROG®<br>Studio
+            </h1>
+            <p class="max-w-xl text-lg md:text-xl text-gray-400">
+                We build business solutions that drive real growth — efficient, scalable, and profit-focused.
+            </p>
+        </section>
+
+        <!-- Our Commitment -->
+        <section class="py-24 px-6 md:px-12 border-t border-gray-800">
+            <div class="flex flex-col md:flex-row justify-between mb-16">
+                <span class="text-sm text-gray-500 uppercase tracking-widest mb-4 md:mb-0">(01) Our Commitment</span>
+                <h2 class="text-3xl md:text-5xl max-w-2xl font-light leading-tight">
+                    Consistent quality in every project, blending innovative Design.
+                </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                <div>
+                    <h3 class="text-5xl md:text-6xl font-bold mb-2">98%</h3>
+                    <p class="text-gray-400 text-sm uppercase tracking-wider">Client Retention</p>
+                </div>
+                <div>
+                    <h3 class="text-5xl md:text-6xl font-bold mb-2">2.5x</h3>
+                    <p class="text-gray-400 text-sm uppercase tracking-wider">Client Revenue</p>
+                </div>
+                <div>
+                    <h3 class="text-5xl md:text-6xl font-bold mb-2">100%</h3>
+                    <p class="text-gray-400 text-sm uppercase tracking-wider">Individuals Rate</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="py-24 px-6 md:px-12 bg-white text-black">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+                <div>
+                    <span class="text-sm text-gray-500 uppercase tracking-widest block mb-4">(02) PROJECTS</span>
+                    <h2 class="text-5xl md:text-7xl font-bold uppercase tracking-tighter">Latest<br>Works</h2>
+                </div>
+                <a href="#" class="mt-8 md:mt-0 uppercase text-sm border-b border-black pb-1 hover:opacity-70 transition-opacity">View All Works</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Project Item 1 -->
+                <div class="group cursor-pointer">
+                    <div class="overflow-hidden mb-6 bg-gray-200 aspect-[4/5] relative">
+                         <!-- Placeholder for image -->
+                         <div class="absolute inset-0 bg-gray-300 group-hover:scale-105 transition-transform duration-700"></div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-2xl font-medium">Urban Glow</h3>
+                        <span class="text-sm text-gray-500">2025</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Portfolio</p>
+                </div>
+                 <!-- Project Item 2 -->
+                 <div class="group cursor-pointer md:mt-24">
+                    <div class="overflow-hidden mb-6 bg-gray-200 aspect-[4/5] relative">
+                         <!-- Placeholder for image -->
+                         <div class="absolute inset-0 bg-gray-300 group-hover:scale-105 transition-transform duration-700"></div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-2xl font-medium">Lunaris Health</h3>
+                        <span class="text-sm text-gray-500">2025</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Web Design</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Brog -->
+        <section class="py-24 px-6 md:px-12 border-t border-gray-800">
+             <div class="mb-16">
+                <span class="text-sm text-gray-500 uppercase tracking-widest block mb-4">(03) Why Choose Brog</span>
+                <h2 class="text-5xl md:text-7xl font-bold uppercase tracking-tighter">Why Brog?</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 gap-x-24">
+                <div>
+                    <h3 class="text-2xl font-medium mb-4">Strategy & Research</h3>
+                    <p class="text-gray-400 leading-relaxed">We begin by shaping tailored strategies and performing in-depth research to reveal critical insights. This creates a solid roadmap for impactful, measurable outcomes.</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-medium mb-4">Design & Prototype</h3>
+                    <p class="text-gray-400 leading-relaxed">We transform ideas into engaging designs and functional prototypes that bring your vision to life. This approach ensures smooth collaboration and early validation.</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-medium mb-4">Build, Test & Optimize</h3>
+                    <p class="text-gray-400 leading-relaxed">We craft reliable solutions, perform thorough testing, and fine-tune for top performance. The result is efficient, high-impact outcomes that drive long-term success.</p>
+                </div>
+                 <div>
+                    <h3 class="text-2xl font-medium mb-4">Launch & Support</h3>
+                    <p class="text-gray-400 leading-relaxed">We launch with precision and provide ongoing support to help your product grow. By thorough understanding of your goals and users, we ensure speedy and lasting results.</p>
+                </div>
+            </div>
+        </section>
+
+         <!-- Services -->
+         <section class="py-24 px-6 md:px-12 bg-white text-black">
+             <div class="mb-16">
+                <span class="text-sm text-gray-500 uppercase tracking-widest block mb-4">(04) Our Services</span>
+                <h2 class="text-5xl md:text-7xl font-bold uppercase tracking-tighter">Services</h2>
+            </div>
+            <div class="space-y-12">
+                <!-- Service 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 border-t border-gray-200 pt-12">
+                    <div class="md:col-span-1 text-gray-400">01</div>
+                    <div class="md:col-span-5">
+                        <h3 class="text-3xl font-medium mb-4">Art Direction</h3>
+                        <p class="text-gray-600">Creative and cohesive art direction that defines your brand’s visual story. We craft impactful aesthetics that capture attention and inspire engagement.</p>
+                    </div>
+                    <div class="md:col-span-6 grid grid-cols-2 gap-4 text-sm text-gray-500">
+                        <ul>
+                            <li class="mb-2">Visual Concept</li>
+                            <li class="mb-2">Style Development</li>
+                            <li>Campaign Art</li>
+                        </ul>
+                         <ul>
+                            <li class="mb-2">Creative Direction</li>
+                            <li class="mb-2">Photography</li>
+                            <li>Visual Consistency</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Service 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 border-t border-gray-200 pt-12">
+                    <div class="md:col-span-1 text-gray-400">02</div>
+                    <div class="md:col-span-5">
+                        <h3 class="text-3xl font-medium mb-4">Brand Identity</h3>
+                        <p class="text-gray-600">Distinctive branding that reflects your core values and connects with your audience. From logo to color palette, we shape a consistent and memorable identity.</p>
+                    </div>
+                    <div class="md:col-span-6 grid grid-cols-2 gap-4 text-sm text-gray-500">
+                        <ul>
+                            <li class="mb-2">Animation Strategy</li>
+                            <li class="mb-2">Storyboarding</li>
+                            <li>2D / 3D Motion</li>
+                        </ul>
+                         <ul>
+                            <li class="mb-2">Visual Effects</li>
+                            <li class="mb-2">Transitions</li>
+                            <li>Sound Design</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+         </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-24 px-6 md:px-12 bg-[#0f0f0f] border-t border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-end">
+        <div class="mb-12 md:mb-0">
+            <h2 class="text-4xl md:text-6xl font-bold uppercase tracking-tighter mb-8">Let's Talk</h2>
+            <p class="text-gray-400 max-w-sm mb-8">Have a project in mind? Reach out and let's create something amazing together.</p>
+            <div class="space-y-4">
+                <a href="mailto:hello@brog.com" class="block hover:text-gray-300 transition-colors">hello@brog.com</a>
+                <a href="tel:+15108956500" class="block hover:text-gray-300 transition-colors">(510) 895-6500</a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-12 text-sm uppercase tracking-wider">
+            <div>
+                <h4 class="text-gray-500 mb-6">Navigation</h4>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-gray-300 transition-colors">Home</a></li>
+                    <li><a href="#" class="hover:text-gray-300 transition-colors">Projects</a></li>
+                    <li><a href="#" class="hover:text-gray-300 transition-colors">Contact</a></li>
+                </ul>
+            </div>
+             <div>
+                <h4 class="text-gray-500 mb-6">Social</h4>
+                <ul class="space-y-4">
+                    <li><a href="#" class="hover:text-gray-300 transition-colors">X.com</a></li>
+                    <li><a href="#" class="hover:text-gray-300 transition-colors">Dribbble</a></li>
+                    <li><a href="#" class="hover:text-gray-300 transition-colors">Instagram</a></li>
+                    <li><a href="#" class="hover:text-gray-300 transition-colors">LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    <div class="px-6 md:px-12 py-6 border-t border-gray-800 text-center md:text-left text-sm text-gray-600 flex flex-col md:flex-row justify-between items-center">
+        <p>© 2025 BROG®. All rights reserved.</p>
+        <div class="space-x-4 mt-4 md:mt-0">
+             <a href="#" class="hover:text-gray-300 transition-colors">Terms</a>
+             <a href="#" class="hover:text-gray-300 transition-colors">Privacy</a>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+</body>
+</html>
