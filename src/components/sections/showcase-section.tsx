@@ -118,36 +118,56 @@ export default function ShowcaseSection({ lang }: Props) {
           </div>
 
           {/* ── RIGHT: text content ── */}
-          <div className="flex-1 flex flex-col justify-center">
-            {/* Label */}
-            <p style={{ fontSize: 13, letterSpacing: "0.08em", color: "#6b7280", fontWeight: 500, marginBottom: 20, textTransform: "uppercase" }}>
-              {content?.label ?? "01 — Our Commitment"}
-            </p>
+          <div className="flex-1 flex flex-col justify-between" style={{ minHeight: 600 }}>
 
-            {/* Title */}
-            <h2 style={{ fontSize: "clamp(28px, 3.5vw, 52px)", fontWeight: 800, lineHeight: 1.1, color: "#0a0a0a", marginBottom: 24, letterSpacing: "-0.02em" }}>
-              {title ?? (lang === "tr" ? "Her projede tutarlı kalite, yenilikçi tasarım" : "Consistent quality in every project, innovative Design")}
-            </h2>
+            <div>
+              {/* Label */}
+              <p style={{ fontSize: 13, letterSpacing: "0.06em", color: "#6b7280", fontWeight: 500, marginBottom: 28 }}>
+                ({content?.label ?? "01"}) Our Commitment
+              </p>
 
-            {/* Description */}
-            <p style={{ fontSize: 16, lineHeight: 1.7, color: "#4b5563", marginBottom: 48, maxWidth: 520 }}>
-              {desc ?? (lang === "tr" ? "Tasarımın amaca buluştuğu dijital deneyimler yaratıyoruz." : "We create digital experiences where design meets purpose.")}
-            </p>
+              {/* Title — massive */}
+              <h2 style={{
+                fontSize: "clamp(42px, 5.5vw, 76px)",
+                fontWeight: 900,
+                lineHeight: 1.05,
+                color: "#0a0a0a",
+                letterSpacing: "-0.03em",
+                marginBottom: 32,
+              }}>
+                {title ?? (lang === "tr"
+                  ? "Her projede tutarlı kalite, yenilikçi tasarım"
+                  : "Consistent quality in every project, blending innovative Design")}
+              </h2>
 
-            {/* Stats */}
-            <div style={{ display: "flex", gap: 48, flexWrap: "wrap" }}>
+              {/* Description */}
+              <p style={{ fontSize: 16, lineHeight: 1.75, color: "#374151", maxWidth: 560 }}>
+                {desc ?? (lang === "tr"
+                  ? "Tasarımın amaca buluştuğu dijital deneyimler yaratıyoruz — yenilik ile netliği harmanlıyoruz. Her etkileşim kusursuz, sezgisel ve anlamlı hissettirmek için tasarlanır."
+                  : "We create digital experiences where design meets purpose — blending innovation with clarity. Every interaction is crafted to feel seamless, intuitive, and meaningful.")}
+              </p>
+            </div>
+
+            {/* Stats row */}
+            <div style={{ display: "flex", gap: 56, flexWrap: "wrap", paddingTop: 48, borderTop: "1px solid #e5e7eb", marginTop: 48 }}>
               {[
-                { value: content?.stat1_value ?? "120+", label: stat1lbl ?? "Projects" },
-                { value: content?.stat2_value ?? "98%",  label: stat2lbl ?? "Retention" },
-                { value: content?.stat3_value ?? "5+",   label: stat3lbl ?? "Years" },
+                { value: content?.stat1_value ?? "190",  label: stat1lbl ?? "Client Revenue" },
+                { value: content?.stat2_value ?? "92",   label: stat2lbl ?? "Client Retention" },
+                { value: content?.stat3_value ?? "32%",  label: stat3lbl ?? "Individuals Rate" },
               ].map(({ value, label }) => (
-                <div key={label}>
-                  <p style={{ fontSize: "clamp(32px, 3.5vw, 48px)", fontWeight: 800, color: "#0a0a0a", lineHeight: 1, letterSpacing: "-0.02em" }}>
+                <div key={label} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{
+                    fontSize: "clamp(48px, 5vw, 68px)",
+                    fontWeight: 900,
+                    color: "#0a0a0a",
+                    lineHeight: 1,
+                    letterSpacing: "-0.04em",
+                  }}>
                     {value}
-                  </p>
-                  <p style={{ fontSize: 13, color: "#6b7280", marginTop: 6, fontWeight: 500 }}>
+                  </span>
+                  <span style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.4, maxWidth: 72, fontWeight: 500 }}>
                     {label}
-                  </p>
+                  </span>
                 </div>
               ))}
             </div>
