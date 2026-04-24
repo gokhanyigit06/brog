@@ -418,3 +418,50 @@ export async function saveMarqueeContent(data: MarqueeContent): Promise<void> {
     updatedAt: new Date().toISOString(),
   });
 }
+
+// ─────────────────────────────────────────────
+// PROJECTS SECTION
+// ─────────────────────────────────────────────
+
+export interface ProjectItem {
+  id: string;
+  imageUrl: string;
+  brandName: string;
+  year: string;
+  category: string;
+  link: string;
+  order: number;
+}
+
+export interface ProjectsContent {
+  label: string;
+  title_tr: string;
+  title_en: string;
+  description_tr: string;
+  description_en: string;
+  viewAllLink: string;
+  projects: ProjectItem[];
+}
+
+const PROJECTS_DEFAULT: ProjectsContent = {
+  label: "02",
+  title_tr: "Projeler",
+  title_en: "Latest Works",
+  description_tr: "Kendileri için konuşan dijital ürünler yaratıyoruz — sade, hızlı ve kullanıcı odaklı.",
+  description_en: "We craft digital products that speak for themselves — simple, fast, and user-focused.",
+  viewAllLink: "/projects",
+  projects: [],
+};
+
+export async function getProjectsContent(): Promise<ProjectsContent> {
+  const snap = await getDoc(doc(db, "siteContent", "projects"));
+  if (!snap.exists()) return PROJECTS_DEFAULT;
+  return { ...PROJECTS_DEFAULT, ...snap.data() } as ProjectsContent;
+}
+
+export async function saveProjectsContent(data: ProjectsContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "projects"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}

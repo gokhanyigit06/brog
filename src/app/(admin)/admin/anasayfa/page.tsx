@@ -5,6 +5,7 @@ import {
   getHeroContent, saveHeroContent, type HeroContent,
   getNavbarContent, saveNavbarContent, type NavbarContent,
   getShowcaseContent, saveShowcaseContent, type ShowcaseContent, type ShowcaseMediaItem,
+  getProjectsContent, saveProjectsContent, type ProjectsContent, type ProjectItem,
   uploadImage,
 } from "@/lib/content";
 import { Save, Plus, Trash2, RefreshCw, Upload, Image as ImageIcon, ChevronDown, ChevronUp, Video, ArrowUp, ArrowDown } from "lucide-react";
@@ -108,6 +109,7 @@ export default function AnasayfaAdmin() {
   const [hero, setHero] = useState<HeroContent | null>(null);
   const [navbar, setNavbar] = useState<NavbarContent | null>(null);
   const [showcase, setShowcase] = useState<ShowcaseContent | null>(null);
+  const [projects, setProjects] = useState<ProjectsContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -117,10 +119,12 @@ export default function AnasayfaAdmin() {
   const [navSaved, setNavSaved] = useState(false);
   const [showcaseSaving, setShowcaseSaving] = useState(false);
   const [showcaseSaved, setShowcaseSaved] = useState(false);
+  const [projectsSaving, setProjectsSaving] = useState(false);
+  const [projectsSaved, setProjectsSaved] = useState(false);
 
   useEffect(() => {
-    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent()])
-      .then(([h, n, s]) => { setHero(h); setNavbar(n); setShowcase(s); setLoading(false); })
+    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent(), getProjectsContent()])
+      .then(([h, n, s, p]) => { setHero(h); setNavbar(n); setShowcase(s); setProjects(p); setLoading(false); })
       .catch((err) => { console.error("Firebase error:", err); setError(err?.message || "Firebase bağlantı hatası"); setLoading(false); });
   }, []);
 
@@ -607,6 +611,106 @@ service cloud.firestore {
                 </div>
               ))}
             </div>
+          </Card>
+        </div>
+      </section>
+      )}
+
+      {/* ══ PROJECTS SECTION ═══════════════════════ */}
+      {projects && (
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">Projeler Bölümü</h1>
+            <p className="text-zinc-500 text-sm mt-0.5">Showcase altındaki proje kartları</p>
+          </div>
+          <SaveBar onSave={async () => { setProjectsSaving(true); await saveProjectsContent(projects); setProjectsSaving(false); setProjectsSaved(true); setTimeout(() => setProjectsSaved(false), 2500); }} saving={projectsSaving} saved={projectsSaved} />
+        </div>
+
+        <div className="space-y-4">
+          {/* Başlık & Açıklama */}
+          <Card title="Başlık ve Açıklama" subtitle="Bölüm üstü metinler" defaultOpen={false}>
+            <div className="space-y-4">
+              <div className="grid grid-cols-3 gap-3">
+                <Field label="Etiket (ör: 02)">
+                  <input value={projects.label} onChange={(e) => setProjects({...projects, label: e.target.value})} className={INPUT} placeholder="02" />
+                </Field>
+                <Field label="🇹🇷 Başlık TR">
+                  <input value={projects.title_tr} onChange={(e) => setProjects({...projects, title_tr: e.target.value})} className={INPUT} placeholder="Projeler" />
+                </Field>
+                <Field label="🇬🇧 Title EN">
+                  <input value={projects.title_en} onChange={(e) => setProjects({...projects, title_en: e.target.value})} className={INPUT} placeholder="Latest Works" />
+                </Field>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="🇹🇷 Açıklama TR">
+                  <textarea value={projects.description_tr} onChange={(e) => setProjects({...projects, description_tr: e.target.value})} rows={3} className={`${INPUT} resize-none`} />
+                </Field>
+                <Field label="🇬🇧 Description EN">
+                  <textarea value={projects.description_en} onChange={(e) => setProjects({...projects, description_en: e.target.value})} rows={3} className={`${INPUT} resize-none`} />
+                </Field>
+              </div>
+              <Field label="&quot;Tümü Gör&quot; linki">
+                <input value={projects.viewAllLink} onChange={(e) => setProjects({...projects, viewAllLink: e.target.value})} className={INPUT} placeholder="/projects" />
+              </Field>
+            </div>
+          </Card>
+
+          {/* Proje Kartları */}
+          <Card title="Proje Kartları" subtitle="Her kart: görsel, marka adı, yıl, kategori, link">
+            <div className="space-y-3 mb-4">
+              {[...projects.projects].sort((a,b)=>a.order-b.order).map((proj) => (
+                <div key={proj.id} className="bg-zinc-800 rounded-xl p-4 space-y-3">
+                  {/* Thumb + controls row */}
+                  <div className="flex items-start gap-3">
+                    {/* Thumb */}
+                    <div className="w-24 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-zinc-700">
+                      {proj.imageUrl ? <img src={proj.imageUrl} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><ImageIcon size={16} className="text-zinc-600" /></div>}
+                    </div>
+                    {/* Image upload */}
+                    <label className="flex items-center gap-2 px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white text-xs rounded-lg cursor-pointer transition-colors">
+                      <Upload size={12} /> Görsel Değiştir
+                      <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                        const f = e.target.files?.[0]; if (!f) return;
+                        const url = await uploadImage(f, `projects/${Date.now()}_${f.name}`);
+                        setProjects(prev => prev ? { ...prev, projects: prev.projects.map(p => p.id === proj.id ? {...p, imageUrl: url} : p) } : prev);
+                        e.target.value = "";
+                      }} />
+                    </label>
+                    {/* Order + delete */}
+                    <div className="ml-auto flex items-center gap-2">
+                      <button onClick={() => setProjects(prev => { if(!prev) return prev; const arr = [...prev.projects].sort((a,b)=>a.order-b.order); const i = arr.findIndex(p=>p.id===proj.id); if(i<=0) return prev; [arr[i],arr[i-1]]=[arr[i-1],arr[i]]; return {...prev, projects: arr.map((p,idx)=>({...p,order:idx}))}; })} className="p-1.5 text-zinc-500 hover:text-white"><ArrowUp size={13}/></button>
+                      <button onClick={() => setProjects(prev => { if(!prev) return prev; const arr = [...prev.projects].sort((a,b)=>a.order-b.order); const i = arr.findIndex(p=>p.id===proj.id); if(i>=arr.length-1) return prev; [arr[i],arr[i+1]]=[arr[i+1],arr[i]]; return {...prev, projects: arr.map((p,idx)=>({...p,order:idx}))}; })} className="p-1.5 text-zinc-500 hover:text-white"><ArrowDown size={13}/></button>
+                      <button onClick={() => setProjects(prev => prev ? {...prev, projects: prev.projects.filter(p=>p.id!==proj.id).map((p,i)=>({...p,order:i}))} : prev)} className="p-1.5 text-zinc-600 hover:text-red-400 transition-colors"><Trash2 size={13}/></button>
+                    </div>
+                  </div>
+                  {/* Fields */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <Field label="Marka Adı">
+                      <input value={proj.brandName} onChange={(e) => setProjects(prev => prev ? {...prev, projects: prev.projects.map(p=>p.id===proj.id?{...p,brandName:e.target.value}:p)} : prev)} className={INPUT} placeholder="Urban Glow" />
+                    </Field>
+                    <Field label="Yıl">
+                      <input value={proj.year} onChange={(e) => setProjects(prev => prev ? {...prev, projects: prev.projects.map(p=>p.id===proj.id?{...p,year:e.target.value}:p)} : prev)} className={INPUT} placeholder="2025" />
+                    </Field>
+                    <Field label="Kategori (hover'da görünür)">
+                      <input value={proj.category} onChange={(e) => setProjects(prev => prev ? {...prev, projects: prev.projects.map(p=>p.id===proj.id?{...p,category:e.target.value}:p)} : prev)} className={INPUT} placeholder="Web Design" />
+                    </Field>
+                    <Field label="Link (opsiyonel)">
+                      <input value={proj.link} onChange={(e) => setProjects(prev => prev ? {...prev, projects: prev.projects.map(p=>p.id===proj.id?{...p,link:e.target.value}:p)} : prev)} className={INPUT} placeholder="/projects/urban-glow" />
+                    </Field>
+                  </div>
+                </div>
+              ))}
+              {projects.projects.length === 0 && (
+                <p className="text-sm text-zinc-600 py-4 text-center">Henüz proje eklenmedi</p>
+              )}
+            </div>
+            <button
+              onClick={() => setProjects(prev => prev ? {...prev, projects: [...prev.projects, { id: Date.now().toString(), imageUrl: "", brandName: "", year: new Date().getFullYear().toString(), category: "", link: "", order: prev.projects.length }]} : prev)}
+              className="flex items-center gap-2 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg transition-colors"
+            >
+              <Plus size={14} /> Yeni Proje Ekle
+            </button>
           </Card>
         </div>
       </section>
