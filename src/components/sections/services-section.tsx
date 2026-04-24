@@ -66,16 +66,16 @@ export default function ServicesSection({ lang }: Props) {
                 padding: "48px 0",
               }}>
                 {/* Number */}
-                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", fontWeight: 500, paddingTop: 4 }}>
+                <span style={{ fontSize: 16, color: "#ffffff", fontWeight: 600, paddingTop: 4 }}>
                   {num}
                 </span>
 
                 {/* Title + Description */}
                 <div>
-                  <h3 style={{ fontSize: 22, fontWeight: 700, color: "#ffffff", marginBottom: 14, lineHeight: 1.2 }}>
+                  <h3 style={{ fontSize: 25, fontWeight: 700, color: "#ffffff", marginBottom: 14, lineHeight: 1.2 }}>
                     {ititle}
                   </h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.75, color: "rgba(255,255,255,0.55)", maxWidth: 420 }}>
+                  <p style={{ fontSize: 14, lineHeight: 1.75, color: "rgba(255,255,255,0.75)", maxWidth: 420 }}>
                     {idesc}
                   </p>
                 </div>

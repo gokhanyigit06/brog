@@ -258,7 +258,7 @@ export default function Navbar({ lang }: NavbarProps) {
             </div>
 
             {/* RIGHT: nav links */}
-            <nav className="flex flex-col justify-center items-end w-1/2">
+            <nav className="flex flex-col justify-center items-end w-1/2" style={{ gap: "7px" }}>
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
