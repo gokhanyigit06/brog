@@ -134,8 +134,15 @@ export default function HeroSection({ lang }: HeroSectionProps) {
         transition={{ duration: 2.0, delay: 0.5, ease: "easeInOut" }}
         className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none"
         style={{
-          height: "100px",
-          background: "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 40%, transparent 100%)",
+          height: "150px",
+          background: `linear-gradient(to top,
+            rgba(255,255,255,1)   0%,
+            rgba(255,255,255,0.9) 15%,
+            rgba(255,255,255,0.7) 30%,
+            rgba(255,255,255,0.4) 55%,
+            rgba(255,255,255,0.1) 80%,
+            transparent           100%
+          )`,
         }}
       />
 
