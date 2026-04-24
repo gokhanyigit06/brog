@@ -38,16 +38,16 @@ export default function Navbar({ lang }: NavbarProps) {
           {/* Contact info — hidden on mobile */}
           <div className="hidden md:flex items-start gap-8">
             <div>
-              <p className="text-white text-[13px] font-semibold mb-0.5">Email</p>
-              <p className="text-white text-[13px]">hello@brog.com</p>
+              <p className="text-white text-[14px] font-semibold mb-0.5">Email</p>
+              <p className="text-white text-[14px]">hello@brog.com</p>
             </div>
             <div>
-              <p className="text-white text-[13px] font-semibold mb-0.5">Phone</p>
-              <p className="text-white text-[13px]">+90 555 000 0000</p>
+              <p className="text-white text-[14px] font-semibold mb-0.5">Phone</p>
+              <p className="text-white text-[14px]">+90 555 000 0000</p>
             </div>
             <div>
-              <p className="text-white text-[13px] font-semibold mb-0.5">Location</p>
-              <p className="text-white text-[13px]">Istanbul, Turkey</p>
+              <p className="text-white text-[14px] font-semibold mb-0.5">Location</p>
+              <p className="text-white text-[14px]">Istanbul, Turkey</p>
             </div>
           </div>
 
