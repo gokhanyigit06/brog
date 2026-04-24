@@ -1,5 +1,6 @@
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
+import Footer from "@/components/site/footer";
 import HeroSection from "@/components/sections/hero-section";
 import ShowcaseSection from "@/components/sections/showcase-section";
 import MarqueeSection from "@/components/sections/marquee-section";
@@ -25,6 +26,7 @@ export default async function HomePage({
       <WhySection lang={lang} />
       <ServicesSection lang={lang} />
       <FaqSection lang={lang} />
+      <Footer lang={lang} />
     </main>
   );
 }
