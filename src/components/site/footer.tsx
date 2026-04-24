@@ -74,7 +74,7 @@ export default function Footer({ lang }: Props) {
   ];
 
   const labelStyle: React.CSSProperties = {
-    fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.45)",
+    fontSize: 16, fontWeight: 600, color: "#ffffff",
     letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 24,
   };
   const linkStyle: React.CSSProperties = {
