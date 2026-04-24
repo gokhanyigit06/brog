@@ -173,7 +173,7 @@ export default function Navbar({ lang }: NavbarProps) {
             style={{ display: "flex", alignItems: "stretch", paddingTop: "100px", paddingBottom: "60px" }}
           >
             {/* LEFT: brand + clock + socials */}
-            <div className="flex flex-col w-1/2" style={{ gap: "40px" }}>
+            <div className="flex flex-col justify-center w-1/2" style={{ gap: "20px" }}>
               {/* Brand */}
               <div
                 className="text-white font-black leading-none tracking-tight"
@@ -187,7 +187,7 @@ export default function Navbar({ lang }: NavbarProps) {
               <LiveClock />
 
               {/* Socials */}
-              <div className="flex items-center gap-6 flex-wrap mt-auto">
+              <div className="flex items-center gap-6 flex-wrap">
                 {socials.map((s) => (
                   <a
                     key={s.href}
