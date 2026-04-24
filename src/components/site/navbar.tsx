@@ -22,7 +22,7 @@ export default function Navbar({ lang }: NavbarProps) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5">
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between section-container py-5">
         {/* Logo */}
         <Link href={`/${lang}`} className="flex items-center gap-2">
           <span className="w-5 h-5 rounded-full border border-white/60 flex items-center justify-center">

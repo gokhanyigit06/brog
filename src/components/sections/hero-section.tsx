@@ -90,9 +90,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       </motion.div>
 
       {/* ── Text overlay ── */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-between pointer-events-none"
-        style={{ padding: "88px 150px 56px 150px" }}
-      >
+      <div className="section-container absolute inset-0 z-20 flex flex-col justify-between pointer-events-none pt-[88px] pb-14">
         {/* Top: Big title */}
         <div className="flex justify-between items-start">
           <motion.h1
