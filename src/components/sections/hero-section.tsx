@@ -71,6 +71,17 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   return (
     <div className="relative w-full h-screen bg-[#080808] overflow-hidden">
 
+      {/* ── DEBUG (dev only) — kaldırılacak ── */}
+      {process.env.NODE_ENV === "development" && (
+        <div style={{ position: "fixed", bottom: 8, left: 8, zIndex: 9999, background: "rgba(0,0,0,0.85)", color: "#0f0", padding: "8px 12px", fontSize: 11, fontFamily: "monospace", borderRadius: 6, maxWidth: 400, wordBreak: "break-all" }}>
+          <b>Hero Debug</b><br />
+          ready: {String(contentReady)}<br />
+          c1: {content?.card1Image ? "✓ " + content.card1Image.slice(0, 60) + "…" : "empty"}<br />
+          c2: {content?.card2Image ? "✓ " + content.card2Image.slice(0, 60) + "…" : "empty"}<br />
+          c3: {content?.card3Image ? "✓ " + content.card3Image.slice(0, 60) + "…" : "empty"}
+        </div>
+      )}
+
       {/* ── Kart 1: en küçük, üstte ── */}
       <motion.div
         initial={{ opacity: 0, y: 160 }}
