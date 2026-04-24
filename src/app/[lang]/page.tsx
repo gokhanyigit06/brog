@@ -1,6 +1,7 @@
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
 import HeroSection from "@/components/sections/hero-section";
+import ShowcaseSection from "@/components/sections/showcase-section";
 
 export default async function HomePage({
   params,
@@ -13,6 +14,7 @@ export default async function HomePage({
     <main className="bg-white min-h-screen">
       <Navbar lang={lang as Locale} />
       <HeroSection lang={lang} />
+      <ShowcaseSection lang={lang} />
     </main>
   );
 }

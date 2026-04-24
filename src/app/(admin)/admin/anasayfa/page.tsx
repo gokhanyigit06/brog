@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import {
   getHeroContent, saveHeroContent, type HeroContent,
   getNavbarContent, saveNavbarContent, type NavbarContent,
+  getShowcaseContent, saveShowcaseContent, type ShowcaseContent, type ShowcaseMediaItem,
   uploadImage,
 } from "@/lib/content";
-import { Save, Plus, Trash2, RefreshCw, Upload, Image as ImageIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { Save, Plus, Trash2, RefreshCw, Upload, Image as ImageIcon, ChevronDown, ChevronUp, Video, ArrowUp, ArrowDown } from "lucide-react";
 
 // ── Shared styles ───────────────────────────────────────────────
 const INPUT = "w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors";
@@ -106,6 +107,7 @@ function ImageUpload({ url, onUpload, storagePath, aspect = "16/9", label = "Gö
 export default function AnasayfaAdmin() {
   const [hero, setHero] = useState<HeroContent | null>(null);
   const [navbar, setNavbar] = useState<NavbarContent | null>(null);
+  const [showcase, setShowcase] = useState<ShowcaseContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -113,10 +115,12 @@ export default function AnasayfaAdmin() {
   const [heroSaved, setHeroSaved] = useState(false);
   const [navSaving, setNavSaving] = useState(false);
   const [navSaved, setNavSaved] = useState(false);
+  const [showcaseSaving, setShowcaseSaving] = useState(false);
+  const [showcaseSaved, setShowcaseSaved] = useState(false);
 
   useEffect(() => {
-    Promise.all([getHeroContent(), getNavbarContent()])
-      .then(([h, n]) => { setHero(h); setNavbar(n); setLoading(false); })
+    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent()])
+      .then(([h, n, s]) => { setHero(h); setNavbar(n); setShowcase(s); setLoading(false); })
       .catch((err) => { console.error("Firebase error:", err); setError(err?.message || "Firebase bağlantı hatası"); setLoading(false); });
   }, []);
 
@@ -134,6 +138,41 @@ export default function AnasayfaAdmin() {
     await saveNavbarContent(navbar);
     setNavSaving(false); setNavSaved(true);
     setTimeout(() => setNavSaved(false), 2500);
+  }
+
+  async function saveShowcase() {
+    if (!showcase) return;
+    setShowcaseSaving(true);
+    await saveShowcaseContent(showcase);
+    setShowcaseSaving(false); setShowcaseSaved(true);
+    setTimeout(() => setShowcaseSaved(false), 2500);
+  }
+
+  async function addShowcaseMedia(file: File, type: "image" | "video") {
+    const url = await uploadImage(file, `showcase/${Date.now()}_${file.name}`);
+    const newItem: ShowcaseMediaItem = {
+      id: Date.now().toString(),
+      url,
+      type,
+      order: (showcase?.mediaItems.length ?? 0),
+    };
+    setShowcase((prev) => prev ? { ...prev, mediaItems: [...prev.mediaItems, newItem] } : prev);
+  }
+
+  function removeShowcaseMedia(id: string) {
+    setShowcase((prev) => prev ? { ...prev, mediaItems: prev.mediaItems.filter(m => m.id !== id).map((m, i) => ({ ...m, order: i })) } : prev);
+  }
+
+  function moveShowcaseMedia(id: string, dir: -1 | 1) {
+    setShowcase((prev) => {
+      if (!prev) return prev;
+      const items = [...prev.mediaItems].sort((a,b) => a.order - b.order);
+      const idx = items.findIndex(m => m.id === id);
+      const newIdx = idx + dir;
+      if (newIdx < 0 || newIdx >= items.length) return prev;
+      [items[idx], items[newIdx]] = [items[newIdx], items[idx]];
+      return { ...prev, mediaItems: items.map((m, i) => ({ ...m, order: i })) };
+    });
   }
 
   function updateService(lang: "tr" | "en", idx: number, val: string) {
@@ -425,6 +464,111 @@ service cloud.firestore {
           </Card>
         </div>
       </section>
+
+      {/* ══ SHOWCASE SECTION ════════════════════════ */}
+      {showcase && (
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">Showcase Bölümü</h1>
+            <p className="text-zinc-500 text-sm mt-0.5">Hero altındaki dönüşlü medya ve içerik bölümü</p>
+          </div>
+          <SaveBar onSave={saveShowcase} saving={showcaseSaving} saved={showcaseSaved} />
+        </div>
+
+        <div className="space-y-4">
+          {/* Medya Yönetimi */}
+          <Card title="Medya Listesi" subtitle="2 saniyede bir dönüşlü görüntülenir — görsel ve video destekler">
+            <div className="space-y-3 mb-4">
+              {[...showcase.mediaItems].sort((a,b)=>a.order-b.order).map((item) => (
+                <div key={item.id} className="flex items-center gap-3 bg-zinc-800 rounded-lg p-3">
+                  {/* Thumb */}
+                  <div className="w-20 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-zinc-700">
+                    {item.type === "video" ? (
+                      <video src={item.url} className="w-full h-full object-cover" muted />
+                    ) : (
+                      <img src={item.url} alt="" className="w-full h-full object-cover" />
+                    )}
+                  </div>
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs text-zinc-400 uppercase font-medium">{item.type === "video" ? "🎬 Video" : "🖼️ Görsel"}</span>
+                    <p className="text-xs text-zinc-600 truncate mt-0.5">{item.url.split("/").pop()?.split("?")[0]}</p>
+                  </div>
+                  {/* Order */}
+                  <div className="flex flex-col gap-1">
+                    <button onClick={() => moveShowcaseMedia(item.id, -1)} className="p-1 text-zinc-500 hover:text-white"><ArrowUp size={12} /></button>
+                    <button onClick={() => moveShowcaseMedia(item.id,  1)} className="p-1 text-zinc-500 hover:text-white"><ArrowDown size={12} /></button>
+                  </div>
+                  {/* Delete */}
+                  <button onClick={() => removeShowcaseMedia(item.id)} className="p-2 text-zinc-600 hover:text-red-400 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+              {showcase.mediaItems.length === 0 && (
+                <p className="text-sm text-zinc-600 py-4 text-center">Henüz medya eklenmedi</p>
+              )}
+            </div>
+            {/* Upload buttons */}
+            <div className="flex gap-3">
+              <label className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg cursor-pointer transition-colors">
+                <ImageIcon size={14} /> Görsel Ekle
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if(f) addShowcaseMedia(f, "image"); e.target.value=""; }} />
+              </label>
+              <label className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg cursor-pointer transition-colors">
+                <Video size={14} /> Video Ekle
+                <input type="file" accept="video/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if(f) addShowcaseMedia(f, "video"); e.target.value=""; }} />
+              </label>
+            </div>
+            <p className="text-xs text-zinc-600 mt-2">Ekledikten sonra "Kaydet" butonuna basmayı unutma!</p>
+          </Card>
+
+          {/* Metin İçeriği */}
+          <Card title="Metin İçeriği" subtitle="Sağ taraf yazıları" defaultOpen={false}>
+            <div className="space-y-4">
+              <Field label="Etiket (sol üst küçük yazı)">
+                <input value={showcase.label} onChange={(e) => setShowcase({...showcase, label: e.target.value})} className={INPUT} placeholder="01 — Our Commitment" />
+              </Field>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="🇹🇷 Başlık TR">
+                  <textarea value={showcase.title_tr} onChange={(e) => setShowcase({...showcase, title_tr: e.target.value})} rows={3} className={`${INPUT} resize-none`} />
+                </Field>
+                <Field label="🇬🇧 Başlık EN">
+                  <textarea value={showcase.title_en} onChange={(e) => setShowcase({...showcase, title_en: e.target.value})} rows={3} className={`${INPUT} resize-none`} />
+                </Field>
+                <Field label="🇹🇷 Açıklama TR">
+                  <textarea value={showcase.description_tr} onChange={(e) => setShowcase({...showcase, description_tr: e.target.value})} rows={3} className={`${INPUT} resize-none`} />
+                </Field>
+                <Field label="🇬🇧 Açıklama EN">
+                  <textarea value={showcase.description_en} onChange={(e) => setShowcase({...showcase, description_en: e.target.value})} rows={3} className={`${INPUT} resize-none`} />
+                </Field>
+              </div>
+            </div>
+          </Card>
+
+          {/* Stats */}
+          <Card title="İstatistikler" subtitle="3 adet rakam göstergesi" defaultOpen={false}>
+            <div className="space-y-3">
+              <div className="grid grid-cols-4 gap-2 mb-1">
+                <span className="text-xs text-zinc-600">#</span>
+                <span className="text-xs text-zinc-600">Değer</span>
+                <span className="text-xs text-zinc-600">🇹🇷 Etiket</span>
+                <span className="text-xs text-zinc-600">🇬🇧 Label</span>
+              </div>
+              {([1,2,3] as const).map((n) => (
+                <div key={n} className="grid grid-cols-4 gap-2 items-center">
+                  <span className="text-xs text-zinc-500">Stat {n}</span>
+                  <input value={(showcase as any)[`stat${n}_value`]} onChange={(e) => setShowcase({...showcase, [`stat${n}_value`]: e.target.value} as ShowcaseContent)} className={INPUT} placeholder="120+" />
+                  <input value={(showcase as any)[`stat${n}_label_tr`]} onChange={(e) => setShowcase({...showcase, [`stat${n}_label_tr`]: e.target.value} as ShowcaseContent)} className={INPUT} placeholder="Proje" />
+                  <input value={(showcase as any)[`stat${n}_label_en`]} onChange={(e) => setShowcase({...showcase, [`stat${n}_label_en`]: e.target.value} as ShowcaseContent)} className={INPUT} placeholder="Projects" />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </section>
+      )}
     </div>
   );
 }

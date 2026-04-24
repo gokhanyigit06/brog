@@ -326,3 +326,63 @@ export async function deleteImage(url: string): Promise<void> {
     // ignore if not found
   }
 }
+
+// ─────────────────────────────────────────────
+// SHOWCASE SECTION
+// ─────────────────────────────────────────────
+
+export interface ShowcaseMediaItem {
+  id: string;
+  url: string;
+  type: "image" | "video";
+  order: number;
+}
+
+export interface ShowcaseContent {
+  label: string;
+  title_tr: string;
+  title_en: string;
+  description_tr: string;
+  description_en: string;
+  stat1_value: string;
+  stat1_label_tr: string;
+  stat1_label_en: string;
+  stat2_value: string;
+  stat2_label_tr: string;
+  stat2_label_en: string;
+  stat3_value: string;
+  stat3_label_tr: string;
+  stat3_label_en: string;
+  mediaItems: ShowcaseMediaItem[];
+}
+
+const SHOWCASE_DEFAULT: ShowcaseContent = {
+  label: "01 — Our Commitment",
+  title_tr: "Her projede tutarlı kalite, yenilikçi tasarım",
+  title_en: "Consistent quality in every project, innovative Design",
+  description_tr: "Tasarımın amaca buluştuğu dijital deneyimler yaratıyoruz — yenilik ile netliği harmanlıyoruz.",
+  description_en: "We create digital experiences where design meets purpose — blending innovation with clarity.",
+  stat1_value: "120+",
+  stat1_label_tr: "Tamamlanan Proje",
+  stat1_label_en: "Projects Done",
+  stat2_value: "98%",
+  stat2_label_tr: "Müşteri Memnuniyeti",
+  stat2_label_en: "Client Retention",
+  stat3_value: "5+",
+  stat3_label_tr: "Yıllık Deneyim",
+  stat3_label_en: "Years Experience",
+  mediaItems: [],
+};
+
+export async function getShowcaseContent(): Promise<ShowcaseContent> {
+  const snap = await getDoc(doc(db, "siteContent", "showcase"));
+  if (!snap.exists()) return SHOWCASE_DEFAULT;
+  return { ...SHOWCASE_DEFAULT, ...snap.data() } as ShowcaseContent;
+}
+
+export async function saveShowcaseContent(data: ShowcaseContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "showcase"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}
