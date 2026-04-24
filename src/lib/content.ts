@@ -391,3 +391,30 @@ export async function saveShowcaseContent(data: ShowcaseContent): Promise<void> 
     updatedAt: new Date().toISOString(),
   });
 }
+
+// ─────────────────────────────────────────────
+// MARQUEE SECTION
+// ─────────────────────────────────────────────
+
+export interface MarqueeContent {
+  items: string[];   // text items to display
+  speed: number;     // seconds for one full loop (lower = faster)
+}
+
+const MARQUEE_DEFAULT: MarqueeContent = {
+  items: ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING", "STRATEGY", "MOTION", "UX/UI"],
+  speed: 30,
+};
+
+export async function getMarqueeContent(): Promise<MarqueeContent> {
+  const snap = await getDoc(doc(db, "siteContent", "marquee"));
+  if (!snap.exists()) return MARQUEE_DEFAULT;
+  return { ...MARQUEE_DEFAULT, ...snap.data() } as MarqueeContent;
+}
+
+export async function saveMarqueeContent(data: MarqueeContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "marquee"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}
