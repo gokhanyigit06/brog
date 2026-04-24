@@ -14,7 +14,7 @@ interface NavbarProps {
 function SlideLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
   const fontSize = "clamp(20px, 2.75vw, 38px)";
-  const lineH    = "clamp(24px, 3.25vw, 43px)";
+  const lineH    = "clamp(31px, 4.2vw, 56px)";
 
   return (
     <Link
