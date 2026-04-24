@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { getHeroContent, type HeroContent } from "@/lib/content";
 
 type Phase = "idle" | "card1" | "card2" | "card3" | "expand" | "text";
 
 const CARD_COLORS = [
-  "linear-gradient(160deg, #1a2d42 0%, #0d1c2e 100%)",  // kart 1
-  "linear-gradient(160deg, #142236 0%, #0a1828 100%)",  // kart 2
-  "linear-gradient(160deg, #0a2540 0%, #07182a 100%)",  // kart 3 / hero
+  "linear-gradient(160deg, #1a2d42 0%, #0d1c2e 100%)",
+  "linear-gradient(160deg, #142236 0%, #0a1828 100%)",
+  "linear-gradient(160deg, #0a2540 0%, #07182a 100%)",
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -19,7 +20,14 @@ interface HeroSectionProps {
 
 export default function HeroSection({ lang }: HeroSectionProps) {
   const [phase, setPhase] = useState<Phase>("idle");
+  const [content, setContent] = useState<HeroContent | null>(null);
 
+  // Load Firebase content
+  useEffect(() => {
+    getHeroContent().then(setContent);
+  }, []);
+
+  // Animation sequence
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("card1"), 500);
     const t2 = setTimeout(() => setPhase("card2"), 1250);
@@ -32,19 +40,23 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   const isExpanded = phase === "expand" || phase === "text";
   const showText = phase === "text";
 
-  // Kart görünürlükleri
   const card1Visible = phase === "card1" || phase === "card2" || phase === "card3";
   const card2Visible = phase === "card2" || phase === "card3";
 
-  const services =
-    lang === "tr"
-      ? ["MARKA", "TASARIM", "GELİŞTİRME", "FOTOĞRAF", "PAZARLAMA"]
-      : ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING"];
+  const services = content
+    ? (lang === "tr" ? content.services_tr : content.services_en)
+    : (lang === "tr"
+        ? ["MARKA", "TASARIM", "GELİŞTİRME", "FOTOĞRAF", "PAZARLAMA"]
+        : ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING"]);
 
-  const slogan =
-    lang === "tr"
-      ? "Büyümeyi hızlandıran iş çözümleri üretiyoruz —\nverimli, ölçeklenebilir ve sonuç odaklı."
-      : "We build business solutions that drive real growth —\nefficient, scalable, and profit-focused.";
+  const slogan = content
+    ? (lang === "tr" ? content.slogan_tr : content.slogan_en)
+    : (lang === "tr"
+        ? "Büyümeyi hızlandıran iş çözümleri üretiyoruz —\nverimli, ölçeklenebilir ve sonuç odaklı."
+        : "We build business solutions that drive real growth —\nefficient, scalable, and profit-focused.");
+
+  const titleMain = content?.title_main ?? "VOGO";
+  const titleSub  = content?.title_sub  ?? "lab.";
 
   return (
     <div className="relative w-full h-screen bg-[#080808] overflow-hidden">
@@ -139,7 +151,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             className="absolute left-0 text-white font-black leading-none tracking-tight select-none"
             style={{ fontSize: "clamp(86px, 11.5vw, 154px)", top: "calc(3% + 40px)" }}
           >
-            VOGO
+            {titleMain}
           </motion.h1>
 
           {/* Studio — sağ orta */}
@@ -150,7 +162,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             className="absolute right-0 text-white font-black leading-none tracking-tight select-none"
             style={{ fontSize: "clamp(61px, 8vw, 109px)", top: "38%" }}
           >
-            lab.
+            {titleSub}
           </motion.p>
 
           {/* Servisler — sol alt */}
