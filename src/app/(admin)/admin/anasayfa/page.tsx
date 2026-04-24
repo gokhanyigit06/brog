@@ -324,6 +324,30 @@ service cloud.firestore {
               </div>
             </div>
 
+            {/* Menü Büyük Yazı */}
+            <div className="border-t border-zinc-800 pt-5">
+              <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">Menü Büyük Yazı</p>
+              <p className="text-xs text-zinc-600 mb-3">Hamburger menü açıldığında sol altta görünen büyük yazı (2 satır)</p>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="1. Satır (ör: vogolab)">
+                  <input
+                    value={navbar!.menuBrandLine1 ?? "vogolab"}
+                    onChange={(e) => setNavbar({ ...navbar!, menuBrandLine1: e.target.value })}
+                    className={INPUT}
+                    placeholder="vogolab"
+                  />
+                </Field>
+                <Field label="2. Satır (ör: lab.)">
+                  <input
+                    value={navbar!.menuBrandLine2 ?? "lab."}
+                    onChange={(e) => setNavbar({ ...navbar!, menuBrandLine2: e.target.value })}
+                    className={INPUT}
+                    placeholder="lab."
+                  />
+                </Field>
+              </div>
+            </div>
+
             {/* Menü Arka Plan */}
             <div className="border-t border-zinc-800 pt-5">
               <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">Menü Arka Plan Görseli</p>

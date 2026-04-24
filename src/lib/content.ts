@@ -38,7 +38,9 @@ export interface NavbarContent {
   email: string;
   phone: string;
   location: string;
-  menuBgImage: string;        // optional menu overlay background image
+  menuBgImage: string;
+  menuBrandLine1: string;     // big text line 1 in menu overlay (e.g. "vogolab")
+  menuBrandLine2: string;     // big text line 2 in menu overlay (e.g. "lab.")
   social_x: string;
   social_dribbble: string;
   social_instagram: string;
@@ -143,6 +145,8 @@ const NAVBAR_DEFAULT: NavbarContent = {
   phone: "+90 555 000 0000",
   location: "Istanbul, Turkey",
   menuBgImage: "",
+  menuBrandLine1: "vogolab",
+  menuBrandLine2: "lab.",
   social_x: "https://x.com",
   social_dribbble: "https://dribbble.com",
   social_instagram: "https://instagram.com",

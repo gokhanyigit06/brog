@@ -98,11 +98,13 @@ export default function Navbar({ lang }: NavbarProps) {
     { href: nbData?.social_linkedin  || "https://linkedin.com",  label: "LinkedIn"  },
   ];
 
-  const brandText   = nbData?.brandText   || "vogolab";
-  const email       = nbData?.email       || "hello@brog.com";
-  const phone       = nbData?.phone       || "+90 555 000 0000";
-  const location    = nbData?.location    || "Istanbul, Turkey";
-  const menuBgImage = nbData?.menuBgImage || "";
+  const brandText      = nbData?.brandText      || "vogolab";
+  const menuBrandLine1 = nbData?.menuBrandLine1 || "vogolab";
+  const menuBrandLine2 = nbData?.menuBrandLine2 || "lab.";
+  const email          = nbData?.email          || "hello@brog.com";
+  const phone          = nbData?.phone          || "+90 555 000 0000";
+  const location       = nbData?.location       || "Istanbul, Turkey";
+  const menuBgImage    = nbData?.menuBgImage    || "";
 
   return (
     <>
@@ -197,8 +199,8 @@ export default function Navbar({ lang }: NavbarProps) {
                 className="text-white font-black leading-none tracking-tight"
                 style={{ fontSize: "clamp(48px, 6.4vw, 88px)", marginTop: "48px" }}
               >
-                <div>{nbData?.brandText?.split(" ")[0] || "VOGO"}</div>
-                <div>{nbData?.brandText?.split(" ")[1] || "lab."}</div>
+                <div>{menuBrandLine1}</div>
+                <div>{menuBrandLine2}</div>
               </div>
 
               {/* Clock */}
