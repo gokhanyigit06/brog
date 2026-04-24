@@ -21,7 +21,7 @@ export default async function LangLayout({
 
   return (
     <html lang={lang}>
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
