@@ -22,20 +22,30 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [content, setContent] = useState<HeroContent | null>(null);
 
-  // Load Firebase content
+  const [contentReady, setContentReady] = useState(false);
+
+  // Load Firebase content first
   useEffect(() => {
-    getHeroContent().then(setContent);
+    // Max 1.5s wait — then proceed with defaults
+    const timeout = setTimeout(() => setContentReady(true), 1500);
+    getHeroContent().then((data) => {
+      setContent(data);
+      setContentReady(true);
+      clearTimeout(timeout);
+    }).catch(() => setContentReady(true));
+    return () => clearTimeout(timeout);
   }, []);
 
-  // Animation sequence
+  // Animation sequence — only starts after content is ready
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("card1"), 500);
-    const t2 = setTimeout(() => setPhase("card2"), 1250);
-    const t3 = setTimeout(() => setPhase("card3"), 2000);
-    const t4 = setTimeout(() => setPhase("expand"), 2800);
-    const t5 = setTimeout(() => setPhase("text"), 4100);
+    if (!contentReady) return;
+    const t1 = setTimeout(() => setPhase("card1"), 300);
+    const t2 = setTimeout(() => setPhase("card2"), 1050);
+    const t3 = setTimeout(() => setPhase("card3"), 1800);
+    const t4 = setTimeout(() => setPhase("expand"), 2600);
+    const t5 = setTimeout(() => setPhase("text"), 3900);
     return () => [t1, t2, t3, t4, t5].forEach(clearTimeout);
-  }, []);
+  }, [contentReady]);
 
   const isExpanded = phase === "expand" || phase === "text";
   const showText = phase === "text";
