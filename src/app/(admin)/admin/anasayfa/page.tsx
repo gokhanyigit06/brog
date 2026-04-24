@@ -6,6 +6,7 @@ import {
   getNavbarContent, saveNavbarContent, type NavbarContent,
   getShowcaseContent, saveShowcaseContent, type ShowcaseContent, type ShowcaseMediaItem,
   getProjectsContent, saveProjectsContent, type ProjectsContent, type ProjectItem,
+  getWhyContent, saveWhyContent, type WhyContent, type WhyFeature,
   uploadImage,
 } from "@/lib/content";
 import { Save, Plus, Trash2, RefreshCw, Upload, Image as ImageIcon, ChevronDown, ChevronUp, Video, ArrowUp, ArrowDown } from "lucide-react";
@@ -110,6 +111,7 @@ export default function AnasayfaAdmin() {
   const [navbar, setNavbar] = useState<NavbarContent | null>(null);
   const [showcase, setShowcase] = useState<ShowcaseContent | null>(null);
   const [projects, setProjects] = useState<ProjectsContent | null>(null);
+  const [why, setWhy] = useState<WhyContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -121,10 +123,12 @@ export default function AnasayfaAdmin() {
   const [showcaseSaved, setShowcaseSaved] = useState(false);
   const [projectsSaving, setProjectsSaving] = useState(false);
   const [projectsSaved, setProjectsSaved] = useState(false);
+  const [whySaving, setWhySaving] = useState(false);
+  const [whySaved, setWhySaved] = useState(false);
 
   useEffect(() => {
-    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent(), getProjectsContent()])
-      .then(([h, n, s, p]) => { setHero(h); setNavbar(n); setShowcase(s); setProjects(p); setLoading(false); })
+    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent(), getProjectsContent(), getWhyContent()])
+      .then(([h, n, s, p, w]) => { setHero(h); setNavbar(n); setShowcase(s); setProjects(p); setWhy(w); setLoading(false); })
       .catch((err) => { console.error("Firebase error:", err); setError(err?.message || "Firebase bağlantı hatası"); setLoading(false); });
   }, []);
 
@@ -711,6 +715,89 @@ service cloud.firestore {
             >
               <Plus size={14} /> Yeni Proje Ekle
             </button>
+          </Card>
+        </div>
+      </section>
+      )}
+
+      {/* ══ WHY SECTION ══════════════════════════ */}
+      {why && (
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">Neden Biz Bölümü</h1>
+            <p className="text-zinc-500 text-sm mt-0.5">Medya kutusu ve 4 özellik kartı</p>
+          </div>
+          <SaveBar onSave={async () => { setWhySaving(true); await saveWhyContent(why); setWhySaving(false); setWhySaved(true); setTimeout(() => setWhySaved(false), 2500); }} saving={whySaving} saved={whySaved} />
+        </div>
+        <div className="space-y-4">
+          {/* Başlık */}
+          <Card title="Başlık" subtitle="Sol üst kısım" defaultOpen={false}>
+            <div className="grid grid-cols-3 gap-3">
+              <Field label="Etiket (ör: 03)">
+                <input value={why.label} onChange={(e) => setWhy({...why, label: e.target.value})} className={INPUT} placeholder="03" />
+              </Field>
+              <Field label="🇹🇷 Başlık TR">
+                <input value={why.title_tr} onChange={(e) => setWhy({...why, title_tr: e.target.value})} className={INPUT} placeholder="Neden Biz?" />
+              </Field>
+              <Field label="🇬🇧 Title EN">
+                <input value={why.title_en} onChange={(e) => setWhy({...why, title_en: e.target.value})} className={INPUT} placeholder="Why Brog?" />
+              </Field>
+            </div>
+          </Card>
+
+          {/* Medya Kutusu */}
+          <Card title="Sağ Medya Kutusu" subtitle="250 × 170 px — görsel veya video">
+            <div className="flex items-start gap-4 mb-4">
+              {why.mediaUrl ? (
+                <div className="w-40 h-24 rounded-lg overflow-hidden bg-zinc-700 flex-shrink-0">
+                  {why.mediaType === "video"
+                    ? <video src={why.mediaUrl} className="w-full h-full object-cover" muted />
+                    : <img src={why.mediaUrl} alt="" className="w-full h-full object-cover" />}
+                </div>
+              ) : (
+                <div className="w-40 h-24 rounded-lg bg-zinc-700 flex-shrink-0 flex items-center justify-center"><ImageIcon size={18} className="text-zinc-500" /></div>
+              )}
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white text-xs rounded-lg cursor-pointer transition-colors">
+                  <ImageIcon size={12} /> Görsel Yükle
+                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const f=e.target.files?.[0]; if(!f) return; const url=await uploadImage(f,`why/${Date.now()}_${f.name}`); setWhy({...why, mediaUrl: url, mediaType: "image"}); e.target.value=""; }} />
+                </label>
+                <label className="flex items-center gap-2 px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white text-xs rounded-lg cursor-pointer transition-colors">
+                  <Video size={12} /> Video Yükle
+                  <input type="file" accept="video/*" className="hidden" onChange={async (e) => { const f=e.target.files?.[0]; if(!f) return; const url=await uploadImage(f,`why/${Date.now()}_${f.name}`); setWhy({...why, mediaUrl: url, mediaType: "video"}); e.target.value=""; }} />
+                </label>
+                {why.mediaUrl && <button onClick={() => setWhy({...why, mediaUrl: ""})} className="text-xs text-red-400 hover:text-red-300 text-left">Kaldır</button>}
+              </div>
+            </div>
+          </Card>
+
+          {/* Özellik Kartları */}
+          <Card title="Özellik Kartları" subtitle="4 adet — ikon, başlık, açıklama">
+            <div className="grid grid-cols-2 gap-3">
+              {[...why.features].sort((a,b)=>a.order-b.order).map((f) => (
+                <div key={f.id} className="bg-zinc-800 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <input value={f.icon} onChange={(e) => setWhy(prev => prev ? {...prev, features: prev.features.map(x => x.id===f.id ? {...x, icon: e.target.value} : x)} : prev)} className="w-14 text-center bg-zinc-700 border border-zinc-600 rounded px-2 py-1.5 text-sm text-white" placeholder="✦" />
+                    <span className="text-xs text-zinc-500">ikon / emoji</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Field label="🇹🇷 Başlık TR">
+                      <textarea value={f.title_tr} onChange={(e) => setWhy(prev => prev ? {...prev, features: prev.features.map(x => x.id===f.id ? {...x, title_tr: e.target.value} : x)} : prev)} rows={2} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                    <Field label="🇬🇧 Title EN">
+                      <textarea value={f.title_en} onChange={(e) => setWhy(prev => prev ? {...prev, features: prev.features.map(x => x.id===f.id ? {...x, title_en: e.target.value} : x)} : prev)} rows={2} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                    <Field label="🇹🇷 Açıklama TR">
+                      <textarea value={f.description_tr} onChange={(e) => setWhy(prev => prev ? {...prev, features: prev.features.map(x => x.id===f.id ? {...x, description_tr: e.target.value} : x)} : prev)} rows={3} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                    <Field label="🇬🇧 Description EN">
+                      <textarea value={f.description_en} onChange={(e) => setWhy(prev => prev ? {...prev, features: prev.features.map(x => x.id===f.id ? {...x, description_en: e.target.value} : x)} : prev)} rows={3} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
       </section>

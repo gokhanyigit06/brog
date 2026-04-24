@@ -4,6 +4,7 @@ import HeroSection from "@/components/sections/hero-section";
 import ShowcaseSection from "@/components/sections/showcase-section";
 import MarqueeSection from "@/components/sections/marquee-section";
 import ProjectsSection from "@/components/sections/projects-section";
+import WhySection from "@/components/sections/why-section";
 
 export default async function HomePage({
   params,
@@ -19,6 +20,7 @@ export default async function HomePage({
       <ShowcaseSection lang={lang} />
       <MarqueeSection />
       <ProjectsSection lang={lang} />
+      <WhySection lang={lang} />
     </main>
   );
 }

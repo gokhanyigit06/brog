@@ -465,3 +465,53 @@ export async function saveProjectsContent(data: ProjectsContent): Promise<void> 
     updatedAt: new Date().toISOString(),
   });
 }
+
+// ─────────────────────────────────────────────
+// WHY SECTION
+// ─────────────────────────────────────────────
+
+export interface WhyFeature {
+  id: string;
+  icon: string;          // emoji or short symbol
+  title_tr: string;
+  title_en: string;
+  description_tr: string;
+  description_en: string;
+  order: number;
+}
+
+export interface WhyContent {
+  label: string;
+  title_tr: string;
+  title_en: string;
+  mediaUrl: string;
+  mediaType: "image" | "video";
+  features: WhyFeature[];
+}
+
+const WHY_DEFAULT: WhyContent = {
+  label: "03",
+  title_tr: "Neden Biz?",
+  title_en: "Why Brog?",
+  mediaUrl: "",
+  mediaType: "image",
+  features: [
+    { id: "1", icon: "✦", title_tr: "Strateji &\nAraştırma", title_en: "Strategy &\nResearch", description_tr: "Özelleştirilmiş stratejiler geliştirip derinlemesine araştırmalar yaparak kritik içgörüleri ortaya çıkarıyoruz.", description_en: "We begin by shaping tailored strategies and performing in-depth research to reveal critical insights.", order: 0 },
+    { id: "2", icon: "◎", title_tr: "Tasarım &\nPrototip", title_en: "Design &\nPrototype", description_tr: "Fikirleri ilgi çekici tasarımlara ve işlevsel prototiplere dönüştürerek vizyonunuzu hayata geçiriyoruz.", description_en: "We transform ideas into engaging designs and functional prototypes that bring your vision to life.", order: 1 },
+    { id: "3", icon: "▦", title_tr: "Geliştir, Test Et &\nOptimize Et", title_en: "Build, Test &\nOptimize", description_tr: "Güvenilir çözümler üretir, kapsamlı testler yapar ve en iyi performans için ince ayar yapıyoruz.", description_en: "We craft reliable solutions, perform thorough testing, and fine-tune for top performance.", order: 2 },
+    { id: "4", icon: "↗", title_tr: "Lansman &\nDestek", title_en: "Launch &\nSupport", description_tr: "Hassasiyetle lansman yapıyor ve ürününüzün büyümesine yardımcı olmak için sürekli destek sağlıyoruz.", description_en: "We launch with precision and provide ongoing support to help your product grow.", order: 3 },
+  ],
+};
+
+export async function getWhyContent(): Promise<WhyContent> {
+  const snap = await getDoc(doc(db, "siteContent", "why"));
+  if (!snap.exists()) return WHY_DEFAULT;
+  return { ...WHY_DEFAULT, ...snap.data() } as WhyContent;
+}
+
+export async function saveWhyContent(data: WhyContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "why"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}
