@@ -173,11 +173,11 @@ export default function Navbar({ lang }: NavbarProps) {
             style={{ display: "flex", alignItems: "stretch", paddingTop: "100px", paddingBottom: "60px" }}
           >
             {/* LEFT: brand + clock + socials */}
-            <div className="flex flex-col justify-between w-1/2" style={{ gap: "24px" }}>
+            <div className="flex flex-col justify-center w-1/2" style={{ gap: "24px" }}>
               {/* Brand */}
               <div
                 className="text-white font-black leading-none tracking-tight"
-                style={{ fontSize: "clamp(48px, 6.4vw, 88px)" }}
+                style={{ fontSize: "clamp(48px, 6.4vw, 88px)", marginTop: "48px" }}
               >
                 <div>VOGO</div>
                 <div>lab.</div>
