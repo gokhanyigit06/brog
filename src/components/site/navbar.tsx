@@ -26,7 +26,7 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
       style={{ overflow: "hidden", height: lineH }}
     >
       {/* Text wrapper — clips the two sliding spans */}
-      <div className="relative" style={{ height: lineH, overflow: "hidden" }}>
+      <div className="relative flex-1" style={{ height: lineH, overflow: "hidden" }}>
         {/* Top span — slides up on hover */}
         <motion.span
           animate={{ y: hovered ? "-100%" : "0%" }}
@@ -184,7 +184,9 @@ export default function Navbar({ lang }: NavbarProps) {
               </div>
 
               {/* Clock */}
-              <LiveClock />
+              <div style={{ marginTop: "5px" }}>
+                <LiveClock />
+              </div>
 
               {/* Socials */}
               <div className="flex items-center gap-6 flex-wrap">
