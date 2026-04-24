@@ -25,7 +25,7 @@ export default function Navbar({ lang }: NavbarProps) {
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between section-container py-5">
         {/* Logo */}
         <Link href={`/${lang}`} className="flex items-center gap-2">
-          <span className="w-5 h-5 rounded-full border border-white/60 flex items-center justify-center">
+          <span className="w-5 h-5 rounded-full border border-white flex items-center justify-center">
             <span className="w-1.5 h-1.5 rounded-full bg-white" />
           </span>
           <span className="text-white font-bold text-base tracking-widest uppercase">
@@ -33,41 +33,44 @@ export default function Navbar({ lang }: NavbarProps) {
           </span>
         </Link>
 
-        {/* Center: contact info */}
-        <div className="hidden md:flex items-start gap-8 text-white/70 text-xs">
-          <div>
-            <p className="text-white/40 uppercase tracking-widest text-[10px] mb-0.5">Email</p>
-            <p>hello@brog.com</p>
+        {/* Right side: contact info + hamburger */}
+        <div className="flex items-center gap-8">
+          {/* Contact info — hidden on mobile */}
+          <div className="hidden md:flex items-start gap-7">
+            <div>
+              <p className="text-white text-[11px] font-semibold mb-0.5">Email</p>
+              <p className="text-white text-[11px]">hello@brog.com</p>
+            </div>
+            <div>
+              <p className="text-white text-[11px] font-semibold mb-0.5">Phone</p>
+              <p className="text-white text-[11px]">+90 555 000 0000</p>
+            </div>
+            <div>
+              <p className="text-white text-[11px] font-semibold mb-0.5">Location</p>
+              <p className="text-white text-[11px]">Istanbul, Turkey</p>
+            </div>
           </div>
-          <div>
-            <p className="text-white/40 uppercase tracking-widest text-[10px] mb-0.5">Phone</p>
-            <p>+90 555 000 0000</p>
-          </div>
-          <div>
-            <p className="text-white/40 uppercase tracking-widest text-[10px] mb-0.5">Location</p>
-            <p>Istanbul, Turkey</p>
-          </div>
-        </div>
 
-        {/* Hamburger */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex flex-col gap-1.5 cursor-pointer group"
-          aria-label="Menu"
-        >
-          <span
-            className={cn(
-              "block h-px w-7 bg-white transition-all duration-300 origin-center",
-              menuOpen && "rotate-45 translate-y-[5px]"
-            )}
-          />
-          <span
-            className={cn(
-              "block h-px w-7 bg-white transition-all duration-300",
-              menuOpen && "-rotate-45 -translate-y-[3px]"
-            )}
-          />
-        </button>
+          {/* Hamburger */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="flex flex-col gap-[5px] cursor-pointer"
+            aria-label="Menu"
+          >
+            <span
+              className={cn(
+                "block h-px w-6 bg-white transition-all duration-300 origin-center",
+                menuOpen && "rotate-45 translate-y-[7px]"
+              )}
+            />
+            <span
+              className={cn(
+                "block h-px w-6 bg-white transition-all duration-300",
+                menuOpen && "-rotate-45 -translate-y-[4px]"
+              )}
+            />
+          </button>
+        </div>
       </header>
 
       {/* Full-screen menu overlay */}
