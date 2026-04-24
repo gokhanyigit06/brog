@@ -111,7 +111,7 @@ export default function ProjectsSection({ lang }: Props) {
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
           <div>
             <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 500, marginBottom: 16, letterSpacing: "0.06em" }}>
-              ({content?.label ?? "02"}) PROJECTS
+              ({content?.label ?? "02"}) {lang === "tr" ? "PROJELER" : "PROJECTS"}
             </p>
             <h2 style={{
               fontSize: "clamp(52px, 7vw, 100px)",

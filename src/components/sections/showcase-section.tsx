@@ -129,7 +129,7 @@ export default function ShowcaseSection({ lang }: Props) {
             <div>
               {/* Label */}
               <p style={{ fontSize: 13, letterSpacing: "0.06em", color: "#6b7280", fontWeight: 500, marginBottom: 28 }}>
-                ({content?.label ?? "01"}) Our Commitment
+                ({content?.label ?? "01"}) {lang === "tr" ? "Taahhüdümüz" : "Our Commitment"}
               </p>
 
               {/* Title — massive */}

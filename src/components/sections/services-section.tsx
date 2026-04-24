@@ -34,7 +34,7 @@ export default function ServicesSection({ lang }: Props) {
         {/* ── Header ── */}
         <div style={{ marginBottom: 64 }}>
           <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", fontWeight: 500, letterSpacing: "0.06em", marginBottom: 24 }}>
-            ({content?.label ?? "04"}) Our Services
+            ({content?.label ?? "04"}) {lang === "tr" ? "Hizmetlerimiz" : "Our Services"}
           </p>
           <h2 style={{
             fontSize: "clamp(64px, 9vw, 120px)",

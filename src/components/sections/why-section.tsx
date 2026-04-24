@@ -26,7 +26,7 @@ export default function WhySection({ lang }: Props) {
           <div style={{ flex: 1 }}>
             {/* Label */}
             <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 500, marginBottom: 20, letterSpacing: "0.06em" }}>
-              ({content?.label ?? "03"}) Why Choose Brog
+              ({content?.label ?? "03"}) {lang === "tr" ? "Neden Bizi Seçmelisiniz?" : "Why Choose Brog"}
             </p>
 
             {/* Massive title */}

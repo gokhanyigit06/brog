@@ -91,7 +91,7 @@ export default function FaqSection({ lang }: Props) {
           {/* LEFT: label + massive title */}
           <div style={{ position: "sticky", top: 120 }}>
             <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 500, letterSpacing: "0.06em", marginBottom: 28 }}>
-              ({content?.label ?? "05"}) FAQ
+              ({content?.label ?? "05"}) {lang === "tr" ? "SSS" : "FAQ"}
             </p>
             <h2 style={{
               fontSize: "clamp(52px, 7.5vw, 96px)",
