@@ -88,11 +88,12 @@ export default function ServicesSection({ lang }: Props) {
                       style={{
                         display: "inline-block",
                         padding: "6px 14px",
-                        border: "1px solid rgba(255,255,255,0.25)",
+                        background: "#ffffff",
+                        border: "none",
                         borderRadius: 999,
                         fontSize: 12,
-                        fontWeight: 500,
-                        color: "#ffffff",
+                        fontWeight: 600,
+                        color: "#0a0a0a",
                         letterSpacing: "0.02em",
                         lineHeight: 1,
                       }}
