@@ -5,10 +5,9 @@ import { motion } from "framer-motion";
 
 type Phase = "idle" | "card1" | "card2" | "expand" | "text";
 
-// Placeholder card colors - admin will replace with real media via Firebase
 const CARD_COLORS = [
-  "linear-gradient(135deg, #1c2f45 0%, #0e1c2a 100%)", // card 1
-  "linear-gradient(135deg, #0f2540 0%, #071829 100%)", // card 2 / hero
+  "linear-gradient(135deg, #1c2f45 0%, #0e1c2a 100%)",
+  "linear-gradient(135deg, #0a2540 0%, #07182a 100%)",
 ];
 
 interface HeroSectionProps {
@@ -29,26 +28,28 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   const isExpanded = phase === "expand" || phase === "text";
   const showText = phase === "text";
 
-  const services = lang === "tr"
-    ? ["Marka", "Tasarım", "Geliştirme", "Fotoğraf", "Pazarlama"]
-    : ["Branding", "Design", "Development", "Photography", "Marketing"];
+  const services =
+    lang === "tr"
+      ? ["MARKA", "TASARIM", "GELİŞTİRME", "FOTOĞRAF", "PAZARLAMA"]
+      : ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING"];
 
-  const slogan = lang === "tr"
-    ? "Büyümeyi hızlandıran iş çözümleri\nüretiyoruz — verimli, ölçeklenebilir\nve sonuç odaklı."
-    : "We build business solutions that\ndrive real growth — efficient,\nscalable, and profit-focused.";
+  const slogan =
+    lang === "tr"
+      ? "Büyümeyi hızlandıran iş çözümleri üretiyoruz —\nverimli, ölçeklenebilir ve sonuç odaklı."
+      : "We build business solutions that drive real growth —\nefficient, scalable, and profit-focused.";
 
   return (
     <div className="relative w-full h-screen bg-[#080808] overflow-hidden">
 
-      {/* ── Card 1 — small upper card ── */}
+      {/* ── Card 1 — small upper placeholder ── */}
       <motion.div
         initial={{ opacity: 0, y: 80 }}
         animate={{
-          opacity: phase === "card1" ? 1 : phase === "card2" ? 0.6 : 0,
+          opacity: phase === "card1" ? 1 : phase === "card2" ? 0.5 : 0,
           y: phase === "idle" ? 80 : 0,
         }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute rounded-lg overflow-hidden"
+        className="absolute rounded-lg"
         style={{
           top: "22%",
           left: "50%",
@@ -60,9 +61,9 @@ export default function HeroSection({ lang }: HeroSectionProps) {
         }}
       />
 
-      {/* ── Card 2 / Hero — starts as card, expands to fill ── */}
+      {/* ── Card 2 / Hero — starts small, expands to fill ── */}
       <motion.div
-        initial={{ clipPath: "inset(36% 22% 8% 22% round 10px)", opacity: 0 }}
+        initial={{ clipPath: "inset(36% 14% 8% 14% round 10px)", opacity: 0 }}
         animate={{
           opacity: phase === "idle" ? 0 : 1,
           clipPath: isExpanded
@@ -79,66 +80,88 @@ export default function HeroSection({ lang }: HeroSectionProps) {
         className="absolute inset-0 z-10"
         style={{ background: CARD_COLORS[1] }}
       >
-        {/* Dark bottom gradient for text legibility */}
+        {/* Subtle dark vignette for text legibility */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.6) 100%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)",
           }}
         />
       </motion.div>
 
+      {/* ── Bottom white gradient — animates in after text ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: showText ? 1 : 0 }}
+        transition={{ duration: 1.4, delay: 0.3, ease: "easeInOut" }}
+        className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none"
+        style={{
+          height: "28%",
+          background: "linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)",
+        }}
+      />
+
       {/* ── Text overlay ── */}
-      <div className="section-container absolute inset-0 z-20 flex flex-col justify-between pointer-events-none pt-[88px] pb-14">
-        {/* Top: Big title */}
-        <div className="flex justify-between items-start">
+      {/* section-container gives 150px horizontal padding */}
+      <div className="section-container absolute inset-0 z-20 pointer-events-none pt-[72px] pb-14">
+        {/* Inner relative wrapper so absolute children respect the 150px margin */}
+        <div className="relative h-full w-full">
+
+          {/* Brog® — top left */}
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 30 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-white font-bold leading-none"
-            style={{ fontSize: "clamp(64px, 9vw, 120px)" }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 24 }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute top-0 left-0 text-white font-black leading-none tracking-tight select-none"
+            style={{ fontSize: "clamp(72px, 9.5vw, 130px)" }}
           >
             Brog®
           </motion.h1>
 
+          {/* Studio — right, vertical mid */}
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 30 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-white font-bold leading-none self-end"
-            style={{ fontSize: "clamp(64px, 9vw, 120px)" }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 24 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute right-0 text-white font-black leading-none tracking-tight select-none"
+            style={{
+              fontSize: "clamp(72px, 9.5vw, 130px)",
+              top: "40%",
+            }}
           >
             Studio
           </motion.p>
-        </div>
 
-        {/* Bottom: Services + Slogan */}
-        <div className="flex justify-between items-end">
+          {/* Services — bottom left */}
           <motion.ul
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-0.5"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 16 }}
+            transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute bottom-0 left-0 space-y-0"
           >
             {services.map((s) => (
               <li
                 key={s}
-                className="text-white font-semibold tracking-widest uppercase"
-                style={{ fontSize: "clamp(11px, 1.1vw, 15px)" }}
+                className="text-white font-bold uppercase tracking-widest leading-snug"
+                style={{ fontSize: "clamp(12px, 1.2vw, 15px)" }}
               >
                 {s}
               </li>
             ))}
           </motion.ul>
 
+          {/* Slogan — bottom right */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-white/80 text-right max-w-xs leading-relaxed"
-            style={{ fontSize: "clamp(13px, 1vw, 15px)", whiteSpace: "pre-line" }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 16 }}
+            transition={{ duration: 0.65, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute bottom-0 right-0 text-white leading-relaxed text-right"
+            style={{
+              fontSize: "clamp(12px, 1vw, 14px)",
+              maxWidth: "340px",
+              whiteSpace: "pre-line",
+            }}
           >
             {slogan}
           </motion.p>
