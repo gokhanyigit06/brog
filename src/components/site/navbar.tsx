@@ -22,16 +22,16 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex items-center gap-3 group"
+      className="flex items-center justify-end gap-2 group w-full"
       style={{ overflow: "hidden", height: lineH }}
     >
       {/* Text wrapper — clips the two sliding spans */}
-      <div className="relative" style={{ height: lineH, overflow: "hidden", minWidth: "200px" }}>
+      <div className="relative" style={{ height: lineH, overflow: "hidden" }}>
         {/* Top span — slides up on hover */}
         <motion.span
           animate={{ y: hovered ? "-100%" : "0%" }}
           transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 flex items-center text-white font-bold"
+          className="absolute inset-0 flex items-center justify-end text-white font-bold text-right"
           style={{ fontSize }}
         >
           {label}
@@ -40,7 +40,7 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
         <motion.span
           animate={{ y: hovered ? "0%" : "100%" }}
           transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 flex items-center text-white font-bold"
+          className="absolute inset-0 flex items-center justify-end text-white font-bold text-right"
           style={{ fontSize }}
         >
           {label}
@@ -49,7 +49,7 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
 
       {/* Arrow */}
       <motion.span
-        animate={{ y: hovered ? "-100%" : "0%", opacity: hovered ? 0 : 1 }}
+        animate={{ opacity: hovered ? 0 : 1 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         className="text-white text-sm flex-shrink-0"
       >↗</motion.span>
