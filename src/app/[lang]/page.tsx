@@ -1,18 +1,18 @@
 import { type Locale } from "@/i18n";
-import { getTranslations } from "@/i18n";
+import Navbar from "@/components/site/navbar";
+import HeroSection from "@/components/sections/hero-section";
 
 export default async function HomePage({
   params,
 }: {
-  params: Promise<{ lang: Locale }>;
+  params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const t = getTranslations(lang);
 
   return (
-    <main>
-      <h1>{t.home.hero.title}</h1>
-      <p>{t.home.hero.subtitle}</p>
+    <main className="bg-[#080808] min-h-screen">
+      <Navbar lang={lang as Locale} />
+      <HeroSection lang={lang} />
     </main>
   );
 }
