@@ -137,7 +137,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
             transition={{ duration: 0.75, ease: EASE }}
             className="absolute left-0 text-white font-black leading-none tracking-tight select-none"
-            style={{ fontSize: "clamp(86px, 11.5vw, 154px)", top: "8%" }}
+            style={{ fontSize: "clamp(86px, 11.5vw, 154px)", top: "3%" }}
           >
             VOGO
           </motion.h1>
@@ -148,7 +148,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
             transition={{ duration: 0.75, delay: 0.1, ease: EASE }}
             className="absolute right-0 text-white font-black leading-none tracking-tight select-none"
-            style={{ fontSize: "clamp(61px, 8vw, 109px)", top: "40%" }}
+            style={{ fontSize: "clamp(61px, 8vw, 109px)", top: "38%" }}
           >
             lab.
           </motion.p>
@@ -158,14 +158,13 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 14 }}
             transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
-            className="absolute left-0 space-y-0.5"
-            style={{ bottom: "18%" }}
-          >
+            className="absolute left-0 space-y-1"
+            style={{ top: "55%" }}>
             {services.map((s) => (
               <li
                 key={s}
-                className="text-white font-bold uppercase tracking-widest leading-snug"
-                style={{ fontSize: "clamp(16px, 1.7vw, 21px)" }}
+                className="text-white font-bold uppercase tracking-widest leading-tight"
+                style={{ fontSize: "clamp(20px, 2.2vw, 28px)" }}
               >
                 {s}
               </li>
@@ -179,10 +178,10 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
             className="absolute right-0 text-white leading-relaxed text-right"
             style={{
-              fontSize: "clamp(14px, 1.3vw, 18px)",
-              maxWidth: "380px",
+              fontSize: "clamp(14px, 1.2vw, 17px)",
+              maxWidth: "400px",
               whiteSpace: "pre-line",
-              bottom: "18%",
+              top: "52%",
             }}
           >
             {slogan}
