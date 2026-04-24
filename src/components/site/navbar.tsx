@@ -14,7 +14,7 @@ interface NavbarProps {
 function SlideLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
   const fontSize = "clamp(20px, 2.75vw, 38px)";
-  const rowH = 52; // px — fixed so framer-motion can animate correctly
+  const rowH = 52;
 
   return (
     <Link
@@ -22,28 +22,27 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex items-center justify-end gap-2 w-full"
-      style={{ overflow: "hidden", height: `${rowH}px` }}
+      style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "8px", width: "100%" }}
     >
-      {/* Stacked text roller */}
-      <motion.div
-        initial={false}
-        animate={{ y: hovered ? -rowH : 0 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        style={{ display: "flex", flexDirection: "column", willChange: "transform" }}
-      >
-        <div className="text-white font-bold text-right"
-          style={{ height: `${rowH}px`, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-          {label}
-        </div>
-        <div className="text-white font-bold text-right"
-          style={{ height: `${rowH}px`, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-          {label}
-        </div>
-      </motion.div>
+      {/* Clip container — overflow hidden here, not on Link */}
+      <div style={{ flex: 1, overflow: "hidden", height: `${rowH}px` }}>
+        <motion.div
+          initial={false}
+          animate={{ y: hovered ? -rowH : 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          <div style={{ height: `${rowH}px`, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end", color: "white", fontWeight: 700 }}>
+            {label}
+          </div>
+          <div style={{ height: `${rowH}px`, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end", color: "white", fontWeight: 700 }}>
+            {label}
+          </div>
+        </motion.div>
+      </div>
 
       {/* Arrow */}
-      <span className="text-white text-sm flex-shrink-0 self-center">↗</span>
+      <span style={{ color: "white", fontSize: "13px", flexShrink: 0 }}>↗</span>
     </Link>
   );
 }
