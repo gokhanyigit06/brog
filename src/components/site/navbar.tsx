@@ -56,27 +56,27 @@ export default function Navbar({ lang }: NavbarProps) {
             onClick={() => setMenuOpen(!menuOpen)}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
-            className="flex flex-col gap-[7px] cursor-pointer"
+            className="flex flex-col items-end gap-[7px] cursor-pointer"
             aria-label="Menu"
           >
             <motion.span
               animate={{
-                width: menuOpen ? "28px" : hovered ? "28px" : "18px",
+                width: menuOpen ? "38px" : hovered ? "38px" : "22px",
                 rotate: menuOpen ? 45 : 0,
                 y: menuOpen ? 7 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="block h-[2px] bg-white origin-left"
+              className="block h-[2px] bg-white origin-right"
               style={{ display: "block" }}
             />
             <motion.span
               animate={{
-                width: menuOpen ? "28px" : hovered ? "18px" : "28px",
+                width: menuOpen ? "38px" : hovered ? "22px" : "38px",
                 rotate: menuOpen ? -45 : 0,
                 y: menuOpen ? -7 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="block h-[2px] bg-white origin-left"
+              className="block h-[2px] bg-white origin-right"
               style={{ display: "block" }}
             />
           </button>
