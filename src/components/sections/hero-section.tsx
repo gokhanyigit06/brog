@@ -20,10 +20,10 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   const [phase, setPhase] = useState<Phase>("idle");
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("card1"), 400);
-    const t2 = setTimeout(() => setPhase("card2"), 950);
-    const t3 = setTimeout(() => setPhase("expand"), 1550);
-    const t4 = setTimeout(() => setPhase("text"), 2600);
+    const t1 = setTimeout(() => setPhase("card1"), 500);
+    const t2 = setTimeout(() => setPhase("card2"), 1200);
+    const t3 = setTimeout(() => setPhase("expand"), 2100);
+    const t4 = setTimeout(() => setPhase("text"), 3400);
     return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, []);
 
@@ -45,12 +45,12 @@ export default function HeroSection({ lang }: HeroSectionProps) {
 
       {/* ── Kart 1: küçük, merkezin biraz üstü, alttan yukarı gelir ── */}
       <motion.div
-        initial={{ opacity: 0, y: 120 }}
+        initial={{ opacity: 0, y: 160 }}
         animate={{
           opacity: phase === "card1" || phase === "card2" ? 1 : 0,
-          y: phase === "idle" ? 120 : 0,
+          y: phase === "idle" ? 160 : 0,
         }}
-        transition={{ duration: 0.7, ease: EASE }}
+        transition={{ duration: 0.95, ease: EASE }}
         style={{
           position: "absolute",
           top: "26%",
@@ -73,23 +73,26 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       <motion.div
         className="absolute inset-0"
         style={{ background: CARD_COLORS[1], zIndex: 3, originX: "50%", originY: "50%" }}
-        initial={{ opacity: 0, scale: 0.48, y: 60, borderRadius: 12 }}
+        initial={{ opacity: 0, scale: 0.48, y: 220, borderRadius: 12 }}
         animate={
           isExpanded
             ? { opacity: 1, scale: 1, y: 0, borderRadius: 0 }
             : phase === "card2"
-            ? { opacity: 1, scale: 0.48, y: 60, borderRadius: 12 }
-            : { opacity: 0, scale: 0.48, y: 60, borderRadius: 12 }
+            ? { opacity: 1, scale: 0.48, y: 40, borderRadius: 12 }
+            : { opacity: 0, scale: 0.48, y: 220, borderRadius: 12 }
         }
         transition={
           isExpanded
             ? {
-                opacity: { duration: 0.4 },
-                scale: { duration: 1.05, ease: EASE },
-                y: { duration: 1.05, ease: EASE },
-                borderRadius: { duration: 1.05, ease: EASE },
+                opacity: { duration: 0.5 },
+                scale: { duration: 1.3, ease: EASE },
+                y: { duration: 1.3, ease: EASE },
+                borderRadius: { duration: 1.3, ease: EASE },
               }
-            : { opacity: { duration: 0.55, ease: EASE } }
+            : {
+                opacity: { duration: 0.85, ease: EASE },
+                y: { duration: 0.95, ease: EASE },
+              }
         }
       >
         {/* Vignette */}
@@ -106,7 +109,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: showText ? 1 : 0 }}
-        transition={{ duration: 1.6, delay: 0.4, ease: "easeInOut" }}
+        transition={{ duration: 2.0, delay: 0.5, ease: "easeInOut" }}
         className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none"
         style={{
           height: "30%",
