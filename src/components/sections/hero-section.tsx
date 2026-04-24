@@ -6,9 +6,11 @@ import { motion } from "framer-motion";
 type Phase = "idle" | "card1" | "card2" | "expand" | "text";
 
 const CARD_COLORS = [
-  "linear-gradient(135deg, #1c2f45 0%, #0e1c2a 100%)",
-  "linear-gradient(135deg, #0a2540 0%, #07182a 100%)",
+  "linear-gradient(160deg, #1c2f45 0%, #0e1c2a 100%)",
+  "linear-gradient(160deg, #0a2540 0%, #07182a 100%)",
 ];
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 interface HeroSectionProps {
   lang: string;
@@ -20,8 +22,8 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("card1"), 400);
     const t2 = setTimeout(() => setPhase("card2"), 950);
-    const t3 = setTimeout(() => setPhase("expand"), 1500);
-    const t4 = setTimeout(() => setPhase("text"), 2500);
+    const t3 = setTimeout(() => setPhase("expand"), 1550);
+    const t4 = setTimeout(() => setPhase("text"), 2600);
     return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, []);
 
@@ -41,125 +43,130 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   return (
     <div className="relative w-full h-screen bg-[#080808] overflow-hidden">
 
-      {/* ── Card 1 — small upper placeholder ── */}
+      {/* ── Kart 1: küçük, merkezin biraz üstü, alttan yukarı gelir ── */}
       <motion.div
-        initial={{ opacity: 0, y: 80 }}
+        initial={{ opacity: 0, y: 120 }}
         animate={{
-          opacity: phase === "card1" ? 1 : phase === "card2" ? 0.5 : 0,
-          y: phase === "idle" ? 80 : 0,
+          opacity: phase === "card1" || phase === "card2" ? 1 : 0,
+          y: phase === "idle" ? 120 : 0,
         }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute rounded-lg"
+        transition={{ duration: 0.7, ease: EASE }}
         style={{
-          top: "22%",
+          position: "absolute",
+          top: "26%",
           left: "50%",
-          transform: "translateX(-46%)",
+          translateX: "-50%",
           width: "42%",
           aspectRatio: "16/9",
+          borderRadius: 10,
           background: CARD_COLORS[0],
           zIndex: 2,
         }}
       />
 
-      {/* ── Card 2 / Hero — starts small, expands to fill ── */}
+      {/* ── Kart 2 / Hero: alttan yukarı gelir, sonra scale ile hero'ya açılır ── */}
+      {/*
+        inset-0 ile tam ekran div.
+        card2 aşamasında: scale(0.50) + y(50px) → küçük kart gibi görünür, kart 1'in biraz altında
+        expand aşamasında: scale(1) + y(0) + borderRadius(0) → hero'ya açılır
+      */}
       <motion.div
-        initial={{ clipPath: "inset(36% 14% 8% 14% round 10px)", opacity: 0 }}
-        animate={{
-          opacity: phase === "idle" ? 0 : 1,
-          clipPath: isExpanded
-            ? "inset(0% 0% 0% 0% round 0px)"
-            : "inset(36% 14% 8% 14% round 10px)",
-        }}
-        transition={{
-          opacity: { duration: 0.5 },
-          clipPath: {
-            duration: isExpanded ? 1.1 : 0.001,
-            ease: [0.22, 1, 0.36, 1],
-          },
-        }}
-        className="absolute inset-0 z-10"
-        style={{ background: CARD_COLORS[1] }}
+        className="absolute inset-0"
+        style={{ background: CARD_COLORS[1], zIndex: 3, originX: "50%", originY: "50%" }}
+        initial={{ opacity: 0, scale: 0.48, y: 60, borderRadius: 12 }}
+        animate={
+          isExpanded
+            ? { opacity: 1, scale: 1, y: 0, borderRadius: 0 }
+            : phase === "card2"
+            ? { opacity: 1, scale: 0.48, y: 60, borderRadius: 12 }
+            : { opacity: 0, scale: 0.48, y: 60, borderRadius: 12 }
+        }
+        transition={
+          isExpanded
+            ? {
+                opacity: { duration: 0.4 },
+                scale: { duration: 1.05, ease: EASE },
+                y: { duration: 1.05, ease: EASE },
+                borderRadius: { duration: 1.05, ease: EASE },
+              }
+            : { opacity: { duration: 0.55, ease: EASE } }
+        }
       >
-        {/* Subtle dark vignette for text legibility */}
+        {/* Vignette */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%)",
           }}
         />
       </motion.div>
 
-      {/* ── Bottom white gradient — animates in after text ── */}
+      {/* ── Beyaz gradient — hero açıldıktan sonra alttan yavaşça gelir ── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: showText ? 1 : 0 }}
-        transition={{ duration: 1.4, delay: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 1.6, delay: 0.4, ease: "easeInOut" }}
         className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none"
         style={{
-          height: "28%",
+          height: "30%",
           background: "linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)",
         }}
       />
 
-      {/* ── Text overlay ── */}
-      {/* section-container gives 150px horizontal padding */}
-      <div className="section-container absolute inset-0 z-20 pointer-events-none pt-[72px] pb-14">
-        {/* Inner relative wrapper so absolute children respect the 150px margin */}
+      {/* ── Yazı overlay ── */}
+      <div className="section-container absolute inset-0 z-20 pointer-events-none pt-[70px] pb-12">
         <div className="relative h-full w-full">
 
-          {/* Brog® — top left */}
+          {/* Brog® — sol üst */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 24 }}
-            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
+            transition={{ duration: 0.75, ease: EASE }}
             className="absolute top-0 left-0 text-white font-black leading-none tracking-tight select-none"
-            style={{ fontSize: "clamp(72px, 9.5vw, 130px)" }}
+            style={{ fontSize: "clamp(72px, 9.5vw, 128px)" }}
           >
             Brog®
           </motion.h1>
 
-          {/* Studio — right, vertical mid */}
+          {/* Studio — sağ orta */}
           <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 24 }}
-            transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: EASE }}
             className="absolute right-0 text-white font-black leading-none tracking-tight select-none"
-            style={{
-              fontSize: "clamp(72px, 9.5vw, 130px)",
-              top: "40%",
-            }}
+            style={{ fontSize: "clamp(72px, 9.5vw, 128px)", top: "40%" }}
           >
             Studio
           </motion.p>
 
-          {/* Services — bottom left */}
+          {/* Servisler — sol alt */}
           <motion.ul
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 16 }}
-            transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute bottom-0 left-0 space-y-0"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 14 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+            className="absolute bottom-0 left-0 space-y-0.5"
           >
             {services.map((s) => (
               <li
                 key={s}
                 className="text-white font-bold uppercase tracking-widest leading-snug"
-                style={{ fontSize: "clamp(12px, 1.2vw, 15px)" }}
+                style={{ fontSize: "clamp(11px, 1.15vw, 14px)" }}
               >
                 {s}
               </li>
             ))}
           </motion.ul>
 
-          {/* Slogan — bottom right */}
+          {/* Slogan — sağ alt */}
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 16 }}
-            transition={{ duration: 0.65, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 14 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
             className="absolute bottom-0 right-0 text-white leading-relaxed text-right"
             style={{
               fontSize: "clamp(12px, 1vw, 14px)",
-              maxWidth: "340px",
+              maxWidth: "320px",
               whiteSpace: "pre-line",
             }}
           >
