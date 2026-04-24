@@ -100,14 +100,12 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           borderRadius: 10,
           overflow: "hidden",
           zIndex: 2,
+          backgroundImage: content?.card1Image ? undefined : CARD_COLORS[0],
         }}
       >
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: content?.card1Image ? `url(${content.card1Image})` : CARD_COLORS[0],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }} />
+        {content?.card1Image && (
+          <img src={content.card1Image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        )}
       </motion.div>
 
       {/* ── Kart 2: orta boy, biraz altta ── */}
@@ -128,20 +126,18 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           borderRadius: 10,
           overflow: "hidden",
           zIndex: 3,
+          backgroundImage: content?.card2Image ? undefined : CARD_COLORS[1],
         }}
       >
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: content?.card2Image ? `url(${content.card2Image})` : CARD_COLORS[1],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }} />
+        {content?.card2Image && (
+          <img src={content.card2Image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        )}
       </motion.div>
 
-      {/* ── Kart 3 / Hero: alttan gelir, sonra tam ekrana açılır ── */}
+      {/* ── Kart 3 / Hero: alttan gelir, sonra tam ekrana aışlır ── */}
       <motion.div
         className="absolute inset-0"
-        style={{ originX: "50%", originY: "50%", zIndex: 4, overflow: "hidden" }}
+        style={{ originX: "50%", originY: "50%", zIndex: 4, overflow: "hidden", backgroundImage: content?.card3Image ? undefined : CARD_COLORS[2] }}
         initial={{ opacity: 0, scale: 0.65, y: 260, borderRadius: 12 }}
         animate={
           isExpanded
@@ -164,22 +160,14 @@ export default function HeroSection({ lang }: HeroSectionProps) {
               }
         }
       >
-        {/* Background image / gradient layer */}
-        <div
-          style={{
-            position: "absolute", inset: 0,
-            backgroundImage: content?.card3Image ? `url(${content.card3Image})` : CARD_COLORS[2],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
+        {/* Background image (only when URL set) */}
+        {content?.card3Image && (
+          <img src={content.card3Image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        )}
         {/* Vignette */}
         <div
           className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%)",
-          }}
+          style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%)", zIndex: 1 }}
         />
       </motion.div>
 
