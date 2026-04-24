@@ -140,21 +140,21 @@ export default function Navbar({ lang }: NavbarProps) {
           >
             <motion.span
               animate={{
-                width:  menuOpen ? "38px" : hovered ? "38px" : "22px",
+                width:  menuOpen ? "32px" : hovered ? "38px" : "22px",
                 rotate: menuOpen ? 45 : 0,
-                y:      menuOpen ?  7 : 0,
+                y:      menuOpen ? 4.5 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="block h-[2px] bg-white origin-right"
+              className="block h-[2px] bg-white origin-center"
             />
             <motion.span
               animate={{
-                width:  menuOpen ? "38px" : hovered ? "22px" : "38px",
+                width:  menuOpen ? "32px" : hovered ? "22px" : "38px",
                 rotate: menuOpen ? -45 : 0,
-                y:      menuOpen ? -7 : 0,
+                y:      menuOpen ? -4.5 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="block h-[2px] bg-white origin-right"
+              className="block h-[2px] bg-white origin-center"
             />
           </button>
         </div>
