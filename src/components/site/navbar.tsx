@@ -14,7 +14,7 @@ interface NavbarProps {
 function SlideLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
   const fontSize = "clamp(20px, 2.75vw, 38px)";
-  const lineH    = "clamp(34px, 4.6vw, 62px)";
+  const rowH     = "clamp(34px, 4.6vw, 62px)";
 
   return (
     <Link
@@ -23,36 +23,32 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="flex items-center justify-end gap-2 group w-full"
-      style={{ overflow: "hidden", height: lineH }}
+      style={{ overflow: "hidden", height: rowH }}
     >
-      {/* Text wrapper — clips the two sliding spans */}
-      <div className="relative flex-1" style={{ height: lineH, overflow: "hidden" }}>
-        {/* Top span — slides up on hover */}
-        <motion.span
-          animate={{ y: hovered ? "-100%" : "0%" }}
-          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 flex items-center justify-end text-white font-bold text-right"
-          style={{ fontSize }}
+      {/* Stacked text roller */}
+      <motion.div
+        animate={{ y: hovered ? `-${rowH}` : "0px" }}
+        transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+        style={{ display: "flex", flexDirection: "column" }}
+      >
+        {/* Visible row */}
+        <div
+          className="text-white font-bold text-right"
+          style={{ height: rowH, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}
         >
           {label}
-        </motion.span>
-        {/* Clone — comes from below on hover */}
-        <motion.span
-          animate={{ y: hovered ? "0%" : "100%" }}
-          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 flex items-center justify-end text-white font-bold text-right"
-          style={{ fontSize }}
+        </div>
+        {/* Clone row — comes up from below */}
+        <div
+          className="text-white font-bold text-right"
+          style={{ height: rowH, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}
         >
           {label}
-        </motion.span>
-      </div>
+        </div>
+      </motion.div>
 
       {/* Arrow */}
-      <motion.span
-        animate={{ opacity: hovered ? 0 : 1 }}
-        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="text-white text-sm flex-shrink-0"
-      >↗</motion.span>
+      <span className="text-white text-sm flex-shrink-0 self-center">↗</span>
     </Link>
   );
 }
