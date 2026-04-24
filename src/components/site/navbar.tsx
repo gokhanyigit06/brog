@@ -25,7 +25,7 @@ export default function Navbar({ lang }: NavbarProps) {
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between section-container py-6">
         {/* Logo */}
         <Link href={`/${lang}`} className="flex items-center gap-2.5">
-          <img src="/logo.png" alt="Vogo Lab Logo" className="h-7 w-auto object-contain" />
+          <img src="/logo.png" alt="Vogo Lab Logo" className="h-7 w-auto object-contain" style={{ filter: "brightness(0) invert(1)" }} />
           <span className="text-white font-bold text-lg tracking-widest uppercase">
             vogolab
           </span>
