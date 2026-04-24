@@ -74,13 +74,13 @@ export default function Footer({ lang }: Props) {
   ];
 
   const labelStyle: React.CSSProperties = {
-    fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)",
-    letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 20,
+    fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.45)",
+    letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 24,
   };
   const linkStyle: React.CSSProperties = {
-    display: "flex", alignItems: "center", gap: 4,
-    fontSize: 14, color: "#ffffff",
-    textDecoration: "none", marginBottom: 10,
+    display: "flex", alignItems: "center", gap: 5,
+    fontSize: 17, color: "#ffffff",
+    textDecoration: "none", marginBottom: 12,
     transition: "opacity 0.2s",
   };
 
@@ -88,35 +88,35 @@ export default function Footer({ lang }: Props) {
     <footer style={{ background: "#0a0a0a", width: "100%" }}>
 
       {/* ── Social bar top ── */}
-      <div className="section-container" style={{ paddingTop: 32, paddingBottom: 32, borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", gap: 32 }}>
+      <div className="section-container" style={{ paddingTop: 38, paddingBottom: 38, borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", gap: 38 }}>
           {socials.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: 13, color: "#ffffff", textDecoration: "none", display: "flex", alignItems: "center", gap: 4, transition: "opacity 0.2s" }}
+              style={{ fontSize: 16, color: "#ffffff", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, transition: "opacity 0.2s" }}
               onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
-              {s.label} <span style={{ fontSize: 10 }}>↗</span>
+              {s.label} <span style={{ fontSize: 11 }}>↗</span>
             </a>
           ))}
         </div>
         {/* Small brand dot */}
-        <div style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>B</span>
+        <div style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>B</span>
         </div>
       </div>
 
       {/* ── Main content grid ── */}
-      <div className="section-container" style={{ paddingTop: 64, paddingBottom: 0, display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 48 }}>
+      <div className="section-container" style={{ paddingTop: 77, paddingBottom: 0, display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 58 }}>
 
         {/* Contact Us */}
         <div>
           <p style={labelStyle}>{lang === "tr" ? "Bize Ulaşın" : "Contact Us"}</p>
-          <h3 style={{ fontSize: "clamp(22px, 2.5vw, 32px)", fontWeight: 800, color: "#ffffff", lineHeight: 1.25, marginBottom: 28 }}>
+          <h3 style={{ fontSize: "clamp(26px, 3vw, 38px)", fontWeight: 800, color: "#ffffff", lineHeight: 1.25, marginBottom: 34 }}>
             {lang === "tr" ? "Bir projeniz mi var?" : "Have a project in mind?"}
           </h3>
 
-          <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 8 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
             Email
           </p>
           <input
@@ -125,12 +125,12 @@ export default function Footer({ lang }: Props) {
             placeholder={lang === "tr" ? "E-posta adresiniz*" : "Your Email*"}
             style={{
               width: "100%", background: "none", border: "none", borderBottom: "1px solid rgba(255,255,255,0.15)",
-              padding: "8px 0 10px", fontSize: 13, color: "#fff", outline: "none",
-              caretColor: "#fff", marginBottom: 24,
+              padding: "10px 0 12px", fontSize: 16, color: "#fff", outline: "none",
+              caretColor: "#fff", marginBottom: 29,
             }}
           />
 
-          <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 8 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
             {lang === "tr" ? "Mesajınız" : "Message"}
           </p>
           <textarea
@@ -140,8 +140,8 @@ export default function Footer({ lang }: Props) {
             rows={3}
             style={{
               width: "100%", background: "none", border: "none", borderBottom: "1px solid rgba(255,255,255,0.15)",
-              padding: "8px 0 10px", fontSize: 13, color: "#fff", outline: "none",
-              caretColor: "#fff", resize: "none", fontFamily: "inherit", marginBottom: 24,
+              padding: "10px 0 12px", fontSize: 16, color: "#fff", outline: "none",
+              caretColor: "#fff", resize: "none", fontFamily: "inherit", marginBottom: 29,
             }}
           />
 
@@ -149,7 +149,7 @@ export default function Footer({ lang }: Props) {
             onClick={() => { if (email && message) { setSent(true); setEmail(""); setMessage(""); setTimeout(() => setSent(false), 3000); } }}
             style={{
               background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)",
-              borderRadius: 999, padding: "12px 28px", fontSize: 13,
+              borderRadius: 999, padding: "14px 34px", fontSize: 16,
               color: "#fff", cursor: "pointer", fontWeight: 500,
               transition: "background 0.2s",
             }}
@@ -208,7 +208,7 @@ export default function Footer({ lang }: Props) {
       {/* ── Bottom bar ── */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
         <div className="section-container" style={{
-          paddingTop: 18, paddingBottom: 18,
+          paddingTop: 22, paddingBottom: 22,
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
           {/* Created by Vogolab */}
@@ -218,17 +218,17 @@ export default function Footer({ lang }: Props) {
             rel="noopener noreferrer"
             style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}
           >
-            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
+            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
               {lang === "tr" ? "Tarafından oluşturuldu" : "Created by"}
             </span>
-            <VogoLogo size={18} />
-            <span style={{ fontSize: 12, color: "#ffffff", fontWeight: 600, letterSpacing: "0.04em" }}>
+            <VogoLogo size={20} />
+            <span style={{ fontSize: 14, color: "#ffffff", fontWeight: 600, letterSpacing: "0.04em" }}>
               Vogolab ↗
             </span>
           </a>
 
           {/* Right: copyright */}
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
+          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
             © 2026 VOGOLAB. {lang === "tr" ? "Tüm hakları saklıdır." : "All rights reserved."}
           </span>
         </div>
