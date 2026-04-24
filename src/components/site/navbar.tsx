@@ -173,7 +173,7 @@ export default function Navbar({ lang }: NavbarProps) {
             style={{ display: "flex", alignItems: "stretch", paddingTop: "100px", paddingBottom: "60px" }}
           >
             {/* LEFT: brand + clock + socials */}
-            <div className="flex flex-col justify-center w-1/2" style={{ gap: "20px" }}>
+            <div className="flex flex-col justify-center w-1/2" style={{ gap: "24px" }}>
               {/* Brand */}
               <div
                 className="text-white font-black leading-none tracking-tight"
@@ -195,7 +195,7 @@ export default function Navbar({ lang }: NavbarProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white/60 hover:text-white transition-colors flex items-center gap-1"
-                    style={{ fontSize: "15px" }}
+                    style={{ fontSize: "17px" }}
                   >
                     {s.label} <span className="text-xs">↗</span>
                   </a>
