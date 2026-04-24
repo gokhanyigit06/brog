@@ -15,27 +15,32 @@ function VogoLogo({ size = 20 }: { size?: number }) {
   );
 }
 
-/* ── Infinite marquee ── */
+/* ── Infinite marquee with edge fade (inside section-container padding) ── */
 function FooterMarquee() {
   const text = "STUDIO / Design / Development BROG / Creative /\u00a0";
   const repeated = Array(6).fill(text).join("");
   return (
-    <div style={{ overflow: "hidden", width: "100%", padding: "40px 0 32px" }}>
+    <div className="section-container" style={{ padding: 0, overflow: "hidden", paddingTop: 40, paddingBottom: 32 }}>
       <div
         style={{
-          display: "inline-block",
-          whiteSpace: "nowrap",
-          animation: "footerMarquee 28s linear infinite",
-          fontSize: "clamp(48px, 7vw, 88px)",
-          fontWeight: 900,
-          letterSpacing: "-0.03em",
-          background: "linear-gradient(90deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.08) 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundSize: "200% 100%",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+          maskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+          overflow: "hidden",
         }}
       >
-        {repeated}
+        <div
+          style={{
+            display: "inline-block",
+            whiteSpace: "nowrap",
+            animation: "footerMarquee 28s linear infinite",
+            fontSize: "clamp(48px, 7vw, 88px)",
+            fontWeight: 900,
+            letterSpacing: "-0.03em",
+            color: "rgba(255,255,255,0.18)",
+          }}
+        >
+          {repeated}
+        </div>
       </div>
       <style>{`
         @keyframes footerMarquee {
@@ -60,23 +65,23 @@ export default function Footer({ lang }: Props) {
   ];
 
   const navLinks = lang === "tr"
-    ? [{ label: "Ana Sayfa", href: `/${lang}` }, { label: "Projeler", href: `/${lang}/projeler` }, { label: "İletişim", href: `/${lang}/iletisim` }]
+    ? [{ label: "Ana Sayfa", href: `/${lang}` }, { label: "Projeler", href: `/${lang}/projeler` }, { label: "\u0130leti\u015fim", href: `/${lang}/iletisim` }]
     : [{ label: "Home",      href: `/${lang}` }, { label: "Projects",  href: `/${lang}/projects`  }, { label: "Contact",  href: `/${lang}/contact`  }];
 
   const priorityLinks = [
-    { label: lang === "tr" ? "Kullanım Koşulları" : "Terms And Conditions", href: "#" },
-    { label: lang === "tr" ? "Gizlilik Politikası" : "Privacy & Policy",    href: "#" },
+    { label: lang === "tr" ? "Kullan\u0131m Ko\u015fullar\u0131" : "Terms And Conditions", href: "#" },
+    { label: lang === "tr" ? "Gizlilik Politikas\u0131" : "Privacy & Policy",    href: "#" },
   ];
 
   const labelStyle: React.CSSProperties = {
-    fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.35)",
+    fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.45)",
     letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 20,
   };
   const linkStyle: React.CSSProperties = {
     display: "flex", alignItems: "center", gap: 4,
-    fontSize: 14, color: "rgba(255,255,255,0.75)",
+    fontSize: 14, color: "#ffffff",
     textDecoration: "none", marginBottom: 10,
-    transition: "color 0.2s",
+    transition: "opacity 0.2s",
   };
 
   return (
@@ -87,9 +92,9 @@ export default function Footer({ lang }: Props) {
         <div style={{ display: "flex", gap: 32 }}>
           {socials.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4, transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}
+              style={{ fontSize: 13, color: "#ffffff", textDecoration: "none", display: "flex", alignItems: "center", gap: 4, transition: "opacity 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
               {s.label} <span style={{ fontSize: 10 }}>↗</span>
             </a>
@@ -157,14 +162,14 @@ export default function Footer({ lang }: Props) {
         <div>
           <p style={labelStyle}>{lang === "tr" ? "Konuşalım" : "Lets Talk"}</p>
           <a href="tel:+15108956500" style={linkStyle}
-            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
           >
             (510) 895-6500 <span style={{ fontSize: 10 }}>↗</span>
           </a>
           <a href="mailto:hello@brog.com" style={linkStyle}
-            onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
           >
             Hello@brog.com <span style={{ fontSize: 10 }}>↗</span>
           </a>
@@ -175,8 +180,8 @@ export default function Footer({ lang }: Props) {
           <p style={labelStyle}>{lang === "tr" ? "Navigasyon" : "Navigation"}</p>
           {navLinks.map(l => (
             <Link key={l.href} href={l.href} style={linkStyle}
-              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
               {l.label} <span style={{ fontSize: 10 }}>↗</span>
             </Link>
@@ -188,8 +193,8 @@ export default function Footer({ lang }: Props) {
           <p style={labelStyle}>{lang === "tr" ? "Yasal" : "Priority"}</p>
           {priorityLinks.map(l => (
             <a key={l.label} href={l.href} style={linkStyle}
-              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
               {l.label} <span style={{ fontSize: 10 }}>↗</span>
             </a>
@@ -213,17 +218,17 @@ export default function Footer({ lang }: Props) {
             rel="noopener noreferrer"
             style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}
           >
-            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.04em" }}>
+            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
               {lang === "tr" ? "Tarafından oluşturuldu" : "Created by"}
             </span>
             <VogoLogo size={18} />
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", fontWeight: 600, letterSpacing: "0.04em" }}>
+            <span style={{ fontSize: 12, color: "#ffffff", fontWeight: 600, letterSpacing: "0.04em" }}>
               Vogolab ↗
             </span>
           </a>
 
           {/* Right: copyright */}
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.04em" }}>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
             © 2026 VOGOLAB. {lang === "tr" ? "Tüm hakları saklıdır." : "All rights reserved."}
           </span>
         </div>
