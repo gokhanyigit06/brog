@@ -78,9 +78,9 @@ export default function Footer({ lang }: Props) {
     letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 24,
   };
   const linkStyle: React.CSSProperties = {
-    display: "flex", alignItems: "center", gap: 5,
+    display: "flex", flexDirection: "column", alignItems: "flex-end",
     fontSize: 17, color: "#ffffff",
-    textDecoration: "none", marginBottom: 12,
+    textDecoration: "none", marginBottom: 18,
     transition: "opacity 0.2s",
   };
 
@@ -159,44 +159,56 @@ export default function Footer({ lang }: Props) {
         </div>
 
         {/* Lets Talk */}
-        <div>
+        <div style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Konuşalım" : "Lets Talk"}</p>
           <a href="tel:+15108956500" style={linkStyle}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
           >
-            (510) 895-6500 <span style={{ fontSize: 10 }}>↗</span>
+            <span>(510) 895-6500</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
+              <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </a>
           <a href="mailto:hello@brog.com" style={linkStyle}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
           >
-            Hello@brog.com <span style={{ fontSize: 10 }}>↗</span>
+            <span>Hello@brog.com</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
+              <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </a>
         </div>
 
         {/* Navigation */}
-        <div>
+        <div style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Navigasyon" : "Navigation"}</p>
           {navLinks.map(l => (
             <Link key={l.href} href={l.href} style={linkStyle}
               onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
-              {l.label} <span style={{ fontSize: 10 }}>↗</span>
+              <span>{l.label}</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
+                <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </Link>
           ))}
         </div>
 
         {/* Priority */}
-        <div>
+        <div style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Yasal" : "Priority"}</p>
           {priorityLinks.map(l => (
             <a key={l.label} href={l.href} style={linkStyle}
               onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
-              {l.label} <span style={{ fontSize: 10 }}>↗</span>
+              <span>{l.label}</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
+                <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </a>
           ))}
         </div>
