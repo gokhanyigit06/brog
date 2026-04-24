@@ -185,15 +185,15 @@ export default function Navbar({ lang }: NavbarProps) {
               </div>
 
               {/* Socials */}
-              <div className="flex items-center gap-6 flex-wrap">
+              <div className="flex items-center gap-6 flex-wrap" style={{ marginTop: "10px" }}>
                 {socials.map((s) => (
                   <a
                     key={s.href}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/60 hover:text-white transition-colors flex items-center gap-1"
-                    style={{ fontSize: "17px" }}
+                    className="text-white hover:text-white/70 transition-colors flex items-center gap-1"
+                    style={{ fontSize: "19px" }}
                   >
                     {s.label} <span className="text-xs">↗</span>
                   </a>
