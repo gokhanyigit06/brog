@@ -1,19 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Props { lang: string }
-
-/* ── Tiny logo mark — circle with "V" ── */
-function VogoLogo({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="16" cy="16" r="15" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"/>
-      <path d="M10 11l6 10 6-10" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
 
 /* ── Infinite marquee with edge fade (inside section-container padding) ── */
 function FooterMarquee() {
@@ -78,7 +69,7 @@ export default function Footer({ lang }: Props) {
     letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 24,
   };
   const linkStyle: React.CSSProperties = {
-    display: "flex", flexDirection: "column", alignItems: "flex-end",
+    display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-end", gap: 6,
     fontSize: 17, color: "#ffffff",
     textDecoration: "none", marginBottom: 18,
     transition: "opacity 0.2s",
@@ -148,6 +139,7 @@ export default function Footer({ lang }: Props) {
           <button
             onClick={() => { if (email && message) { setSent(true); setEmail(""); setMessage(""); setTimeout(() => setSent(false), 3000); } }}
             style={{
+              width: "100%", textAlign: "center",
               background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)",
               borderRadius: 999, padding: "14px 34px", fontSize: 16,
               color: "#fff", cursor: "pointer", fontWeight: 500,
@@ -190,7 +182,7 @@ export default function Footer({ lang }: Props) {
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
               <span>{l.label}</span>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </Link>
@@ -206,7 +198,7 @@ export default function Footer({ lang }: Props) {
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
               <span>{l.label}</span>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
@@ -228,14 +220,20 @@ export default function Footer({ lang }: Props) {
             href="https://vogolab.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}
+            style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}
           >
             <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
               {lang === "tr" ? "Tarafından oluşturuldu" : "Created by"}
             </span>
-            <VogoLogo size={20} />
-            <span style={{ fontSize: 14, color: "#ffffff", fontWeight: 600, letterSpacing: "0.04em" }}>
-              Vogolab ↗
+            <Image
+              src="/logo.png"
+              alt="Vogolab"
+              width={20}
+              height={20}
+              style={{ filter: "invert(1)", opacity: 0.9 }}
+            />
+            <span style={{ fontSize: 14, color: "#ffffff", fontWeight: 700, letterSpacing: "0.08em" }}>
+              VOGOLAB
             </span>
           </a>
 
