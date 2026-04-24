@@ -7,7 +7,7 @@ export default function AdminLayout({
 }) {
   return (
     <html lang="tr">
-      <body className="bg-zinc-950 text-white antialiased">
+      <body className="bg-zinc-950 text-white antialiased" suppressHydrationWarning>
         <div className="flex min-h-screen">
           <AdminSidebar />
           <main className="flex-1 overflow-auto">
