@@ -13,8 +13,8 @@ interface NavbarProps {
 // ── Hover slide-up text component ──────────────────────────────
 function SlideLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
-  const fontSize = "clamp(40px, 5.5vw, 76px)";
-  const lineH    = "clamp(48px, 6.5vw, 86px)";
+  const fontSize = "clamp(20px, 2.75vw, 38px)";
+  const lineH    = "clamp(24px, 3.25vw, 43px)";
 
   return (
     <Link
