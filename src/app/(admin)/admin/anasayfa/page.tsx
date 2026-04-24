@@ -8,6 +8,7 @@ import {
   getProjectsContent, saveProjectsContent, type ProjectsContent, type ProjectItem,
   getWhyContent, saveWhyContent, type WhyContent, type WhyFeature,
   getServicesContent, saveServicesContent, type ServicesContent, type ServiceItem,
+  getFaqContent, saveFaqContent, type FaqContent, type FaqItem,
   getSiteConfig, saveSiteConfig, type SiteConfig,
   uploadImage,
 } from "@/lib/content";
@@ -115,6 +116,7 @@ export default function AnasayfaAdmin() {
   const [projects, setProjects] = useState<ProjectsContent | null>(null);
   const [why, setWhy] = useState<WhyContent | null>(null);
   const [services, setServices] = useState<ServicesContent | null>(null);
+  const [faq, setFaq] = useState<FaqContent | null>(null);
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -131,12 +133,14 @@ export default function AnasayfaAdmin() {
   const [whySaved, setWhySaved] = useState(false);
   const [servicesSaving, setServicesSaving] = useState(false);
   const [servicesSaved, setServicesSaved] = useState(false);
+  const [faqSaving, setFaqSaving] = useState(false);
+  const [faqSaved, setFaqSaved] = useState(false);
   const [configSaving, setConfigSaving] = useState(false);
   const [configSaved, setConfigSaved] = useState(false);
 
   useEffect(() => {
-    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent(), getProjectsContent(), getWhyContent(), getServicesContent(), getSiteConfig()])
-      .then(([h, n, s, p, w, sv, sc]) => { setHero(h); setNavbar(n); setShowcase(s); setProjects(p); setWhy(w); setServices(sv); setSiteConfig(sc); setLoading(false); })
+    Promise.all([getHeroContent(), getNavbarContent(), getShowcaseContent(), getProjectsContent(), getWhyContent(), getServicesContent(), getFaqContent(), getSiteConfig()])
+      .then(([h, n, s, p, w, sv, fq, sc]) => { setHero(h); setNavbar(n); setShowcase(s); setProjects(p); setWhy(w); setServices(sv); setFaq(fq); setSiteConfig(sc); setLoading(false); })
       .catch((err) => { console.error("Firebase error:", err); setError(err?.message || "Firebase bağlantı hatası"); setLoading(false); });
   }, []);
 
@@ -255,6 +259,7 @@ service cloud.firestore {
               { key: "showProjects",  label: "Projeler" },
               { key: "showWhy",       label: "Neden Biz?" },
               { key: "showServices",  label: "Hizmetler" },
+              { key: "showFaq",       label: "SSS (FAQ)" },
             ] as const).map(({ key, label }) => (
               <label key={key} className="flex items-center gap-3 bg-zinc-800 rounded-lg px-4 py-3 cursor-pointer">
                 <div
@@ -943,6 +948,73 @@ service cloud.firestore {
               className="flex items-center gap-2 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg transition-colors"
             >
               <Plus size={14} /> Yeni Hizmet Ekle
+            </button>
+          </Card>
+        </div>
+      </section>
+      )}
+
+      {/* ══ FAQ SECTION ═══════════════════════════ */}
+      {faq && (
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">SSS (FAQ) Bölümü</h1>
+            <p className="text-zinc-500 text-sm mt-0.5">Sol dev başlık + sağda accordion sorular</p>
+          </div>
+          <SaveBar onSave={async () => { setFaqSaving(true); await saveFaqContent(faq); setFaqSaving(false); setFaqSaved(true); setTimeout(() => setFaqSaved(false), 2500); }} saving={faqSaving} saved={faqSaved} />
+        </div>
+        <div className="space-y-4">
+          {/* Başlık */}
+          <Card title="Başlık" subtitle="Sol taraf" defaultOpen={false}>
+            <div className="grid grid-cols-3 gap-3">
+              <Field label="Etiket (ör: 05)">
+                <input value={faq.label} onChange={(e) => setFaq({...faq, label: e.target.value})} className={INPUT} placeholder="05" />
+              </Field>
+              <Field label="🇹🇷 Başlık TR">
+                <textarea value={faq.title_tr} onChange={(e) => setFaq({...faq, title_tr: e.target.value})} rows={3} className={`${INPUT} resize-none text-xs`} placeholder="Sıkça\nSorulan\nSorular" />
+              </Field>
+              <Field label="🇬🇧 Title EN">
+                <textarea value={faq.title_en} onChange={(e) => setFaq({...faq, title_en: e.target.value})} rows={3} className={`${INPUT} resize-none text-xs`} placeholder="Frequently\nAsked\nQuestions" />
+              </Field>
+            </div>
+          </Card>
+
+          {/* Sorular */}
+          <Card title="Sorular" subtitle="Her satır: soru + cevap TR/EN">
+            <div className="space-y-3 mb-4">
+              {[...faq.items].sort((a,b)=>a.order-b.order).map((item) => (
+                <div key={item.id} className="bg-zinc-800 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center gap-2 justify-between">
+                    <span className="text-xs text-zinc-500 font-mono">{String(item.order+1).padStart(2,"0")}</span>
+                    <div className="flex gap-1 ml-auto">
+                      <button onClick={() => setFaq(prev => { if(!prev) return prev; const arr=[...prev.items].sort((a,b)=>a.order-b.order); const i=arr.findIndex(x=>x.id===item.id); if(i<=0) return prev; [arr[i],arr[i-1]]=[arr[i-1],arr[i]]; return {...prev, items: arr.map((x,idx)=>({...x,order:idx}))}; })} className="p-1 text-zinc-500 hover:text-white"><ArrowUp size={12}/></button>
+                      <button onClick={() => setFaq(prev => { if(!prev) return prev; const arr=[...prev.items].sort((a,b)=>a.order-b.order); const i=arr.findIndex(x=>x.id===item.id); if(i>=arr.length-1) return prev; [arr[i],arr[i+1]]=[arr[i+1],arr[i]]; return {...prev, items: arr.map((x,idx)=>({...x,order:idx}))}; })} className="p-1 text-zinc-500 hover:text-white"><ArrowDown size={12}/></button>
+                      <button onClick={() => setFaq(prev => prev ? {...prev, items: prev.items.filter(x=>x.id!==item.id).map((x,i)=>({...x,order:i}))} : prev)} className="p-1 text-zinc-600 hover:text-red-400"><Trash2 size={12}/></button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Field label="🇹🇷 Soru TR">
+                      <input value={item.question_tr} onChange={(e) => setFaq(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,question_tr:e.target.value}:x)} : p)} className={INPUT} />
+                    </Field>
+                    <Field label="🇬🇧 Question EN">
+                      <input value={item.question_en} onChange={(e) => setFaq(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,question_en:e.target.value}:x)} : p)} className={INPUT} />
+                    </Field>
+                    <Field label="🇹🇷 Cevap TR">
+                      <textarea value={item.answer_tr} onChange={(e) => setFaq(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,answer_tr:e.target.value}:x)} : p)} rows={3} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                    <Field label="🇬🇧 Answer EN">
+                      <textarea value={item.answer_en} onChange={(e) => setFaq(p => p ? {...p, items: p.items.map(x=>x.id===item.id?{...x,answer_en:e.target.value}:x)} : p)} rows={3} className={`${INPUT} resize-none text-xs`} />
+                    </Field>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => setFaq(prev => prev ? {...prev, items: [...prev.items, { id: Date.now().toString(), question_tr: "", question_en: "", answer_tr: "", answer_en: "", order: prev.items.length }]} : prev)}
+              className="flex items-center gap-2 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white text-sm rounded-lg transition-colors"
+            >
+              <Plus size={14} /> Yeni Soru Ekle
             </button>
           </Card>
         </div>

@@ -6,6 +6,7 @@ import MarqueeSection from "@/components/sections/marquee-section";
 import ProjectsSection from "@/components/sections/projects-section";
 import WhySection from "@/components/sections/why-section";
 import ServicesSection from "@/components/sections/services-section";
+import FaqSection from "@/components/sections/faq-section";
 
 export default async function HomePage({
   params,
@@ -23,6 +24,7 @@ export default async function HomePage({
       <ProjectsSection lang={lang} />
       <WhySection lang={lang} />
       <ServicesSection lang={lang} />
+      <FaqSection lang={lang} />
     </main>
   );
 }

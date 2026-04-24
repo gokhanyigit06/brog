@@ -526,6 +526,7 @@ export interface SiteConfig {
   showProjects: boolean;
   showWhy: boolean;
   showServices: boolean;
+  showFaq: boolean;
 }
 
 const SITE_CONFIG_DEFAULT: SiteConfig = {
@@ -534,6 +535,7 @@ const SITE_CONFIG_DEFAULT: SiteConfig = {
   showProjects: true,
   showWhy: true,
   showServices: true,
+  showFaq: true,
 };
 
 export async function getSiteConfig(): Promise<SiteConfig> {
@@ -590,6 +592,52 @@ export async function getServicesContent(): Promise<ServicesContent> {
 
 export async function saveServicesContent(data: ServicesContent): Promise<void> {
   await setDoc(doc(db, "siteContent", "services"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+// ─────────────────────────────────────────────
+// FAQ SECTION
+// ─────────────────────────────────────────────
+
+export interface FaqItem {
+  id: string;
+  question_tr: string;
+  question_en: string;
+  answer_tr: string;
+  answer_en: string;
+  order: number;
+}
+
+export interface FaqContent {
+  label: string;
+  title_tr: string;
+  title_en: string;
+  items: FaqItem[];
+}
+
+const FAQ_DEFAULT: FaqContent = {
+  label: "05",
+  title_tr: "Sıkça\nSorulan\nSorular",
+  title_en: "Frequently\nAsked\nQuestions",
+  items: [
+    { id: "1", question_tr: "Tipik teslim süreniz nedir?", question_en: "What is your typical turnaround time?", answer_tr: "Projenin kapsamına bağlı olarak değişmekle birlikte, küçük projeler için 1–2 hafta, büyük projeler için 4–8 hafta sürmektedir.", answer_en: "Depending on the scope, small projects typically take 1–2 weeks, while larger ones range from 4–8 weeks.", order: 0 },
+    { id: "2", question_tr: "Özel tasarım çözümleri sunuyor musunuz?", question_en: "Do you offer custom design solutions?", answer_tr: "Evet, her proje benzersizdir. Markanıza ve hedeflerinize özel çözümler geliştiriyoruz.", answer_en: "Yes, every project is unique. We develop solutions tailored to your brand and goals.", order: 1 },
+    { id: "3", question_tr: "Hangi sektörlerde uzmanlaşıyorsunuz?", question_en: "What industries do you specialize in?", answer_tr: "Teknoloji, moda, sağlık, fintech ve yaratıcı endüstriler dahil birçok sektörde deneyimliyiz.", answer_en: "We have experience across many sectors including tech, fashion, health, fintech and creative industries.", order: 2 },
+    { id: "4", question_tr: "Hem tasarım hem de geliştirmeyi üstlenebilir misiniz?", question_en: "Can you handle both design and development?", answer_tr: "Kesinlikle. Uçtan uca hizmet sunuyoruz: strateji, tasarım, geliştirme ve lansman.", answer_en: "Absolutely. We offer end-to-end services: strategy, design, development, and launch.", order: 3 },
+    { id: "5", question_tr: "Lansman sonrası destek sağlıyor musunuz?", question_en: "Do you provide post-launch support?", answer_tr: "Evet, tüm projelerimizde bakım ve destek planları sunuyoruz.", answer_en: "Yes, we offer maintenance and support plans for all our projects.", order: 4 },
+  ],
+};
+
+export async function getFaqContent(): Promise<FaqContent> {
+  const snap = await getDoc(doc(db, "siteContent", "faq"));
+  if (!snap.exists()) return FAQ_DEFAULT;
+  return { ...FAQ_DEFAULT, ...snap.data() } as FaqContent;
+}
+
+export async function saveFaqContent(data: FaqContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "faq"), {
     ...data,
     updatedAt: new Date().toISOString(),
   });
