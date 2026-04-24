@@ -13,39 +13,46 @@ interface NavbarProps {
 // ── Hover slide-up text component ──────────────────────────────
 function SlideLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
+  const fontSize = "clamp(40px, 5.5vw, 76px)";
+  const lineH    = "clamp(48px, 6.5vw, 86px)";
+
   return (
     <Link
       href={href}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex items-center gap-3 group overflow-hidden relative"
-      style={{ height: "clamp(52px, 6.5vw, 88px)" }}
+      className="flex items-center gap-3 group"
+      style={{ overflow: "hidden", height: lineH }}
     >
-      {/* Arrow */}
-      <span className="text-white/40 text-xl mt-1 flex-shrink-0">↗</span>
+      {/* Text wrapper — clips the two sliding spans */}
+      <div className="relative" style={{ height: lineH, overflow: "hidden", minWidth: "200px" }}>
+        {/* Top span — slides up on hover */}
+        <motion.span
+          animate={{ y: hovered ? "-100%" : "0%" }}
+          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 flex items-center text-white font-bold"
+          style={{ fontSize }}
+        >
+          {label}
+        </motion.span>
+        {/* Clone — comes from below on hover */}
+        <motion.span
+          animate={{ y: hovered ? "0%" : "100%" }}
+          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 flex items-center text-white font-bold"
+          style={{ fontSize }}
+        >
+          {label}
+        </motion.span>
+      </div>
 
-      {/* Text wrapper */}
-      <span className="relative overflow-hidden flex-1" style={{ height: "1.1em" }}>
-        {/* Top text — slides up on hover */}
-        <motion.span
-          animate={{ y: hovered ? "-110%" : "0%" }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 text-white font-bold leading-none text-left"
-          style={{ fontSize: "clamp(36px, 5vw, 72px)" }}
-        >
-          {label}
-        </motion.span>
-        {/* Bottom text — comes up from below on hover */}
-        <motion.span
-          animate={{ y: hovered ? "0%" : "110%" }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 text-white font-bold leading-none text-left"
-          style={{ fontSize: "clamp(36px, 5vw, 72px)" }}
-        >
-          {label}
-        </motion.span>
-      </span>
+      {/* Arrow */}
+      <motion.span
+        animate={{ y: hovered ? "-100%" : "0%", opacity: hovered ? 0 : 1 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="text-white/50 text-xl flex-shrink-0"
+      >↗</motion.span>
     </Link>
   );
 }
@@ -62,7 +69,7 @@ function LiveClock() {
   const time = now.toLocaleTimeString("en-US", { hour12: false });
 
   return (
-    <div className="text-white/70 font-mono text-2xl leading-tight">
+    <div className="text-white font-mono leading-tight" style={{ fontSize: "clamp(28px, 3.5vw, 48px)" }}>
       <div>{date}</div>
       <div>{time}</div>
     </div>
@@ -71,21 +78,21 @@ function LiveClock() {
 
 export default function Navbar({ lang }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered]   = useState(false);
 
   const navLinks = [
-    { href: `/${lang}`,              label: lang === "tr" ? "Ana Sayfa"  : "Home"     },
-    { href: `/${lang}/projeler`,     label: lang === "tr" ? "Projeler"   : "Projects" },
-    { href: `/${lang}/hizmetler`,    label: lang === "tr" ? "Hizmetler"  : "Services" },
-    { href: `/${lang}/hakkimizda`,   label: lang === "tr" ? "Hakkımızda" : "About"    },
-    { href: `/${lang}/iletisim`,     label: lang === "tr" ? "İletişim"   : "Contact"  },
+    { href: `/${lang}`,            label: lang === "tr" ? "Ana Sayfa"  : "Home"     },
+    { href: `/${lang}/projeler`,   label: lang === "tr" ? "Projeler"   : "Projects" },
+    { href: `/${lang}/hizmetler`,  label: lang === "tr" ? "Hizmetler"  : "Services" },
+    { href: `/${lang}/hakkimizda`, label: lang === "tr" ? "Hakkımızda" : "About"    },
+    { href: `/${lang}/iletisim`,   label: lang === "tr" ? "İletişim"   : "Contact"  },
   ];
 
   const socials = [
-    { href: "https://x.com",        label: "X.com"      },
-    { href: "https://dribbble.com", label: "Dribbble"   },
-    { href: "https://instagram.com",label: "Instagram"  },
-    { href: "https://linkedin.com", label: "LinkedIn"   },
+    { href: "https://x.com",         label: "X.com"     },
+    { href: "https://dribbble.com",  label: "Dribbble"  },
+    { href: "https://instagram.com", label: "Instagram" },
+    { href: "https://linkedin.com",  label: "LinkedIn"  },
   ];
 
   return (
@@ -133,23 +140,21 @@ export default function Navbar({ lang }: NavbarProps) {
           >
             <motion.span
               animate={{
-                width: menuOpen ? "38px" : hovered ? "38px" : "22px",
+                width:  menuOpen ? "38px" : hovered ? "38px" : "22px",
                 rotate: menuOpen ? 45 : 0,
-                y: menuOpen ? 7 : 0,
+                y:      menuOpen ?  7 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="block h-[2px] bg-white origin-right"
-              style={{ display: "block" }}
             />
             <motion.span
               animate={{
-                width: menuOpen ? "38px" : hovered ? "22px" : "38px",
+                width:  menuOpen ? "38px" : hovered ? "22px" : "38px",
                 rotate: menuOpen ? -45 : 0,
-                y: menuOpen ? -7 : 0,
+                y:      menuOpen ? -7 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="block h-[2px] bg-white origin-right"
-              style={{ display: "block" }}
             />
           </button>
         </div>
@@ -163,39 +168,36 @@ export default function Navbar({ lang }: NavbarProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed inset-0 z-40 bg-black flex section-container pt-28 pb-12"
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            className="fixed inset-0 z-40 bg-black section-container"
+            style={{ display: "flex", alignItems: "stretch", paddingTop: "100px", paddingBottom: "60px" }}
           >
             {/* LEFT: brand + clock + socials */}
-            <div className="flex flex-col justify-between w-1/2">
-              <div>
-                {/* Brand */}
-                <div
-                  className="text-white font-black leading-none tracking-tight"
-                  style={{ fontSize: "clamp(52px, 7vw, 96px)" }}
-                >
-                  <div>vogo-</div>
-                  <div>lab</div>
-                </div>
-
-                {/* Clock */}
-                <div className="mt-10">
-                  <LiveClock />
-                </div>
+            <div className="flex flex-col w-1/2" style={{ gap: "40px" }}>
+              {/* Brand */}
+              <div
+                className="text-white font-black leading-none tracking-tight"
+                style={{ fontSize: "clamp(60px, 8vw, 110px)" }}
+              >
+                <div>VOGO</div>
+                <div>lab.</div>
               </div>
 
+              {/* Clock */}
+              <LiveClock />
+
               {/* Socials */}
-              <div className="flex items-center gap-6 flex-wrap">
+              <div className="flex items-center gap-6 flex-wrap mt-auto">
                 {socials.map((s) => (
                   <a
                     key={s.href}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/60 hover:text-white text-sm transition-colors flex items-center gap-1"
+                    className="text-white/60 hover:text-white transition-colors flex items-center gap-1"
+                    style={{ fontSize: "15px" }}
                   >
-                    {s.label}
-                    <span className="text-xs">↗</span>
+                    {s.label} <span className="text-xs">↗</span>
                   </a>
                 ))}
               </div>
@@ -206,9 +208,9 @@ export default function Navbar({ lang }: NavbarProps) {
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
-                  initial={{ opacity: 0, y: 24 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.07, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ delay: i * 0.07 + 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <SlideLink
                     href={link.href}
