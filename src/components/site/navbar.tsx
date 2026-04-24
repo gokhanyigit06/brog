@@ -14,7 +14,7 @@ interface NavbarProps {
 function SlideLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
   const fontSize = "clamp(20px, 2.75vw, 38px)";
-  const rowH     = "clamp(34px, 4.6vw, 62px)";
+  const rowH = 52; // px — fixed so framer-motion can animate correctly
 
   return (
     <Link
@@ -22,27 +22,22 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex items-center justify-end gap-2 group w-full"
-      style={{ overflow: "hidden", height: rowH }}
+      className="flex items-center justify-end gap-2 w-full"
+      style={{ overflow: "hidden", height: `${rowH}px` }}
     >
       {/* Stacked text roller */}
       <motion.div
-        animate={{ y: hovered ? `-${rowH}` : "0px" }}
-        transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-        style={{ display: "flex", flexDirection: "column" }}
+        initial={false}
+        animate={{ y: hovered ? -rowH : 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        style={{ display: "flex", flexDirection: "column", willChange: "transform" }}
       >
-        {/* Visible row */}
-        <div
-          className="text-white font-bold text-right"
-          style={{ height: rowH, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}
-        >
+        <div className="text-white font-bold text-right"
+          style={{ height: `${rowH}px`, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
           {label}
         </div>
-        {/* Clone row — comes up from below */}
-        <div
-          className="text-white font-bold text-right"
-          style={{ height: rowH, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}
-        >
+        <div className="text-white font-bold text-right"
+          style={{ height: `${rowH}px`, fontSize, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
           {label}
         </div>
       </motion.div>
