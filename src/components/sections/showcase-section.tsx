@@ -41,7 +41,7 @@ function MediaSlide({ item, active }: { item: ShowcaseMediaItem; active: boolean
 export default function ShowcaseSection({ lang }: Props) {
   const [content, setContent] = useState<ShowcaseContent | null>(null);
   const [current, setCurrent] = useState(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     getShowcaseContent().then(setContent);
@@ -51,13 +51,15 @@ export default function ShowcaseSection({ lang }: Props) {
     .slice()
     .sort((a, b) => a.order - b.order);
 
+  // Per-item duration: uses item.duration (seconds), falls back to 3s
   useEffect(() => {
     if (items.length <= 1) return;
-    intervalRef.current = setInterval(() => {
+    const ms = (items[current]?.duration ?? 3) * 1000;
+    timerRef.current = setTimeout(() => {
       setCurrent((prev) => (prev + 1) % items.length);
-    }, 2000);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [items.length]);
+    }, ms);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [current, items.length]);
 
   const title    = lang === "tr" ? content?.title_tr    : content?.title_en;
   const desc     = lang === "tr" ? content?.description_tr : content?.description_en;

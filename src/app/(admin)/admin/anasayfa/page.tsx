@@ -155,6 +155,7 @@ export default function AnasayfaAdmin() {
       url,
       type,
       order: (showcase?.mediaItems.length ?? 0),
+      duration: 3,
     };
     setShowcase((prev) => prev ? { ...prev, mediaItems: [...prev.mediaItems, newItem] } : prev);
   }
@@ -518,6 +519,23 @@ service cloud.firestore {
                   <div className="flex-1 min-w-0">
                     <span className="text-xs text-zinc-400 uppercase font-medium">{item.type === "video" ? "🎬 Video" : "🖼️ Görsel"}</span>
                     <p className="text-xs text-zinc-600 truncate mt-0.5">{item.url.split("/").pop()?.split("?")[0]}</p>
+                  </div>
+                  {/* Duration */}
+                  <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                    <span className="text-[10px] text-zinc-500">Süre (sn)</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={60}
+                      value={item.duration ?? 3}
+                      onChange={(e) => setShowcase((prev) => prev ? {
+                        ...prev,
+                        mediaItems: prev.mediaItems.map((m) =>
+                          m.id === item.id ? { ...m, duration: Number(e.target.value) } : m
+                        )
+                      } : prev)}
+                      className="w-16 bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm text-white text-center focus:outline-none focus:border-zinc-500"
+                    />
                   </div>
                   {/* Order */}
                   <div className="flex flex-col gap-1">

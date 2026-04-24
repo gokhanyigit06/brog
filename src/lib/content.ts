@@ -340,6 +340,7 @@ export interface ShowcaseMediaItem {
   url: string;
   type: "image" | "video";
   order: number;
+  duration: number; // seconds each item is shown
 }
 
 export interface ShowcaseContent {
