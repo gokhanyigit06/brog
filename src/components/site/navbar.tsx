@@ -41,8 +41,11 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
         </motion.div>
       </div>
 
-      {/* Arrow */}
-      <span style={{ color: "white", fontSize: "13px", flexShrink: 0 }}>↗</span>
+      {/* Arrow — short & thick SVG */}
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+        <line x1="2" y1="12" x2="12" y2="2" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+        <polyline points="5,2 12,2 12,9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      </svg>
     </Link>
   );
 }
