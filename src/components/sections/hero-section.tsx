@@ -176,12 +176,11 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 14 }}
             transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
-            className="absolute right-0 text-white leading-relaxed text-right"
+            className="absolute left-0 right-0 text-white font-bold leading-snug text-left"
             style={{
-              fontSize: "clamp(14px, 1.2vw, 17px)",
-              maxWidth: "400px",
+              fontSize: "clamp(22px, 2.5vw, 34px)",
               whiteSpace: "pre-line",
-              top: "52%",
+              top: "62%",
             }}
           >
             {slogan}
