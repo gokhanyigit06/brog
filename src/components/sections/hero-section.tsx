@@ -126,10 +126,10 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
             transition={{ duration: 0.75, ease: EASE }}
-            className="absolute top-0 left-0 text-white font-black leading-none tracking-tight select-none"
-            style={{ fontSize: "clamp(72px, 9.5vw, 128px)" }}
+            className="absolute left-0 text-white font-black leading-none tracking-tight select-none"
+            style={{ fontSize: "clamp(86px, 11.5vw, 154px)", top: "8%" }}
           >
-            Brog®
+            VOGO®
           </motion.h1>
 
           {/* Studio — sağ orta */}
