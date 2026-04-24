@@ -177,7 +177,7 @@ export default function Navbar({ lang }: NavbarProps) {
               {/* Brand */}
               <div
                 className="text-white font-black leading-none tracking-tight"
-                style={{ fontSize: "clamp(60px, 8vw, 110px)" }}
+                style={{ fontSize: "clamp(48px, 6.4vw, 88px)", marginTop: "48px" }}
               >
                 <div>VOGO</div>
                 <div>lab.</div>
