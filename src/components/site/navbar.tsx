@@ -69,7 +69,7 @@ function LiveClock() {
   const time = now.toLocaleTimeString("en-US", { hour12: false });
 
   return (
-    <div className="text-white font-mono leading-tight" style={{ fontSize: "clamp(28px, 3.5vw, 48px)" }}>
+    <div className="text-white font-mono leading-tight" style={{ fontSize: "clamp(20px, 2.45vw, 34px)" }}>
       <div>{date}</div>
       <div>{time}</div>
     </div>
