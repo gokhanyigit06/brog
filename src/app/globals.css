@@ -5,7 +5,7 @@
   --foreground: #171717;
 
   /* ─── Layout ─────────────────────────────────── */
-  --section-px: 150px;   /* desktop  */
+  --section-px: 200px;   /* desktop  */
 }
 
 @theme inline {
