@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/i18n";
 
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 export default function Navbar({ lang }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const navLinks = [
     { href: `/${lang}/projeler`, label: lang === "tr" ? "Projeler" : "Projects" },
@@ -52,20 +54,30 @@ export default function Navbar({ lang }: NavbarProps) {
           {/* Hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex flex-col gap-[6px] cursor-pointer"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className="flex flex-col gap-[7px] cursor-pointer"
             aria-label="Menu"
           >
-            <span
-              className={cn(
-                "block h-px w-7 bg-white transition-all duration-300 origin-center",
-                menuOpen && "rotate-45 translate-y-[8px]"
-              )}
+            <motion.span
+              animate={{
+                width: menuOpen ? "28px" : hovered ? "28px" : "18px",
+                rotate: menuOpen ? 45 : 0,
+                y: menuOpen ? 7 : 0,
+              }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="block h-[2px] bg-white origin-left"
+              style={{ display: "block" }}
             />
-            <span
-              className={cn(
-                "block h-px w-7 bg-white transition-all duration-300",
-                menuOpen && "-rotate-45 -translate-y-[5px]"
-              )}
+            <motion.span
+              animate={{
+                width: menuOpen ? "28px" : hovered ? "18px" : "28px",
+                rotate: menuOpen ? -45 : 0,
+                y: menuOpen ? -7 : 0,
+              }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="block h-[2px] bg-white origin-left"
+              style={{ display: "block" }}
             />
           </button>
         </div>
