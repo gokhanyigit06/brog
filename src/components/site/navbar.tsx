@@ -14,7 +14,7 @@ interface NavbarProps {
 function SlideLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false);
   const fontSize = "clamp(20px, 2.75vw, 38px)";
-  const lineH    = "clamp(31px, 4.2vw, 56px)";
+  const lineH    = "clamp(34px, 4.6vw, 62px)";
 
   return (
     <Link
@@ -51,7 +51,7 @@ function SlideLink({ href, label, onClick }: { href: string; label: string; onCl
       <motion.span
         animate={{ y: hovered ? "-100%" : "0%", opacity: hovered ? 0 : 1 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="text-white/50 text-xl flex-shrink-0"
+        className="text-white text-sm flex-shrink-0"
       >↗</motion.span>
     </Link>
   );
