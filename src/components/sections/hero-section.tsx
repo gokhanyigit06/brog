@@ -158,13 +158,14 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 14 }}
             transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
-            className="absolute bottom-0 left-0 space-y-0.5"
+            className="absolute left-0 space-y-0.5"
+            style={{ bottom: "18%" }}
           >
             {services.map((s) => (
               <li
                 key={s}
                 className="text-white font-bold uppercase tracking-widest leading-snug"
-                style={{ fontSize: "clamp(11px, 1.15vw, 14px)" }}
+                style={{ fontSize: "clamp(16px, 1.7vw, 21px)" }}
               >
                 {s}
               </li>
@@ -176,11 +177,12 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 14 }}
             transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
-            className="absolute bottom-0 right-0 text-white leading-relaxed text-right"
+            className="absolute right-0 text-white leading-relaxed text-right"
             style={{
-              fontSize: "clamp(12px, 1vw, 14px)",
-              maxWidth: "320px",
+              fontSize: "clamp(14px, 1.3vw, 18px)",
+              maxWidth: "380px",
               whiteSpace: "pre-line",
+              bottom: "18%",
             }}
           >
             {slogan}
