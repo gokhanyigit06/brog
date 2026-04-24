@@ -95,13 +95,13 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       <motion.div
         className="absolute inset-0"
         style={{ background: CARD_COLORS[2], originX: "50%", originY: "50%", zIndex: 4 }}
-        initial={{ opacity: 0, scale: 0.48, y: 230, borderRadius: 12 }}
+        initial={{ opacity: 0, scale: 0.65, y: 260, borderRadius: 12 }}
         animate={
           isExpanded
             ? { opacity: 1, scale: 1, y: 0, borderRadius: 0 }
             : phase === "card3"
-            ? { opacity: 1, scale: 0.48, y: 50, borderRadius: 12 }
-            : { opacity: 0, scale: 0.48, y: 230, borderRadius: 12 }
+            ? { opacity: 1, scale: 0.65, y: 60, borderRadius: 12 }
+            : { opacity: 0, scale: 0.65, y: 260, borderRadius: 12 }
         }
         transition={
           isExpanded
