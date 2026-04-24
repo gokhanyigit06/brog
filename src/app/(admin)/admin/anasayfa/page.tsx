@@ -329,6 +329,36 @@ service cloud.firestore {
             </div>
           </Card>
 
+          {/* Animasyon Kartları */}
+          <Card title="Animasyon Kartları" subtitle="Hero açılırken arka arkaya gelen 3 kart görseli (boş bırakılırsa gradient renk kullanılır)" defaultOpen={false}>
+            <div className="grid grid-cols-3 gap-4">
+              {([
+                { key: "card1Image", label: "Kart 1 — Küçük" },
+                { key: "card2Image", label: "Kart 2 — Orta" },
+                { key: "card3Image", label: "Kart 3 — Büyük" },
+              ] as const).map(({ key, label }) => (
+                <div key={key}>
+                  <p className="text-xs text-zinc-400 font-medium mb-2">{label}</p>
+                  <ImageUpload
+                    url={(hero as any)[key]}
+                    onUpload={(url) => setHero({ ...hero!, [key]: url })}
+                    storagePath="hero/cards"
+                    aspect="16/9"
+                    label="Görsel Yükle"
+                  />
+                  {(hero as any)[key] && (
+                    <button
+                      onClick={() => setHero({ ...hero!, [key]: "" } as HeroContent)}
+                      className="text-xs text-red-400 hover:text-red-300 transition-colors mt-1"
+                    >
+                      Kaldır
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Card>
+
           {/* Arka Plan */}
           <Card title="Arka Plan Görseli" subtitle="Hero'nun arka plan fotoğrafı (boş bırakılırsa gradient kullanılır)" defaultOpen={false}>
             <div className="space-y-4">
@@ -352,6 +382,7 @@ service cloud.firestore {
               </Field>
             </div>
           </Card>
+
 
           {/* Hizmetler Listesi */}
           <Card title="Hizmetler Listesi" subtitle="Sol alt köşede görünür">

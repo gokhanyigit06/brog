@@ -19,14 +19,17 @@ import { db, storage } from "./firebase";
 // ─────────────────────────────────────────────
 
 export interface HeroContent {
-  title_main: string;       // "VOGO"
-  title_sub: string;        // "lab."
+  title_main: string;
+  title_sub: string;
   services_tr: string[];
   services_en: string[];
   slogan_tr: string;
   slogan_en: string;
   bgColor: string;
-  bgImage: string;          // hero background image URL
+  bgImage: string;
+  card1Image: string;   // small card
+  card2Image: string;   // medium card
+  card3Image: string;   // large card / hero bg
 }
 
 export interface NavbarContent {
@@ -111,6 +114,9 @@ const HERO_DEFAULT: HeroContent = {
   slogan_en: "We build business solutions that drive real growth —\nefficient, scalable, and profit-focused.",
   bgColor: "linear-gradient(160deg, #0a2540 0%, #07182a 100%)",
   bgImage: "",
+  card1Image: "",
+  card2Image: "",
+  card3Image: "",
 };
 
 export async function getHeroContent(): Promise<HeroContent> {

@@ -77,7 +77,9 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           width: "38%",
           aspectRatio: "16/9",
           borderRadius: 10,
-          background: CARD_COLORS[0],
+          background: content?.card1Image
+            ? `url(${content.card1Image}) center/cover no-repeat`
+            : CARD_COLORS[0],
           zIndex: 2,
         }}
       />
@@ -98,7 +100,9 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           width: "50%",
           aspectRatio: "16/9",
           borderRadius: 10,
-          background: CARD_COLORS[1],
+          background: content?.card2Image
+            ? `url(${content.card2Image}) center/cover no-repeat`
+            : CARD_COLORS[1],
           zIndex: 3,
         }}
       />
@@ -106,7 +110,12 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       {/* ── Kart 3 / Hero: alttan gelir, sonra tam ekrana açılır ── */}
       <motion.div
         className="absolute inset-0"
-        style={{ background: CARD_COLORS[2], originX: "50%", originY: "50%", zIndex: 4 }}
+        style={{
+          background: content?.card3Image
+            ? `url(${content.card3Image}) center/cover no-repeat`
+            : CARD_COLORS[2],
+          originX: "50%", originY: "50%", zIndex: 4
+        }}
         initial={{ opacity: 0, scale: 0.65, y: 260, borderRadius: 12 }}
         animate={
           isExpanded
