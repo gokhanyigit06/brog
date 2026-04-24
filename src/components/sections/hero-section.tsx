@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-type Phase = "idle" | "card1" | "card2" | "expand" | "text";
+type Phase = "idle" | "card1" | "card2" | "card3" | "expand" | "text";
 
 const CARD_COLORS = [
-  "linear-gradient(160deg, #1c2f45 0%, #0e1c2a 100%)",
-  "linear-gradient(160deg, #0a2540 0%, #07182a 100%)",
+  "linear-gradient(160deg, #1a2d42 0%, #0d1c2e 100%)",  // kart 1
+  "linear-gradient(160deg, #142236 0%, #0a1828 100%)",  // kart 2
+  "linear-gradient(160deg, #0a2540 0%, #07182a 100%)",  // kart 3 / hero
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -21,14 +22,19 @@ export default function HeroSection({ lang }: HeroSectionProps) {
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("card1"), 500);
-    const t2 = setTimeout(() => setPhase("card2"), 1200);
-    const t3 = setTimeout(() => setPhase("expand"), 2100);
-    const t4 = setTimeout(() => setPhase("text"), 3400);
-    return () => [t1, t2, t3, t4].forEach(clearTimeout);
+    const t2 = setTimeout(() => setPhase("card2"), 1250);
+    const t3 = setTimeout(() => setPhase("card3"), 2000);
+    const t4 = setTimeout(() => setPhase("expand"), 2800);
+    const t5 = setTimeout(() => setPhase("text"), 4100);
+    return () => [t1, t2, t3, t4, t5].forEach(clearTimeout);
   }, []);
 
   const isExpanded = phase === "expand" || phase === "text";
   const showText = phase === "text";
+
+  // Kart görünürlükleri
+  const card1Visible = phase === "card1" || phase === "card2" || phase === "card3";
+  const card2Visible = phase === "card2" || phase === "card3";
 
   const services =
     lang === "tr"
@@ -43,20 +49,20 @@ export default function HeroSection({ lang }: HeroSectionProps) {
   return (
     <div className="relative w-full h-screen bg-[#080808] overflow-hidden">
 
-      {/* ── Kart 1: küçük, merkezin biraz üstü, alttan yukarı gelir ── */}
+      {/* ── Kart 1: en küçük, üstte ── */}
       <motion.div
         initial={{ opacity: 0, y: 160 }}
         animate={{
-          opacity: phase === "card1" || phase === "card2" ? 1 : 0,
-          y: phase === "idle" ? 160 : 0,
+          opacity: card1Visible ? 1 : 0,
+          y: card1Visible ? 0 : 160,
         }}
         transition={{ duration: 0.95, ease: EASE }}
         style={{
           position: "absolute",
-          top: "26%",
+          top: "20%",
           left: "50%",
           translateX: "-50%",
-          width: "42%",
+          width: "38%",
           aspectRatio: "16/9",
           borderRadius: 10,
           background: CARD_COLORS[0],
@@ -64,30 +70,46 @@ export default function HeroSection({ lang }: HeroSectionProps) {
         }}
       />
 
-      {/* ── Kart 2 / Hero: alttan yukarı gelir, sonra scale ile hero'ya açılır ── */}
-      {/*
-        inset-0 ile tam ekran div.
-        card2 aşamasında: scale(0.50) + y(50px) → küçük kart gibi görünür, kart 1'in biraz altında
-        expand aşamasında: scale(1) + y(0) + borderRadius(0) → hero'ya açılır
-      */}
+      {/* ── Kart 2: orta boy, biraz altta ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 200 }}
+        animate={{
+          opacity: card2Visible ? 1 : 0,
+          y: card2Visible ? 0 : 200,
+        }}
+        transition={{ duration: 0.95, ease: EASE }}
+        style={{
+          position: "absolute",
+          top: "30%",
+          left: "50%",
+          translateX: "-50%",
+          width: "50%",
+          aspectRatio: "16/9",
+          borderRadius: 10,
+          background: CARD_COLORS[1],
+          zIndex: 3,
+        }}
+      />
+
+      {/* ── Kart 3 / Hero: alttan gelir, sonra tam ekrana açılır ── */}
       <motion.div
         className="absolute inset-0"
-        style={{ background: CARD_COLORS[1], zIndex: 3, originX: "50%", originY: "50%" }}
-        initial={{ opacity: 0, scale: 0.48, y: 220, borderRadius: 12 }}
+        style={{ background: CARD_COLORS[2], originX: "50%", originY: "50%", zIndex: 4 }}
+        initial={{ opacity: 0, scale: 0.48, y: 230, borderRadius: 12 }}
         animate={
           isExpanded
             ? { opacity: 1, scale: 1, y: 0, borderRadius: 0 }
-            : phase === "card2"
-            ? { opacity: 1, scale: 0.48, y: 40, borderRadius: 12 }
-            : { opacity: 0, scale: 0.48, y: 220, borderRadius: 12 }
+            : phase === "card3"
+            ? { opacity: 1, scale: 0.48, y: 50, borderRadius: 12 }
+            : { opacity: 0, scale: 0.48, y: 230, borderRadius: 12 }
         }
         transition={
           isExpanded
             ? {
                 opacity: { duration: 0.5 },
-                scale: { duration: 1.3, ease: EASE },
-                y: { duration: 1.3, ease: EASE },
-                borderRadius: { duration: 1.3, ease: EASE },
+                scale: { duration: 1.35, ease: EASE },
+                y: { duration: 1.35, ease: EASE },
+                borderRadius: { duration: 1.35, ease: EASE },
               }
             : {
                 opacity: { duration: 0.85, ease: EASE },
@@ -105,7 +127,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
         />
       </motion.div>
 
-      {/* ── Beyaz gradient — hero açıldıktan sonra alttan yavaşça gelir ── */}
+      {/* ── Beyaz gradient — alttan yavaşça gelir ── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: showText ? 1 : 0 }}
@@ -121,7 +143,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       <div className="section-container absolute inset-0 z-20 pointer-events-none pt-[70px] pb-12">
         <div className="relative h-full w-full">
 
-          {/* Brog® — sol üst */}
+          {/* VOGO® — sol, biraz aşağı */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
