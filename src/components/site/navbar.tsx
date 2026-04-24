@@ -184,7 +184,7 @@ export default function Navbar({ lang }: NavbarProps) {
               </div>
 
               {/* Clock */}
-              <div style={{ marginTop: "5px" }}>
+              <div style={{ marginTop: "15px" }}>
                 <LiveClock />
               </div>
 
