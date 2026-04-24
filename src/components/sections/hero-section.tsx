@@ -77,8 +77,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           width: "38%",
           aspectRatio: "16/9",
           borderRadius: 10,
-          background: content?.card1Image ? undefined : CARD_COLORS[0],
-          backgroundImage: content?.card1Image ? `url(${content.card1Image})` : undefined,
+          backgroundImage: content?.card1Image ? `url(${content.card1Image})` : CARD_COLORS[0],
           backgroundSize: "cover",
           backgroundPosition: "center",
           zIndex: 2,
@@ -101,8 +100,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
           width: "50%",
           aspectRatio: "16/9",
           borderRadius: 10,
-          background: content?.card2Image ? undefined : CARD_COLORS[1],
-          backgroundImage: content?.card2Image ? `url(${content.card2Image})` : undefined,
+          backgroundImage: content?.card2Image ? `url(${content.card2Image})` : CARD_COLORS[1],
           backgroundSize: "cover",
           backgroundPosition: "center",
           zIndex: 3,
@@ -113,8 +111,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       <motion.div
         className="absolute inset-0"
         style={{
-          background: content?.card3Image ? undefined : CARD_COLORS[2],
-          backgroundImage: content?.card3Image ? `url(${content.card3Image})` : undefined,
+          backgroundImage: content?.card3Image ? `url(${content.card3Image})` : CARD_COLORS[2],
           backgroundSize: "cover",
           backgroundPosition: "center",
           originX: "50%", originY: "50%", zIndex: 4
