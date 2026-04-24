@@ -22,13 +22,13 @@ export default function Navbar({ lang }: NavbarProps) {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between section-container py-5">
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between section-container py-6">
         {/* Logo */}
         <Link href={`/${lang}`} className="flex items-center gap-2">
-          <span className="w-5 h-5 rounded-full border border-white flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-white" />
+          <span className="w-6 h-6 rounded-full border border-white flex items-center justify-center">
+            <span className="w-2 h-2 rounded-full bg-white" />
           </span>
-          <span className="text-white font-bold text-base tracking-widest uppercase">
+          <span className="text-white font-bold text-lg tracking-widest uppercase">
             BROG®
           </span>
         </Link>
@@ -36,37 +36,37 @@ export default function Navbar({ lang }: NavbarProps) {
         {/* Right side: contact info + hamburger */}
         <div className="flex items-center gap-8">
           {/* Contact info — hidden on mobile */}
-          <div className="hidden md:flex items-start gap-7">
+          <div className="hidden md:flex items-start gap-8">
             <div>
-              <p className="text-white text-[11px] font-semibold mb-0.5">Email</p>
-              <p className="text-white text-[11px]">hello@brog.com</p>
+              <p className="text-white text-[13px] font-semibold mb-0.5">Email</p>
+              <p className="text-white text-[13px]">hello@brog.com</p>
             </div>
             <div>
-              <p className="text-white text-[11px] font-semibold mb-0.5">Phone</p>
-              <p className="text-white text-[11px]">+90 555 000 0000</p>
+              <p className="text-white text-[13px] font-semibold mb-0.5">Phone</p>
+              <p className="text-white text-[13px]">+90 555 000 0000</p>
             </div>
             <div>
-              <p className="text-white text-[11px] font-semibold mb-0.5">Location</p>
-              <p className="text-white text-[11px]">Istanbul, Turkey</p>
+              <p className="text-white text-[13px] font-semibold mb-0.5">Location</p>
+              <p className="text-white text-[13px]">Istanbul, Turkey</p>
             </div>
           </div>
 
           {/* Hamburger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex flex-col gap-[5px] cursor-pointer"
+            className="flex flex-col gap-[6px] cursor-pointer"
             aria-label="Menu"
           >
             <span
               className={cn(
-                "block h-px w-6 bg-white transition-all duration-300 origin-center",
-                menuOpen && "rotate-45 translate-y-[7px]"
+                "block h-px w-7 bg-white transition-all duration-300 origin-center",
+                menuOpen && "rotate-45 translate-y-[8px]"
               )}
             />
             <span
               className={cn(
-                "block h-px w-6 bg-white transition-all duration-300",
-                menuOpen && "-rotate-45 -translate-y-[4px]"
+                "block h-px w-7 bg-white transition-all duration-300",
+                menuOpen && "-rotate-45 -translate-y-[5px]"
               )}
             />
           </button>
