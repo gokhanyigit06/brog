@@ -98,7 +98,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
         initial={{ opacity: 0, scale: 0.65, y: 260, borderRadius: 12 }}
         animate={
           isExpanded
-            ? { opacity: 1, scale: 1, y: 0, borderRadius: 0 }
+            ? { opacity: 1, scale: 1, y: 0, borderRadius: "0 0 24px 24px" }
             : phase === "card3"
             ? { opacity: 1, scale: 0.65, y: 60, borderRadius: 12 }
             : { opacity: 0, scale: 0.65, y: 260, borderRadius: 12 }
@@ -127,26 +127,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
         />
       </motion.div>
 
-      {/* ── Beyaz gradient — alttan yavaşça gelir ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: showText ? 1 : 0 }}
-        transition={{ duration: 2.0, delay: 0.5, ease: "easeInOut" }}
-        className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none"
-        style={{
-          height: "150px",
-          background: `linear-gradient(to top,
-            rgba(255,255,255,1)   0%,
-            rgba(255,255,255,0.9) 15%,
-            rgba(255,255,255,0.7) 30%,
-            rgba(255,255,255,0.4) 55%,
-            rgba(255,255,255,0.1) 80%,
-            transparent           100%
-          )`,
-        }}
-      />
-
-      {/* ── Yazı overlay ── */}
+      {/* ── Sayfa arka planı için alt beyaz alan ── */}
       <div className="section-container absolute inset-0 z-20 pointer-events-none pt-[70px] pb-12">
         <div className="relative h-full w-full">
 

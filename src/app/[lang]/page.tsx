@@ -10,7 +10,7 @@ export default async function HomePage({
   const { lang } = await params;
 
   return (
-    <main className="bg-[#080808] min-h-screen">
+    <main className="bg-white min-h-screen">
       <Navbar lang={lang as Locale} />
       <HeroSection lang={lang} />
     </main>
