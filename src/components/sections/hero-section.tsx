@@ -137,7 +137,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
             transition={{ duration: 0.75, ease: EASE }}
             className="absolute left-0 text-white font-black leading-none tracking-tight select-none"
-            style={{ fontSize: "clamp(86px, 11.5vw, 154px)", top: "3%" }}
+            style={{ fontSize: "clamp(86px, 11.5vw, 154px)", top: "calc(3% + 20px)" }}
           >
             VOGO
           </motion.h1>
