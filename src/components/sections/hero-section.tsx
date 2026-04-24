@@ -151,7 +151,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             className="absolute left-0 text-white font-black leading-none tracking-tight select-none"
             style={{ fontSize: "clamp(86px, 11.5vw, 154px)", top: "8%" }}
           >
-            VOGO®
+            VOGO
           </motion.h1>
 
           {/* Studio — sağ orta */}
@@ -160,9 +160,9 @@ export default function HeroSection({ lang }: HeroSectionProps) {
             animate={{ opacity: showText ? 1 : 0, y: showText ? 0 : 20 }}
             transition={{ duration: 0.75, delay: 0.1, ease: EASE }}
             className="absolute right-0 text-white font-black leading-none tracking-tight select-none"
-            style={{ fontSize: "clamp(72px, 9.5vw, 128px)", top: "40%" }}
+            style={{ fontSize: "clamp(61px, 8vw, 109px)", top: "40%" }}
           >
-            Studio
+            lab.
           </motion.p>
 
           {/* Servisler — sol alt */}
