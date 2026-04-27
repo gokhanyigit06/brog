@@ -192,19 +192,22 @@ export default function ProjectDetailClient({ slug, lang }: Props) {
             <h1 style={{ fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#0a0a0a", lineHeight: 1, marginBottom: 28 }}>
               {project.brandName || project.title}
             </h1>
-            {project.link && (
-              <a
-                href={project.link} target="_blank" rel="noopener noreferrer"
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, border: "1.5px solid #0a0a0a", borderRadius: 999, padding: "10px 22px", fontSize: 14, fontWeight: 600, color: "#0a0a0a", textDecoration: "none", transition: "background 0.2s, color 0.2s" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "#0a0a0a"; (e.currentTarget as HTMLElement).style.color = "#fff"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#0a0a0a"; }}
-              >
-                {lang === "tr" ? "Canlı Site" : "Live Website"}
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
-            )}
+            {project.link && (() => {
+              const href = project.link.startsWith("http") ? project.link : `https://${project.link}`;
+              return (
+                <a
+                  href={href} target="_blank" rel="noopener noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, border: "1.5px solid #0a0a0a", borderRadius: 999, padding: "10px 22px", fontSize: 14, fontWeight: 600, color: "#0a0a0a", textDecoration: "none", transition: "background 0.2s, color 0.2s" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "#0a0a0a"; (e.currentTarget as HTMLElement).style.color = "#fff"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#0a0a0a"; }}
+                >
+                  {lang === "tr" ? "Canlı Site" : "Live Website"}
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </a>
+              );
+            })()}
           </div>
 
           {/* Right — description on top, then metadata rows */}
