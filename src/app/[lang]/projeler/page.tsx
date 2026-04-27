@@ -22,7 +22,7 @@ export default async function ProjelerPage({
 
   return (
     <>
-      <Navbar lang={lang} />
+      <Navbar lang={lang} lightBg />
       <ProjelerClient lang={lang} />
       <Footer lang={lang} />
     </>

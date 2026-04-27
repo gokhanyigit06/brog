@@ -9,6 +9,7 @@ import type { Locale } from "@/i18n";
 
 interface NavbarProps {
   lang: Locale;
+  lightBg?: boolean; // force dark text on light background pages
 }
 
 // ── Hover slide-up text component ──────────────────────────────
@@ -73,11 +74,14 @@ function LiveClock() {
   );
 }
 
-export default function Navbar({ lang }: NavbarProps) {
+export default function Navbar({ lang, lightBg }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hovered, setHovered]   = useState(false);
   const [nbData, setNbData]     = useState<NavbarContent | null>(null);
   const [scrolled, setScrolled] = useState(false);
+
+  // On light-bg pages the navbar always looks as if scrolled (dark text)
+  const isDark = lightBg || scrolled;
 
   useEffect(() => {
     getNavbarContent().then(setNbData);
@@ -119,10 +123,10 @@ export default function Navbar({ lang }: NavbarProps) {
       <header
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between section-container py-6"
         style={{
-          background: scrolled ? "rgba(255,255,255,0.85)" : "transparent",
-          backdropFilter: scrolled ? "blur(18px) saturate(1.8)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(18px) saturate(1.8)" : "none",
-          borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
+          background: isDark ? "rgba(255,255,255,0.85)" : "transparent",
+          backdropFilter: isDark ? "blur(18px) saturate(1.8)" : "none",
+          WebkitBackdropFilter: isDark ? "blur(18px) saturate(1.8)" : "none",
+          borderBottom: isDark ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
           transition: "background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease",
         }}
       >
@@ -133,7 +137,7 @@ export default function Navbar({ lang }: NavbarProps) {
             alt="Vogo Lab Logo"
             className="h-7 w-auto object-contain"
             style={{
-              filter: scrolled
+              filter: isDark
                 ? (nbData?.logoUrl ? "none" : "brightness(0)")
                 : (nbData?.logoUrl ? "none" : "brightness(0) invert(1)"),
               transition: "filter 0.35s ease",
@@ -141,7 +145,7 @@ export default function Navbar({ lang }: NavbarProps) {
           />
           <span
             style={{
-              color: scrolled ? "#0a0a0a" : "#fff",
+              color: isDark ? "#0a0a0a" : "#fff",
               transition: "color 0.35s ease",
               fontWeight: 700,
               fontSize: "1.125rem",
@@ -158,16 +162,16 @@ export default function Navbar({ lang }: NavbarProps) {
           {/* Contact info */}
           <div className="hidden md:flex items-start gap-8">
             <div>
-              <p style={{ color: scrolled ? "#0a0a0a" : "#fff", transition: "color 0.35s ease", fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Email</p>
-              <p style={{ color: scrolled ? "#374151" : "#fff", transition: "color 0.35s ease", fontSize: 14 }}>{email}</p>
+              <p style={{ color: isDark ? "#0a0a0a" : "#fff", transition: "color 0.35s ease", fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Email</p>
+              <p style={{ color: isDark ? "#374151" : "#fff", transition: "color 0.35s ease", fontSize: 14 }}>{email}</p>
             </div>
             <div>
-              <p style={{ color: scrolled ? "#0a0a0a" : "#fff", transition: "color 0.35s ease", fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Phone</p>
-              <p style={{ color: scrolled ? "#374151" : "#fff", transition: "color 0.35s ease", fontSize: 14 }}>{phone}</p>
+              <p style={{ color: isDark ? "#0a0a0a" : "#fff", transition: "color 0.35s ease", fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Phone</p>
+              <p style={{ color: isDark ? "#374151" : "#fff", transition: "color 0.35s ease", fontSize: 14 }}>{phone}</p>
             </div>
             <div>
-              <p style={{ color: scrolled ? "#0a0a0a" : "#fff", transition: "color 0.35s ease", fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Location</p>
-              <p style={{ color: scrolled ? "#374151" : "#fff", transition: "color 0.35s ease", fontSize: 14 }}>{location}</p>
+              <p style={{ color: isDark ? "#0a0a0a" : "#fff", transition: "color 0.35s ease", fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Location</p>
+              <p style={{ color: isDark ? "#374151" : "#fff", transition: "color 0.35s ease", fontSize: 14 }}>{location}</p>
             </div>
           </div>
 
@@ -186,7 +190,7 @@ export default function Navbar({ lang }: NavbarProps) {
                 y:      menuOpen ? 4.5 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              style={{ background: scrolled ? "#0a0a0a" : "#fff", transition: "background 0.35s ease" }}
+              style={{ background: isDark ? "#0a0a0a" : "#fff", transition: "background 0.35s ease" }}
               className="block h-[2px] origin-center"
             />
             <motion.span
@@ -196,7 +200,7 @@ export default function Navbar({ lang }: NavbarProps) {
                 y:      menuOpen ? -4.5 : 0,
               }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              style={{ background: scrolled ? "#0a0a0a" : "#fff", transition: "background 0.35s ease" }}
+              style={{ background: isDark ? "#0a0a0a" : "#fff", transition: "background 0.35s ease" }}
               className="block h-[2px] origin-center"
             />
           </button>
