@@ -27,7 +27,18 @@ function ProjectCard({ project }: { project: Project }) {
           background: "#e5e7eb",
         }}
       >
-        {project.imageUrl && (
+        {project.videoUrl ? (
+          <video
+            src={project.videoUrl}
+            autoPlay muted loop playsInline
+            style={{
+              position: "absolute", inset: 0, width: "100%", height: "100%",
+              objectFit: "cover",
+              transition: "transform 0.7s cubic-bezier(0.4,0,0.2,1)",
+              transform: hovered ? "scale(1.04)" : "scale(1)",
+            }}
+          />
+        ) : project.imageUrl ? (
           <Image
             src={project.imageUrl}
             alt={`${project.brandName} — ${project.category} projesi`}
@@ -39,7 +50,7 @@ function ProjectCard({ project }: { project: Project }) {
               transform: hovered ? "scale(1.04)" : "scale(1)",
             }}
           />
-        )}
+        ) : null}
 
         {/* Hover overlay — category */}
         <div

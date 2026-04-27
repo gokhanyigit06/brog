@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -63,11 +64,12 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
           }}
         />
       ) : (project.listingImageUrl || project.imageUrl) ? (
-        <img
-          src={project.listingImageUrl || project.imageUrl}
-          alt={project.brandName}
+        <Image
+          src={project.listingImageUrl || project.imageUrl || ""}
+          alt={`${project.brandName} — ${project.category} projesi`}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           style={{
-            position: "absolute", inset: 0, width: "100%", height: "100%",
             objectFit: "cover",
             transform: hovered ? "scale(1.03)" : "scale(1)",
             transition: "transform 0.8s cubic-bezier(0.4,0,0.2,1)",

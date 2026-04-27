@@ -407,7 +407,36 @@ export default function ProjelerAdmin() {
                 </Field>
               </div>
 
-              <Field label="Video URL (mp4/webm — opsiyonel)">
+              <Field label="🎬 Kapak Videosu" hint="mp4 / webm — varsa görselin önüne geçer">
+                {editing.videoUrl && (
+                  <video src={editing.videoUrl} muted loop playsInline className="w-full h-40 object-cover rounded-lg mb-2" />
+                )}
+                <div className="flex gap-2 flex-wrap">
+                  <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg transition-colors">
+                    <Upload size={14} />
+                    Video Yükle
+                    <input type="file" accept="video/mp4,video/webm,video/*" onChange={async e => {
+                      const file = e.target.files?.[0]; if (!file || !editing) return;
+                      setUploading(true);
+                      const ext = file.name.split(".").pop() || "mp4";
+                      const seoName = (editing.brandName || "proje").toLowerCase().replace(/[^a-z0-9]/g, "-");
+                      const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+                      const { storage } = await import("@/lib/firebase");
+                      const r = ref(storage, `projects/${seoName}-cover-${Date.now()}.${ext}`);
+                      await uploadBytes(r, file);
+                      const url = await getDownloadURL(r);
+                      setEditing(prev => prev ? { ...prev, videoUrl: url } : prev);
+                      setUploading(false);
+                    }} className="hidden" />
+                  </label>
+                  {editing.videoUrl && (
+                    <button onClick={() => setEditing({ ...editing, videoUrl: "" })}
+                      className="px-3 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-400 text-sm rounded-lg transition-colors">
+                      Videoyu Kaldır
+                    </button>
+                  )}
+                </div>
+                <p className="text-xs text-zinc-600 mt-1">Veya direkt URL girin:</p>
                 <input value={editing.videoUrl ?? ""} onChange={e => setEditing({ ...editing, videoUrl: e.target.value })} className={INPUT} placeholder="https://...video.mp4" />
               </Field>
 
