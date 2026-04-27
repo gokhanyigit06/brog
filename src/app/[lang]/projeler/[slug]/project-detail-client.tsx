@@ -185,14 +185,11 @@ export default function ProjectDetailClient({ slug, lang }: Props) {
       <div className="section-container" style={{ paddingTop: 40, paddingBottom: 64 }}>
         <div style={{ display: "grid", gridTemplateColumns: "5fr 4fr", gap: 80, alignItems: "start" }}>
 
-          {/* Left */}
+          {/* Left — title + link only */}
           <div>
-            <h1 style={{ fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#0a0a0a", lineHeight: 1, marginBottom: 20 }}>
+            <h1 style={{ fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#0a0a0a", lineHeight: 1, marginBottom: 28 }}>
               {project.brandName || project.title}
             </h1>
-            {desc && (
-              <p style={{ fontSize: 16, lineHeight: 1.75, color: "#374151", maxWidth: 480, marginBottom: 28 }}>{desc}</p>
-            )}
             {project.link && (
               <a
                 href={project.link} target="_blank" rel="noopener noreferrer"
@@ -208,12 +205,15 @@ export default function ProjectDetailClient({ slug, lang }: Props) {
             )}
           </div>
 
-          {/* Right: metadata */}
+          {/* Right — description on top, then metadata rows */}
           <div style={{ paddingTop: 8 }}>
-            {project.year     && <MetaRow label={lang === "tr" ? "Yıl"        : "Year"}          value={project.year} />}
-            {industry         && <MetaRow label={lang === "tr" ? "Sektör"     : "Industry"}       value={industry} />}
+            {desc && (
+              <p style={{ fontSize: 15, lineHeight: 1.75, color: "#374151", marginBottom: 28 }}>{desc}</p>
+            )}
+            {project.year     && <MetaRow label={lang === "tr" ? "Yıl"           : "Year"}          value={project.year} />}
+            {industry         && <MetaRow label={lang === "tr" ? "Sektör"        : "Industry"}       value={industry} />}
             {project.category && <MetaRow label={lang === "tr" ? "Çalışma Alanı" : "Space of work"} value={project.category} />}
-            {project.timeline && <MetaRow label={lang === "tr" ? "Süre"       : "Timeline"}       value={project.timeline} />}
+            {project.timeline && <MetaRow label={lang === "tr" ? "Süre"          : "Timeline"}       value={project.timeline} />}
           </div>
         </div>
       </div>
