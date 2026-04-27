@@ -16,6 +16,20 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage
 import { db, storage } from "./firebase";
 
 // ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+
+/** Convert any string to a URL-safe slug. "Acity AVM 2025" → "acity-avm-2025" */
+export function slugify(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/ç/g, "c").replace(/ğ/g, "g").replace(/ı/g, "i")
+    .replace(/ö/g, "o").replace(/ş/g, "s").replace(/ü/g, "u")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// ─────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────
 
@@ -266,16 +280,20 @@ export async function deleteProject(id: string): Promise<void> {
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  // 1) Try by slug field
-  const bySlug = query(collection(db, "projects"), where("slug", "==", slug));
-  const snapSlug = await getDocs(bySlug);
-  if (!snapSlug.empty) {
-    const d = snapSlug.docs[0];
-    return { id: d.id, ...d.data() } as Project;
-  }
-  // 2) Fall back to document id
+  const all = await getProjects();
+
+  // 1) Exact match on explicit slug field
+  const byExplicit = all.find((p) => p.slug === slug);
+  if (byExplicit) return byExplicit;
+
+  // 2) Auto-match by slugified brandName (primary strategy)
+  const byBrand = all.find((p) => slugify(p.brandName || p.title || "") === slug);
+  if (byBrand) return byBrand;
+
+  // 3) Fall back to Firestore document id
   const byId = await getDoc(doc(db, "projects", slug));
   if (byId.exists()) return { id: byId.id, ...byId.data() } as Project;
+
   return null;
 }
 

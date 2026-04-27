@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getProjectBySlug, getProjects, type Project, type ProjectBlock } from "@/lib/content";
+import { getProjectBySlug, getProjects, slugify, type Project, type ProjectBlock } from "@/lib/content";
 
 /* ────────────────────────────────────────────────────────
    Media renderer (image or video)
@@ -37,6 +37,8 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
     case "text_block": {
       const title = lang === "tr" ? block.title_tr : block.title_en;
       const body  = lang === "tr" ? block.body_tr  : block.body_en;
+      // Only render if there's something to show
+      if (!title && !body && !block.label) return null;
       return (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 3fr", gap: 64, padding: "80px 0", borderTop: "1px solid #e5e7eb" }}>
           <div style={{ paddingTop: 4 }}>
@@ -117,7 +119,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
 ──────────────────────────────────────────────────────── */
 function MiniCard({ project, lang }: { project: Project; lang: string }) {
   const [hovered, setHovered] = useState(false);
-  const slug = project.slug || project.id;
+  const slug = project.slug || slugify(project.brandName || project.title || "");
   return (
     <Link href={`/${lang}/projeler/${slug}`} style={{ display: "block", textDecoration: "none" }}>
       <div

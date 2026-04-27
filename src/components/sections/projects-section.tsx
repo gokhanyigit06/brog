@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getFeaturedProjects, getProjectsContent, type Project, type ProjectsContent } from "@/lib/content";
+import { getFeaturedProjects, getProjectsContent, slugify, type Project, type ProjectsContent } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
 
 interface Props { lang: string }
@@ -162,7 +162,7 @@ export default function ProjectsSection({ lang }: Props) {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
             {featured.map((project) => {
-              const slug = (project as any).slug || project.id;
+              const slug = (project as any).slug || slugify(project.brandName || project.title || "");
               return (
                 <Link key={project.id} href={`/${lang}/projeler/${slug}`} style={{ textDecoration: "none" }}>
                   <ProjectCard project={project} />

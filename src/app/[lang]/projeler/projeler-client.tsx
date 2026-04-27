@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { getProjects, type Project } from "@/lib/content";
+import { getProjects, slugify, type Project } from "@/lib/content";
 
 /* ─────────────────────────────────────────────────────
    Seed projects — shown when Firestore collection empty
@@ -167,8 +167,8 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
     </div>
   );
 
-  const slug = project.slug || project.id;
-  return slug ? (
+  const slug = project.slug || slugify(project.brandName || project.title || "");
+  return (
     <Link href={`/${lang}/projeler/${slug}`} style={{ display: "block", textDecoration: "none" }}>
       {card}
     </Link>
