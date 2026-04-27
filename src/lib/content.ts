@@ -29,6 +29,11 @@ export function slugify(str: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+/** Guard: only use slug override if it's a clean path token — no dots, slashes, or http */
+function isValidSlug(s?: string): boolean {
+  return !!s && !s.includes(".") && !s.includes("/") && !s.startsWith("http");
+}
+
 // ─────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────
@@ -282,11 +287,11 @@ export async function deleteProject(id: string): Promise<void> {
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
   const all = await getProjects();
 
-  // 1) Exact match on explicit slug field
-  const byExplicit = all.find((p) => p.slug === slug);
+  // 1) Explicit clean slug override
+  const byExplicit = all.find((p) => isValidSlug(p.slug) && p.slug === slug);
   if (byExplicit) return byExplicit;
 
-  // 2) Auto-match by slugified brandName (primary strategy)
+  // 2) Auto-match by slugified brandName
   const byBrand = all.find((p) => slugify(p.brandName || p.title || "") === slug);
   if (byBrand) return byBrand;
 

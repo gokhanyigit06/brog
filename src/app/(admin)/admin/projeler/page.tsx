@@ -301,14 +301,18 @@ export default function ProjelerAdmin() {
               </label>
 
               {/* Basic fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Marka / Proje Adı">
-                  <input value={editing.brandName} onChange={e => setEditing({ ...editing, brandName: e.target.value, title: e.target.value })} className={INPUT} placeholder="Urban Glow" />
-                </Field>
-                <Field label="URL Slug">
-                  <input value={editing.slug ?? ""} onChange={e => setEditing({ ...editing, slug: e.target.value })} className={INPUT} placeholder="urban-glow" />
-                </Field>
-              </div>
+              <Field label="Marka / Proje Adı">
+                <input value={editing.brandName} onChange={e => setEditing({ ...editing, brandName: e.target.value, title: e.target.value })} className={INPUT} placeholder="Urban Glow" />
+                <p className="text-xs text-zinc-500 mt-1">
+                  URL: /tr/projeler/<span className="text-zinc-400">{
+                    (editing.brandName || "marka-adi")
+                      .toLowerCase()
+                      .replace(/ç/g,"c").replace(/ğ/g,"g").replace(/ı/g,"i")
+                      .replace(/ö/g,"o").replace(/ş/g,"s").replace(/ü/g,"u")
+                      .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")
+                  }</span>
+                </p>
+              </Field>
 
               <div className="grid grid-cols-3 gap-4">
                 <Field label="Yıl"><input value={editing.year} onChange={e => setEditing({ ...editing, year: e.target.value })} className={INPUT} placeholder="2025" /></Field>

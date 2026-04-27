@@ -162,7 +162,10 @@ export default function ProjectsSection({ lang }: Props) {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
             {featured.map((project) => {
-              const slug = (project as any).slug || slugify(project.brandName || project.title || "");
+              const rawSlug = (project as any).slug;
+              const slug = (rawSlug && !rawSlug.includes(".") && !rawSlug.startsWith("http"))
+                ? rawSlug
+                : slugify(project.brandName || project.title || "");
               return (
                 <Link key={project.id} href={`/${lang}/projeler/${slug}`} style={{ textDecoration: "none" }}>
                   <ProjectCard project={project} />

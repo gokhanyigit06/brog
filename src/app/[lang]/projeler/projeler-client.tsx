@@ -167,7 +167,10 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
     </div>
   );
 
-  const slug = project.slug || slugify(project.brandName || project.title || "");
+  const rawSlug = project.slug;
+  const slug = (rawSlug && !rawSlug.includes(".") && !rawSlug.startsWith("http"))
+    ? rawSlug
+    : slugify(project.brandName || project.title || "");
   return (
     <Link href={`/${lang}/projeler/${slug}`} style={{ display: "block", textDecoration: "none" }}>
       {card}
