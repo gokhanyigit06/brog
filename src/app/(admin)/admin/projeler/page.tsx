@@ -407,66 +407,94 @@ export default function ProjelerAdmin() {
                 </Field>
               </div>
 
-              <Field label="🎬 Kapak Videosu" hint="mp4 / webm — varsa görselin önüne geçer">
-                {editing.videoUrl && (
-                  <video src={editing.videoUrl} muted loop playsInline className="w-full h-40 object-cover rounded-lg mb-2" />
-                )}
-                <div className="flex gap-2 flex-wrap">
-                  <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg transition-colors">
-                    <Upload size={14} />
-                    Video Yükle
-                    <input type="file" accept="video/mp4,video/webm,video/*" onChange={async e => {
-                      const file = e.target.files?.[0]; if (!file || !editing) return;
-                      setUploading(true);
-                      const ext = file.name.split(".").pop() || "mp4";
-                      const seoName = (editing.brandName || "proje").toLowerCase().replace(/[^a-z0-9]/g, "-");
-                      const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
-                      const { storage } = await import("@/lib/firebase");
-                      const r = ref(storage, `projects/${seoName}-cover-${Date.now()}.${ext}`);
-                      await uploadBytes(r, file);
-                      const url = await getDownloadURL(r);
-                      setEditing(prev => prev ? { ...prev, videoUrl: url } : prev);
-                      setUploading(false);
-                    }} className="hidden" />
-                  </label>
-                  {editing.videoUrl && (
-                    <button onClick={() => setEditing({ ...editing, videoUrl: "" })}
-                      className="px-3 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-400 text-sm rounded-lg transition-colors">
-                      Videoyu Kaldır
-                    </button>
-                  )}
-                </div>
-                <p className="text-xs text-zinc-600 mt-1">Veya direkt URL girin:</p>
-                <input value={editing.videoUrl ?? ""} onChange={e => setEditing({ ...editing, videoUrl: e.target.value })} className={INPUT} placeholder="https://...video.mp4" />
-              </Field>
 
+              {/* ── Cover media — each has its own image + video ── */}
               <div className="grid grid-cols-2 gap-4">
-                <Field label="🏠 Anasayfa Kapağı" hint="Yatay / landscape önerilir">
-                  {editing.imageUrl && <img src={editing.imageUrl} className="w-full h-32 object-cover rounded-lg mb-2" alt="" />}
-                  <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg transition-colors w-fit">
-                    {uploading ? <RefreshCw size={14} className="animate-spin" /> : <Upload size={14} />}
-                    {uploading ? "Yükleniyor..." : "Görsel Yükle"}
-                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                  </label>
-                </Field>
-                <Field label="📋 Projeler Sayfası Kapağı" hint="Kare / dikey önerilir — yoksa anasayfa görseli kullanılır">
-                  {editing.listingImageUrl && <img src={editing.listingImageUrl} className="w-full h-32 object-cover rounded-lg mb-2" alt="" />}
-                  <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg transition-colors w-fit">
-                    <Upload size={14} />
-                    Görsel Yükle
-                    <input type="file" accept="image/*" onChange={async e => {
-                      const file = e.target.files?.[0]; if (!file) return;
-                      setUploading(true);
-                      const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
-                      const { storage } = await import("@/lib/firebase");
-                      const r = ref(storage, `projects/listing_${Date.now()}_${file.name}`);
-                      await uploadBytes(r, file);
-                      const url = await getDownloadURL(r);
-                      setEditing(prev => prev ? { ...prev, listingImageUrl: url } : prev);
-                      setUploading(false);
-                    }} className="hidden" />
-                  </label>
-                </Field>
+
+                {/* Homepage cover */}
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-zinc-400">🏠 Anasayfa Kapağı <span className="font-normal text-zinc-600">landscape önerilir</span></p>
+                  {editing.videoUrl
+                    ? <video src={editing.videoUrl} muted loop playsInline className="w-full h-32 object-cover rounded-lg" />
+                    : editing.imageUrl
+                    ? <img src={editing.imageUrl} className="w-full h-32 object-cover rounded-lg" alt="" />
+                    : <div className="w-full h-32 rounded-lg bg-zinc-800 flex items-center justify-center text-xs text-zinc-600">Medya yok</div>
+                  }
+                  <div className="flex gap-2 flex-wrap">
+                    <label className="flex items-center gap-1.5 cursor-pointer px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs rounded-lg">
+                      <Upload size={12} /> Görsel
+                      <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs rounded-lg">
+                      <Upload size={12} /> Video
+                      <input type="file" accept="video/*" onChange={async e => {
+                        const file = e.target.files?.[0]; if (!file || !editing) return;
+                        setUploading(true);
+                        const ext = file.name.split(".").pop() || "mp4";
+                        const seoName = (editing.brandName || "proje").toLowerCase().replace(/[^a-z0-9]/g, "-");
+                        const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+                        const { storage } = await import("@/lib/firebase");
+                        const r = ref(storage, `projects/${seoName}-home-${Date.now()}.${ext}`);
+                        await uploadBytes(r, file);
+                        const url = await getDownloadURL(r);
+                        setEditing(prev => prev ? { ...prev, videoUrl: url } : prev);
+                        setUploading(false);
+                      }} className="hidden" />
+                    </label>
+                    {editing.videoUrl && (
+                      <button onClick={() => setEditing({ ...editing, videoUrl: "" })} className="px-2.5 py-1.5 bg-red-900/30 text-red-400 text-xs rounded-lg">Videoyu Sil</button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Listing page cover */}
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-zinc-400">📋 Projeler Sayfası Kapağı <span className="font-normal text-zinc-600">kare/dikey önerilir</span></p>
+                  {editing.listingVideoUrl
+                    ? <video src={editing.listingVideoUrl} muted loop playsInline className="w-full h-32 object-cover rounded-lg" />
+                    : editing.listingImageUrl
+                    ? <img src={editing.listingImageUrl} className="w-full h-32 object-cover rounded-lg" alt="" />
+                    : <div className="w-full h-32 rounded-lg bg-zinc-800 flex items-center justify-center text-xs text-zinc-600">Anasayfa görseli kullanılır</div>
+                  }
+                  <div className="flex gap-2 flex-wrap">
+                    <label className="flex items-center gap-1.5 cursor-pointer px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs rounded-lg">
+                      <Upload size={12} /> Görsel
+                      <input type="file" accept="image/*" onChange={async e => {
+                        const file = e.target.files?.[0]; if (!file) return;
+                        setUploading(true);
+                        const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+                        const { storage } = await import("@/lib/firebase");
+                        const ext = file.name.split(".").pop() || "jpg";
+                        const seoName = (editing?.brandName || "proje").toLowerCase().replace(/[^a-z0-9]/g, "-");
+                        const r = ref(storage, `projects/${seoName}-listing-${Date.now()}.${ext}`);
+                        await uploadBytes(r, file);
+                        const url = await getDownloadURL(r);
+                        setEditing(prev => prev ? { ...prev, listingImageUrl: url } : prev);
+                        setUploading(false);
+                      }} className="hidden" />
+                    </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white text-xs rounded-lg">
+                      <Upload size={12} /> Video
+                      <input type="file" accept="video/*" onChange={async e => {
+                        const file = e.target.files?.[0]; if (!file || !editing) return;
+                        setUploading(true);
+                        const ext = file.name.split(".").pop() || "mp4";
+                        const seoName = (editing.brandName || "proje").toLowerCase().replace(/[^a-z0-9]/g, "-");
+                        const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+                        const { storage } = await import("@/lib/firebase");
+                        const r = ref(storage, `projects/${seoName}-listing-${Date.now()}.${ext}`);
+                        await uploadBytes(r, file);
+                        const url = await getDownloadURL(r);
+                        setEditing(prev => prev ? { ...prev, listingVideoUrl: url } : prev);
+                        setUploading(false);
+                      }} className="hidden" />
+                    </label>
+                    {editing.listingVideoUrl && (
+                      <button onClick={() => setEditing({ ...editing, listingVideoUrl: "" })} className="px-2.5 py-1.5 bg-red-900/30 text-red-400 text-xs rounded-lg">Videoyu Sil</button>
+                    )}
+                  </div>
+                </div>
+
               </div>
 
               {/* ─── Content Blocks ─── */}

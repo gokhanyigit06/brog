@@ -49,13 +49,11 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
       }}
     >
       {/* ── Cover media ── */}
-      {project.videoUrl ? (
+      {project.listingVideoUrl ? (
         <video
           ref={videoRef}
-          src={project.videoUrl}
-          muted
-          loop
-          playsInline
+          src={project.listingVideoUrl}
+          muted loop playsInline
           style={{
             position: "absolute", inset: 0, width: "100%", height: "100%",
             objectFit: "cover",

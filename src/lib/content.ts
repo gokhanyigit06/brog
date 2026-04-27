@@ -108,9 +108,10 @@ export interface Project {
   industry_tr?: string;       // e.g. "Sağlık"
   industry_en?: string;       // e.g. "Healthcare"
   timeline?: string;          // e.g. "8 Weeks"
-  imageUrl: string;           // homepage cover (landscape / hero)
-  listingImageUrl?: string;   // projects-page cover (square / portrait) — falls back to imageUrl
-  videoUrl?: string;          // optional cover video
+  imageUrl: string;           // homepage cover image
+  listingImageUrl?: string;   // projects-page cover image — falls back to imageUrl
+  videoUrl?: string;          // homepage cover video (replaces imageUrl when present)
+  listingVideoUrl?: string;   // projects-page cover video (replaces listingImageUrl when present)
   year: string;
   category: string;           // space of work
   tags: string[];
