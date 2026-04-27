@@ -99,72 +99,61 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
 
     /* ── Mobile phone frame preview ── */
     case "mobile_preview": {
-      const safeUrl = block.url
-        ? (block.url.startsWith("http") ? block.url : `https://${block.url}`)
-        : "";
       const count = block.count || 1;
+      const urls = block.urls || [];
 
-      const PhoneFrame = ({ idx }: { idx: number }) => (
-        <div style={{
-          position: "relative",
-          width: 260, height: 520,
-          border: "10px solid #1a1a1a",
-          borderRadius: 36,
-          background: "#000",
-          boxShadow: "0 32px 64px -12px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08)",
-          overflow: "hidden",
-          flexShrink: 0,
-          transition: "transform 0.35s cubic-bezier(.4,0,.2,1)",
-        }}
-          onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-10px)")}
-          onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}
-        >
-          {/* Dynamic island / notch */}
+      const safeUrl = (raw: string) =>
+        raw ? (raw.startsWith("http") ? raw : `https://${raw}`) : "";
+
+      const PhoneFrame = ({ idx }: { idx: number }) => {
+        const frameUrl = safeUrl(urls[idx] || urls[0] || "");
+        return (
           <div style={{
-            position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
-            width: 100, height: 22,
-            background: "#1a1a1a",
-            borderBottomLeftRadius: 14, borderBottomRightRadius: 14,
-            zIndex: 20,
-          }} />
+            position: "relative",
+            width: 260, height: 520,
+            border: "10px solid #1a1a1a",
+            borderRadius: 36,
+            background: "#000",
+            boxShadow: "0 32px 64px -12px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08)",
+            overflow: "hidden",
+            flexShrink: 0,
+            transition: "transform 0.35s cubic-bezier(.4,0,.2,1)",
+          }}
+            onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-10px)")}
+            onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}
+          >
+            {/* Dynamic island */}
+            <div style={{
+              position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+              width: 100, height: 22, background: "#1a1a1a",
+              borderBottomLeftRadius: 14, borderBottomRightRadius: 14, zIndex: 20,
+            }} />
 
-          {/* iframe */}
-          {safeUrl ? (
-            <iframe
-              key={`${idx}-${safeUrl}`}
-              src={safeUrl}
-              title={`preview-${idx}`}
-              style={{ width: "100%", height: "100%", border: "none", background: "#fff" }}
-              sandbox="allow-scripts allow-same-origin allow-forms"
-            />
-          ) : (
-            <div style={{ width: "100%", height: "100%", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <p style={{ color: "#9ca3af", fontSize: 12, textAlign: "center", padding: 16 }}>URL girilmedi</p>
-            </div>
-          )}
-
-          {/* Fallback overlay — shows if iframe blocked */}
-          <noscript>
-            <div style={{ position: "absolute", inset: 0, background: "#fff", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20, textAlign: "center", zIndex: 10 }}>
-              <p style={{ fontSize: 11, color: "#9ca3af", marginBottom: 12 }}>Önizleme yüklenemedi</p>
-              <a href={safeUrl} target="_blank" rel="noopener noreferrer"
-                style={{ fontSize: 11, padding: "6px 16px", borderRadius: 999, background: "#0a0a0a", color: "#fff", textDecoration: "none" }}>
-                Siteyi Aç
-              </a>
-            </div>
-          </noscript>
-        </div>
-      );
+            {frameUrl ? (
+              <iframe
+                src={frameUrl}
+                title={`preview-${idx}`}
+                style={{ width: "100%", height: "100%", border: "none", background: "#fff" }}
+                sandbox="allow-scripts allow-same-origin allow-forms"
+              />
+            ) : (
+              <div style={{ width: "100%", height: "100%", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <p style={{ color: "#9ca3af", fontSize: 12, textAlign: "center", padding: 16 }}>URL girilmedi</p>
+              </div>
+            )}
+          </div>
+        );
+      };
 
       return (
         <div style={{
-          background: "#f8f8f8",
+          background: "#f0f0f0",
           borderRadius: 24,
           padding: "60px 40px",
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-end",
-          gap: count === 1 ? 0 : 24,
+          gap: count === 1 ? 0 : 28,
           overflow: "hidden",
         }}>
           {Array.from({ length: count }).map((_, i) => (
@@ -173,6 +162,7 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
         </div>
       );
     }
+
 
     default:
       return null;
