@@ -10,6 +10,7 @@ import {
   serverTimestamp,
   query,
   orderBy,
+  where,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./firebase";
@@ -67,20 +68,35 @@ export interface SiteSettings {
   social_linkedin: string;
 }
 
+// ─────────────────────────────────────────────
+// PROJECT CONTENT BLOCKS
+// ─────────────────────────────────────────────
+
+export type ProjectBlock =
+  | { type: "image_16_9"; url: string }
+  | { type: "text_block"; label: string; title_tr: string; title_en: string; body_tr: string; body_en: string }
+  | { type: "gallery"; layout: "left_big" | "right_big"; big: string; small1: string; small2: string }
+  | { type: "single_image"; url: string; ratio: string }; // ratio e.g. "21:9", "4:3"
+
 export interface Project {
   id?: string;
-  title: string;          // project / brand name
-  brandName: string;      // shown below card
+  title: string;
+  brandName: string;
+  slug?: string;           // URL slug — falls back to id if not set
   description_tr: string;
   description_en: string;
-  imageUrl: string;       // main cover image
-  videoUrl?: string;      // optional cover video (mp4/webm)
+  industry_tr?: string;    // e.g. "Sağlık"
+  industry_en?: string;    // e.g. "Healthcare"
+  timeline?: string;       // e.g. "8 Weeks"
+  imageUrl: string;        // main cover image
+  videoUrl?: string;       // optional cover video
   year: string;
-  category: string;       // shown on hover overlay
+  category: string;        // space of work
   tags: string[];
-  link: string;
+  link: string;            // live website URL
   order: number;
-  featured: boolean;      // show on homepage
+  featured: boolean;
+  blocks?: ProjectBlock[];  // detail page content blocks
 }
 
 export interface Service {
@@ -247,6 +263,20 @@ export async function updateProject(id: string, data: Partial<Project>): Promise
 
 export async function deleteProject(id: string): Promise<void> {
   await deleteDoc(doc(db, "projects", id));
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  // 1) Try by slug field
+  const bySlug = query(collection(db, "projects"), where("slug", "==", slug));
+  const snapSlug = await getDocs(bySlug);
+  if (!snapSlug.empty) {
+    const d = snapSlug.docs[0];
+    return { id: d.id, ...d.data() } as Project;
+  }
+  // 2) Fall back to document id
+  const byId = await getDoc(doc(db, "projects", slug));
+  if (byId.exists()) return { id: byId.id, ...byId.data() } as Project;
+  return null;
 }
 
 // ─────────────────────────────────────────────

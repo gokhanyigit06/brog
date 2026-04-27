@@ -167,8 +167,9 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
     </div>
   );
 
-  return project.link ? (
-    <Link href={project.link} style={{ display: "block", textDecoration: "none" }}>
+  const slug = project.slug || project.id;
+  return slug ? (
+    <Link href={`/${lang}/projeler/${slug}`} style={{ display: "block", textDecoration: "none" }}>
       {card}
     </Link>
   ) : (
