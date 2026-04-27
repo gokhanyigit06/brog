@@ -37,26 +37,43 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
     case "text_block": {
       const title = lang === "tr" ? block.title_tr : block.title_en;
       const body  = lang === "tr" ? block.body_tr  : block.body_en;
-      // Only render if there's something to show
       if (!title && !body && !block.label) return null;
-      return (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 3fr", gap: 64, padding: "80px 0", borderTop: "1px solid #e5e7eb" }}>
-          <div style={{ paddingTop: 4 }}>
-            <p style={{ fontSize: 12, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              {block.label}
-            </p>
+
+      const hasLabel = !!block.label;
+      const hasTitle = !!title;
+      // If no label and no title → full-width single column
+      const fullWidth = !hasLabel && !hasTitle;
+
+      const BodyText = () => (
+        <div style={{ color: "#374151", fontSize: 16, lineHeight: 1.85, whiteSpace: "pre-wrap" }}>
+          {body}
+        </div>
+      );
+
+      if (fullWidth) {
+        return (
+          <div style={{ padding: "80px 0", borderTop: "1px solid #e5e7eb" }}>
+            <BodyText />
           </div>
+        );
+      }
+
+      return (
+        <div style={{ display: "grid", gridTemplateColumns: hasLabel ? "1fr 3fr" : "1fr", gap: 64, padding: "80px 0", borderTop: "1px solid #e5e7eb" }}>
+          {hasLabel && (
+            <div style={{ paddingTop: 4 }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                {block.label}
+              </p>
+            </div>
+          )}
           <div>
             {title && (
               <h2 style={{ fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 700, color: "#0a0a0a", marginBottom: 28, letterSpacing: "-0.02em", lineHeight: 1.3 }}>
                 {title}
               </h2>
             )}
-            <div style={{ color: "#374151", fontSize: 16, lineHeight: 1.85 }}>
-              {body?.split("\n\n").map((p, i) => (
-                <p key={i} style={{ marginBottom: 18 }}>{p}</p>
-              ))}
-            </div>
+            <BodyText />
           </div>
         </div>
       );
