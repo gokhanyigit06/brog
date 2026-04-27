@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Brog Agency",
-  description: "Brog Creative Agency",
+  title: "VOGOLAB",
+  description: "VOGOLAB Creative Agency",
 };
 
 export default function RootLayout({

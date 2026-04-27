@@ -6,7 +6,7 @@ export async function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: "Brog Agency",
+  title: "VOGOLAB",
   description: "Creative Agency",
 };
 

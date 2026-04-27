@@ -565,7 +565,7 @@ export interface WhyContent {
 const WHY_DEFAULT: WhyContent = {
   label: "03",
   title_tr: "Neden Biz?",
-  title_en: "Why Brog?",
+  title_en: "Why VOGOLAB?",
   mediaUrl: "",
   mediaType: "image",
   features: [

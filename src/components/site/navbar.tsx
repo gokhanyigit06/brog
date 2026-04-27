@@ -112,7 +112,7 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
   const brandText      = nbData?.brandText      || "vogolab";
   const menuBrandLine1 = nbData?.menuBrandLine1 || "vogolab";
   const menuBrandLine2 = nbData?.menuBrandLine2 || "lab.";
-  const email          = nbData?.email          || "hello@brog.com";
+  const email          = nbData?.email          || "hello@vogolab.com";
   const phone          = nbData?.phone          || "+90 555 000 0000";
   const location       = nbData?.location       || "Istanbul, Turkey";
   const menuBgImage    = nbData?.menuBgImage    || "";
