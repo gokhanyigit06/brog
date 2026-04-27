@@ -151,8 +151,8 @@ function BlockEditor({ block, onChange, onRemove, onUp, onDown }: {
               {([1, 2, 3] as const).map(n => (
                 <label key={n} className="flex items-center gap-2 cursor-pointer">
                   <input type="radio" checked={block.count === n} onChange={() => {
-                    const newUrls = Array.from({ length: n }, (_, i) => (block.urls || [])[i] || "");
-                    onChange({ ...block, count: n, urls: newUrls });
+                    const newPhones = Array.from({ length: n }, (_, i) => (block.phones || [])[i] || {});
+                    onChange({ ...block, count: n, phones: newPhones });
                   }} />
                   <span className="text-sm text-white">{n} Telefon</span>
                 </label>
@@ -160,24 +160,39 @@ function BlockEditor({ block, onChange, onRemove, onUp, onDown }: {
             </div>
           </Field>
 
-          {Array.from({ length: block.count || 1 }).map((_, i) => (
-            <Field key={i} label={`Telefon ${i + 1} URL`} hint="https:// olmasa da otomatik eklenir">
-              <input
-                value={(block.urls || [])[i] || ""}
-                onChange={e => {
-                  const newUrls = [...(block.urls || [])];
-                  newUrls[i] = e.target.value;
-                  onChange({ ...block, urls: newUrls });
-                }}
-                className={INPUT}
-                placeholder="https://fouramour.com"
-              />
-            </Field>
-          ))}
+          {Array.from({ length: block.count || 1 }).map((_, i) => {
+            const phone = (block.phones || [])[i] || {};
+            const updatePhone = (patch: { url?: string; imageUrl?: string }) => {
+              const newPhones = [...(block.phones || Array.from({ length: block.count || 1 }, () => ({})))];
+              newPhones[i] = { ...newPhones[i], ...patch };
+              onChange({ ...block, phones: newPhones });
+            };
+            return (
+              <div key={i} className="border border-zinc-700 rounded-xl p-4 space-y-3">
+                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Telefon {i + 1}</p>
+                <Field label="Site URL" hint="Otomatik screenshot için — https:// opsiyonel">
+                  <input
+                    value={phone.url || ""}
+                    onChange={e => updatePhone({ url: e.target.value })}
+                    className={INPUT}
+                    placeholder="https://fouramour.com"
+                  />
+                </Field>
+                <Field label="Manuel Screenshot (öncelikli)" hint="Yüklersen URL screenshot'ının önüne geçer">
+                  <ImgInput
+                    value={phone.imageUrl || ""}
+                    onChange={imageUrl => updatePhone({ imageUrl })}
+                    path={`mobile_preview_${i}`}
+                  />
+                </Field>
+              </div>
+            );
+          })}
 
-          <p className="text-xs text-zinc-600 bg-zinc-700/30 rounded-lg px-3 py-2">
-            Not: Bazı siteler iframe yüklemeyi engeller (X-Frame-Options). Bu durumda boş ekran görünür.
-          </p>
+          <div className="bg-zinc-700/30 rounded-lg px-3 py-2 text-xs text-zinc-500 space-y-1">
+            <p>📸 <strong className="text-zinc-400">Otomatik screenshot</strong>: URL girilince Microlink API üzerinden ekran görüntüsü çekilir (ücretsiz · 100 istek/gün).</p>
+            <p>🖼 <strong className="text-zinc-400">Manuel görsel</strong>: Kendi screenshot'ını yükle — otomatik'in önüne geçer, sınırsız.</p>
+          </div>
         </>
       )}
     </div>
@@ -199,7 +214,7 @@ function makeBlock(type: ProjectBlock["type"]): ProjectBlock {
     case "text_block":     return { type, label: "", title_tr: "", title_en: "", body_tr: "", body_en: "" };
     case "gallery":        return { type, layout: "left_big", big: "", small1: "", small2: "" };
     case "single_image":   return { type, url: "", ratio: "21:9" };
-    case "mobile_preview": return { type, urls: [""], count: 1 };
+    case "mobile_preview": return { type, count: 1, phones: [{}] };
   }
 }
 

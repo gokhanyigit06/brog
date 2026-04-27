@@ -100,20 +100,31 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
     /* ── Mobile phone frame preview ── */
     case "mobile_preview": {
       const count = block.count || 1;
-      const urls = block.urls || [];
+      const phones = block.phones || [];
 
-      const safeUrl = (raw: string) =>
+      const safeHref = (raw?: string) =>
         raw ? (raw.startsWith("http") ? raw : `https://${raw}`) : "";
 
+      /** Microlink: returns a screenshot image of the given URL */
+      const screenshotSrc = (url?: string) => {
+        if (!url) return "";
+        const safe = safeHref(url);
+        return `https://api.microlink.io/?url=${encodeURIComponent(safe)}&screenshot=true&meta=false&embed=screenshot.url`;
+      };
+
       const PhoneFrame = ({ idx }: { idx: number }) => {
-        const frameUrl = safeUrl(urls[idx] || urls[0] || "");
+        const phone = phones[idx] || {};
+        // Priority: manual upload → Microlink screenshot → empty
+        const imgSrc = phone.imageUrl || screenshotSrc(phone.url);
+        const linkHref = safeHref(phone.url);
+
         return (
           <div style={{
             position: "relative",
             width: 260, height: 520,
             border: "10px solid #1a1a1a",
             borderRadius: 36,
-            background: "#000",
+            background: "#111",
             boxShadow: "0 32px 64px -12px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08)",
             overflow: "hidden",
             flexShrink: 0,
@@ -129,17 +140,24 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
               borderBottomLeftRadius: 14, borderBottomRightRadius: 14, zIndex: 20,
             }} />
 
-            {frameUrl ? (
-              <iframe
-                src={frameUrl}
-                title={`preview-${idx}`}
-                style={{ width: "100%", height: "100%", border: "none", background: "#fff" }}
-                sandbox="allow-scripts allow-same-origin allow-forms"
+            {imgSrc ? (
+              <img
+                src={imgSrc}
+                alt={`site-preview-${idx}`}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
               />
             ) : (
               <div style={{ width: "100%", height: "100%", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <p style={{ color: "#9ca3af", fontSize: 12, textAlign: "center", padding: 16 }}>URL girilmedi</p>
+                <p style={{ color: "#9ca3af", fontSize: 12, textAlign: "center", padding: 16 }}>Görsel yüklenmedi</p>
               </div>
+            )}
+
+            {/* Tap overlay — opens site in new tab */}
+            {linkHref && (
+              <a href={linkHref} target="_blank" rel="noopener noreferrer"
+                style={{ position: "absolute", inset: 0, zIndex: 10 }}
+                aria-label="Siteyi aç"
+              />
             )}
           </div>
         );
@@ -147,14 +165,14 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
 
       return (
         <div style={{
-          background: "#f0f0f0",
+          background: "#efefef",
           borderRadius: 24,
           padding: "60px 40px",
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-end",
           gap: count === 1 ? 0 : 28,
-          overflow: "hidden",
+          flexWrap: "wrap",
         }}>
           {Array.from({ length: count }).map((_, i) => (
             <PhoneFrame key={i} idx={i} />
@@ -162,7 +180,6 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
         </div>
       );
     }
-
 
     default:
       return null;
