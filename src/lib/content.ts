@@ -95,7 +95,8 @@ export type ProjectBlock =
   | { type: "image_16_9"; url: string }
   | { type: "text_block"; label: string; title_tr: string; title_en: string; body_tr: string; body_en: string }
   | { type: "gallery"; layout: "left_big" | "right_big"; big: string; small1: string; small2: string }
-  | { type: "single_image"; url: string; ratio: string }; // ratio e.g. "21:9", "4:3"
+  | { type: "single_image"; url: string; ratio: string }
+  | { type: "mobile_preview"; url: string; count: 1 | 2 | 3 }; // phone frame mockup(s)
 
 export interface Project {
   id?: string;

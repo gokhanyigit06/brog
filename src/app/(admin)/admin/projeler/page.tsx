@@ -62,6 +62,7 @@ function BlockEditor({ block, onChange, onRemove, onUp, onDown }: {
     text_block: "Yazı Bloğu",
     gallery: "Galeri (1 büyük + 2 küçük)",
     single_image: "Tek Görsel (Özel Oran)",
+    mobile_preview: "Mobil Telefon Önizleme",
   };
 
   return (
@@ -141,24 +142,50 @@ function BlockEditor({ block, onChange, onRemove, onUp, onDown }: {
           </Field>
         </>
       )}
+
+      {/* mobile_preview */}
+      {block.type === "mobile_preview" && (
+        <>
+          <Field label="Site URL" hint="https:// olmasa da otomatik eklenir">
+            <input value={block.url} onChange={e => onChange({ ...block, url: e.target.value })} className={INPUT} placeholder="https://fouramour.com" />
+          </Field>
+          <Field label="Telefon Sayısı">
+            <div className="flex gap-4">
+              {([1, 2, 3] as const).map(n => (
+                <label key={n} className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" checked={block.count === n} onChange={() => onChange({ ...block, count: n })} />
+                  <span className="text-sm text-white">{n} Telefon</span>
+                </label>
+              ))}
+            </div>
+          </Field>
+          {block.url && (
+            <p className="text-xs text-zinc-500 bg-zinc-700/40 rounded-lg px-3 py-2">
+              Not: Bazı siteler iframe yüklemeyi engeller (X-Frame-Options). Bu durumda telefon kasası görünür ama site yüklenemeyebilir.
+            </p>
+          )}
+        </>
+      )}
     </div>
   );
 }
 
 /* ─── Add block bar ─── */
 const BLOCK_TYPES: { type: ProjectBlock["type"]; label: string }[] = [
-  { type: "image_16_9",   label: "16:9 Görsel" },
-  { type: "text_block",   label: "Yazı Bloğu" },
-  { type: "gallery",      label: "Galeri (1B+2K)" },
-  { type: "single_image", label: "Tek Görsel" },
+  { type: "image_16_9",     label: "16:9 Görsel" },
+  { type: "text_block",     label: "Yazı Bloğu" },
+  { type: "gallery",        label: "Galeri (1B+2K)" },
+  { type: "single_image",   label: "Tek Görsel" },
+  { type: "mobile_preview", label: "📱 Mobil Önizleme" },
 ];
 
 function makeBlock(type: ProjectBlock["type"]): ProjectBlock {
   switch (type) {
-    case "image_16_9":   return { type, url: "" };
-    case "text_block":   return { type, label: "", title_tr: "", title_en: "", body_tr: "", body_en: "" };
-    case "gallery":      return { type, layout: "left_big", big: "", small1: "", small2: "" };
-    case "single_image": return { type, url: "", ratio: "21:9" };
+    case "image_16_9":     return { type, url: "" };
+    case "text_block":     return { type, label: "", title_tr: "", title_en: "", body_tr: "", body_en: "" };
+    case "gallery":        return { type, layout: "left_big", big: "", small1: "", small2: "" };
+    case "single_image":   return { type, url: "", ratio: "21:9" };
+    case "mobile_preview": return { type, url: "", count: 1 };
   }
 }
 
