@@ -106,6 +106,9 @@ export interface ContactContent {
   address_tr: string;
   address_en: string;
   maps_link: string;
+  heroImage: string;   // top cover image
+  image1: string;      // bottom-left image
+  image2: string;      // bottom-right image
 }
 
 // ─────────────────────────────────────────────
@@ -310,6 +313,9 @@ const CONTACT_DEFAULT: ContactContent = {
   address_tr: "İstanbul, Türkiye",
   address_en: "Istanbul, Turkey",
   maps_link: "",
+  heroImage: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80",
+  image1: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80",
+  image2: "https://images.unsplash.com/photo-1605379399642-870262d3d051?w=900&q=80",
 };
 
 export async function getContactContent(): Promise<ContactContent> {
