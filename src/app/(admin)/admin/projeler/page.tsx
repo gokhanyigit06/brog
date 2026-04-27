@@ -19,6 +19,7 @@ const EMPTY: Omit<Project, "id"> = {
   description_tr: "",
   description_en: "",
   imageUrl: "",
+  videoUrl: "",
   year: new Date().getFullYear().toString(),
   category: "",
   tags: [],
@@ -242,6 +243,10 @@ export default function ProjelerAdmin() {
 
               <Field label="Proje Linki">
                 <input value={editing.link} onChange={(e) => setEditing({ ...editing, link: e.target.value })} className={INPUT} placeholder="https://..." />
+              </Field>
+
+              <Field label="Video URL (mp4/webm — opsiyonel)">
+                <input value={editing.videoUrl ?? ""} onChange={(e) => setEditing({ ...editing, videoUrl: e.target.value })} className={INPUT} placeholder="https://...video.mp4" />
               </Field>
 
               <Field label="Görsel">

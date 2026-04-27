@@ -73,9 +73,10 @@ export interface Project {
   brandName: string;      // shown below card
   description_tr: string;
   description_en: string;
-  imageUrl: string;       // main image
+  imageUrl: string;       // main cover image
+  videoUrl?: string;      // optional cover video (mp4/webm)
   year: string;
-  category: string;       // shown on hover
+  category: string;       // shown on hover overlay
   tags: string[];
   link: string;
   order: number;

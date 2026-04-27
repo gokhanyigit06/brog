@@ -1,4 +1,17 @@
-import { type Locale, getTranslations } from "@/i18n";
+import { type Locale } from "@/i18n";
+import Navbar from "@/components/site/navbar";
+import Footer from "@/components/site/footer";
+import ProjelerClient from "./projeler-client";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  return {
+    title: lang === "tr" ? "Projeler — BROG Studio" : "Projects — BROG Studio",
+    description: lang === "tr"
+      ? "BROG Studio'nun seçilmiş çalışmaları ve proje portföyü."
+      : "Selected works and project portfolio by BROG Studio.",
+  };
+}
 
 export default async function ProjelerPage({
   params,
@@ -6,10 +19,12 @@ export default async function ProjelerPage({
   params: Promise<{ lang: Locale }>;
 }) {
   const { lang } = await params;
-  const t = getTranslations(lang);
+
   return (
-    <main>
-      <h1>{t.projects.title}</h1>
-    </main>
+    <>
+      <Navbar lang={lang} />
+      <ProjelerClient lang={lang} />
+      <Footer lang={lang} />
+    </>
   );
 }
