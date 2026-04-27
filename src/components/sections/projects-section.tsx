@@ -97,7 +97,9 @@ export default function ProjectsSection({ lang }: Props) {
 
   if (config && !config.showProjects) return null;
 
-  const title = lang === "tr" ? content?.title_tr : content?.title_en;
+  const STALE_TITLES = ["Seçilmiş Çalışmalar", "Selected Works", "Latest Works", "Latest\nWorks"];
+  const rawTitle = lang === "tr" ? content?.title_tr : content?.title_en;
+  const title    = rawTitle && !STALE_TITLES.includes(rawTitle) ? rawTitle : null;
   const desc  = lang === "tr" ? content?.description_tr : content?.description_en;
 
   return (
@@ -117,7 +119,7 @@ export default function ProjectsSection({ lang }: Props) {
               color: "#0a0a0a",
               letterSpacing: "-0.04em",
             }}>
-              {title ?? (lang === "tr" ? "Projeler" : "Latest\nWorks")}
+              {title ?? (lang === "tr" ? "Projeler" : "Projects")}
             </h2>
           </div>
 
