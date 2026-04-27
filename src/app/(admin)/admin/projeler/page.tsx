@@ -20,10 +20,13 @@ const EMPTY: Omit<Project, "id"> = {
   order: 0, featured: false, blocks: [],
 };
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs text-zinc-500 mb-1.5">{label}</label>
+      <label className="block text-xs text-zinc-500 mb-1.5">
+        {label}
+        {hint && <span className="ml-2 text-zinc-600 font-normal">{hint}</span>}
+      </label>
       {children}
     </div>
   );
