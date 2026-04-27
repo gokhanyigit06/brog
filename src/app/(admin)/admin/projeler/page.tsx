@@ -251,7 +251,14 @@ export default function ProjelerAdmin() {
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]; if (!file || !editing) return;
     setUploading(true);
-    const url = await uploadImage(file, `projects/${Date.now()}_${file.name}`);
+    // SEO-friendly filename: brandName-category-cover.ext
+    const ext = file.name.split(".").pop() || "jpg";
+    const seoName = [
+      editing.brandName || "proje",
+      editing.category || "",
+      "cover",
+    ].filter(Boolean).join("-").toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
+    const url = await uploadImage(file, `projects/${seoName}-${Date.now()}.${ext}`);
     setEditing({ ...editing, imageUrl: url }); setUploading(false);
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { getFeaturedProjects, getProjectsContent, slugify, type Project, type ProjectsContent } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
@@ -27,14 +28,13 @@ function ProjectCard({ project }: { project: Project }) {
         }}
       >
         {project.imageUrl && (
-          <img
+          <Image
             src={project.imageUrl}
-            alt={project.brandName || project.title}
+            alt={`${project.brandName} — ${project.category} projesi`}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             style={{
-              width: "100%",
-              height: "100%",
               objectFit: "cover",
-              display: "block",
               transition: "transform 0.7s cubic-bezier(0.4,0,0.2,1)",
               transform: hovered ? "scale(1.04)" : "scale(1)",
             }}
