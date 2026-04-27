@@ -172,8 +172,6 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
     <Link href={`/${lang}/projeler/${slug}`} style={{ display: "block", textDecoration: "none" }}>
       {card}
     </Link>
-  ) : (
-    <div>{card}</div>
   );
 }
 
