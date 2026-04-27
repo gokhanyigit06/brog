@@ -89,20 +89,18 @@ function BlockEditor({ block, onChange, onRemove, onUp, onDown }: {
           <Field label="Etiket (sol)">
             <input value={block.label} onChange={e => onChange({ ...block, label: e.target.value })} className={INPUT} placeholder="Introduction" />
           </Field>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Başlık TR">
-              <input value={block.title_tr} onChange={e => onChange({ ...block, title_tr: e.target.value })} className={INPUT} />
-            </Field>
-            <Field label="Title EN">
-              <input value={block.title_en} onChange={e => onChange({ ...block, title_en: e.target.value })} className={INPUT} />
-            </Field>
-            <Field label="Metin TR (çift satır = paragraf)">
-              <textarea value={block.body_tr} onChange={e => onChange({ ...block, body_tr: e.target.value })} rows={4} className={`${INPUT} resize-none`} />
-            </Field>
-            <Field label="Body EN">
-              <textarea value={block.body_en} onChange={e => onChange({ ...block, body_en: e.target.value })} rows={4} className={`${INPUT} resize-none`} />
-            </Field>
-          </div>
+          <Field label="Başlık TR">
+            <input value={block.title_tr} onChange={e => onChange({ ...block, title_tr: e.target.value })} className={INPUT} />
+          </Field>
+          <Field label="Title EN">
+            <input value={block.title_en} onChange={e => onChange({ ...block, title_en: e.target.value })} className={INPUT} />
+          </Field>
+          <Field label="Metin TR (çift satır = paragraf)">
+            <textarea value={block.body_tr} onChange={e => onChange({ ...block, body_tr: e.target.value })} rows={5} className={`${INPUT} resize-none`} />
+          </Field>
+          <Field label="Body EN">
+            <textarea value={block.body_en} onChange={e => onChange({ ...block, body_en: e.target.value })} rows={5} className={`${INPUT} resize-none`} />
+          </Field>
         </>
       )}
 
