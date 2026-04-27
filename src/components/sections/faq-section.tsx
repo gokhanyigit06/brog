@@ -84,7 +84,7 @@ export default function FaqSection({ lang }: Props) {
   const displayItems = items.length > 0 ? items : fallback;
 
   return (
-    <section className="w-full bg-white">
+    <section id="sss" className="w-full bg-white">
       <div className="section-container py-20 lg:py-28">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
 

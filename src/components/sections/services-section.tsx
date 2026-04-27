@@ -28,7 +28,7 @@ export default function ServicesSection({ lang }: Props) {
   const displayItems = items.length > 0 ? items : fallbackItems;
 
   return (
-    <section style={{ background: "#0d0d0d", width: "100%" }}>
+    <section id="hizmetler" style={{ background: "#0d0d0d", width: "100%" }}>
       <div className="section-container" style={{ paddingTop: 96, paddingBottom: 96 }}>
 
         {/* ── Header ── */}

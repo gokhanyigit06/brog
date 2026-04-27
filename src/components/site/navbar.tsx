@@ -95,11 +95,11 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
 
   // Dynamic nav links — labels from Firebase, hrefs always correct
   const navLinks = [
-    { href: `/${lang}`,            label: nbData ? (lang === "tr" ? nbData.nav_home_tr     : nbData.nav_home_en)     : (lang === "tr" ? "Ana Sayfa"  : "Home")     },
-    { href: `/${lang}/projeler`,   label: nbData ? (lang === "tr" ? nbData.nav_projects_tr : nbData.nav_projects_en) : (lang === "tr" ? "Projeler"   : "Projects") },
-    { href: `/${lang}/hizmetler`,  label: nbData ? (lang === "tr" ? nbData.nav_services_tr : nbData.nav_services_en) : (lang === "tr" ? "Hizmetler"  : "Services") },
-    { href: `/${lang}/hakkimizda`, label: nbData ? (lang === "tr" ? nbData.nav_about_tr    : nbData.nav_about_en)    : (lang === "tr" ? "Hakkımızda" : "About")    },
-    { href: `/${lang}/iletisim`,   label: nbData ? (lang === "tr" ? nbData.nav_contact_tr  : nbData.nav_contact_en)  : (lang === "tr" ? "İletişim"   : "Contact")  },
+    { href: `/${lang}`,           label: nbData ? (lang === "tr" ? nbData.nav_home_tr     : nbData.nav_home_en)     : (lang === "tr" ? "Ana Sayfa" : "Home")     },
+    { href: `/${lang}/projeler`,  label: nbData ? (lang === "tr" ? nbData.nav_projects_tr : nbData.nav_projects_en) : (lang === "tr" ? "Projeler"  : "Projects") },
+    { href: `/${lang}#hizmetler`, label: nbData ? (lang === "tr" ? nbData.nav_services_tr : nbData.nav_services_en) : (lang === "tr" ? "Hizmetler" : "Services") },
+    { href: `/${lang}/iletisim`,  label: nbData ? (lang === "tr" ? nbData.nav_contact_tr  : nbData.nav_contact_en)  : (lang === "tr" ? "İletişim"  : "Contact")  },
+    { href: `/${lang}#sss`,       label: lang === "tr" ? "SSS" : "FAQ" },
   ];
 
   const socials = [
