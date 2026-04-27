@@ -62,9 +62,9 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
             transition: "transform 0.8s cubic-bezier(0.4,0,0.2,1)",
           }}
         />
-      ) : project.imageUrl ? (
+      ) : (project.listingImageUrl || project.imageUrl) ? (
         <img
-          src={project.imageUrl}
+          src={project.listingImageUrl || project.imageUrl}
           alt={project.brandName}
           style={{
             position: "absolute", inset: 0, width: "100%", height: "100%",

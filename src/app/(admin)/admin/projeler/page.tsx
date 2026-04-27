@@ -401,14 +401,34 @@ export default function ProjelerAdmin() {
                 <input value={editing.videoUrl ?? ""} onChange={e => setEditing({ ...editing, videoUrl: e.target.value })} className={INPUT} placeholder="https://...video.mp4" />
               </Field>
 
-              <Field label="Kapak Görseli">
-                {editing.imageUrl && <img src={editing.imageUrl} className="w-full h-40 object-cover rounded-lg mb-2" alt="" />}
-                <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg transition-colors w-fit">
-                  {uploading ? <RefreshCw size={14} className="animate-spin" /> : <Upload size={14} />}
-                  {uploading ? "Yükleniyor..." : "Görsel Yükle"}
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                </label>
-              </Field>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="🏠 Anasayfa Kapağı" hint="Yatay / landscape önerilir">
+                  {editing.imageUrl && <img src={editing.imageUrl} className="w-full h-32 object-cover rounded-lg mb-2" alt="" />}
+                  <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg transition-colors w-fit">
+                    {uploading ? <RefreshCw size={14} className="animate-spin" /> : <Upload size={14} />}
+                    {uploading ? "Yükleniyor..." : "Görsel Yükle"}
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                  </label>
+                </Field>
+                <Field label="📋 Projeler Sayfası Kapağı" hint="Kare / dikey önerilir — yoksa anasayfa görseli kullanılır">
+                  {editing.listingImageUrl && <img src={editing.listingImageUrl} className="w-full h-32 object-cover rounded-lg mb-2" alt="" />}
+                  <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-sm rounded-lg transition-colors w-fit">
+                    <Upload size={14} />
+                    Görsel Yükle
+                    <input type="file" accept="image/*" onChange={async e => {
+                      const file = e.target.files?.[0]; if (!file) return;
+                      setUploading(true);
+                      const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+                      const { storage } = await import("@/lib/firebase");
+                      const r = ref(storage, `projects/listing_${Date.now()}_${file.name}`);
+                      await uploadBytes(r, file);
+                      const url = await getDownloadURL(r);
+                      setEditing(prev => prev ? { ...prev, listingImageUrl: url } : prev);
+                      setUploading(false);
+                    }} className="hidden" />
+                  </label>
+                </Field>
+              </div>
 
               {/* ─── Content Blocks ─── */}
               <div>

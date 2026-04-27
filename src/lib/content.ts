@@ -102,21 +102,22 @@ export interface Project {
   id?: string;
   title: string;
   brandName: string;
-  slug?: string;           // URL slug — falls back to id if not set
+  slug?: string;              // URL slug — falls back to id if not set
   description_tr: string;
   description_en: string;
-  industry_tr?: string;    // e.g. "Sağlık"
-  industry_en?: string;    // e.g. "Healthcare"
-  timeline?: string;       // e.g. "8 Weeks"
-  imageUrl: string;        // main cover image
-  videoUrl?: string;       // optional cover video
+  industry_tr?: string;       // e.g. "Sağlık"
+  industry_en?: string;       // e.g. "Healthcare"
+  timeline?: string;          // e.g. "8 Weeks"
+  imageUrl: string;           // homepage cover (landscape / hero)
+  listingImageUrl?: string;   // projects-page cover (square / portrait) — falls back to imageUrl
+  videoUrl?: string;          // optional cover video
   year: string;
-  category: string;        // space of work
+  category: string;           // space of work
   tags: string[];
-  link: string;            // live website URL
+  link: string;               // live website URL
   order: number;
   featured: boolean;
-  blocks?: ProjectBlock[];  // detail page content blocks
+  blocks?: ProjectBlock[];    // detail page content blocks
 }
 
 export interface Service {
