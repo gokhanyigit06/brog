@@ -177,8 +177,42 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
 }
 
 /* ─────────────────────────────────────────────────────
-   Main page client component
+   Scroll-reveal wrapper — fades in when entering viewport
 ───────────────────────────────────────────────────── */
+function RevealOnScroll({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.08 } // trigger when just 8% of card is in view
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.35s ease",
+        willChange: "opacity",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 interface Props { lang: string }
 
 export default function ProjelerClient({ lang }: Props) {
@@ -238,9 +272,11 @@ export default function ProjelerClient({ lang }: Props) {
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {sorted.map((project) => (
-              <ProjectCard key={project.id} project={project} lang={lang} />
+              <RevealOnScroll key={project.id}>
+                <ProjectCard project={project} lang={lang} />
+              </RevealOnScroll>
             ))}
           </div>
         )}
