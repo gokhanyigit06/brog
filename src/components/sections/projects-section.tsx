@@ -161,15 +161,14 @@ export default function ProjectsSection({ lang }: Props) {
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
-            {featured.map((project) => (
-              project.link ? (
-                <Link key={project.id} href={project.link} style={{ textDecoration: "none" }}>
+            {featured.map((project) => {
+              const slug = (project as any).slug || project.id;
+              return (
+                <Link key={project.id} href={`/${lang}/projeler/${slug}`} style={{ textDecoration: "none" }}>
                   <ProjectCard project={project} />
                 </Link>
-              ) : (
-                <ProjectCard key={project.id} project={project} />
-              )
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

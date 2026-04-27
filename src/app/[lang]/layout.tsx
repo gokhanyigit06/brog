@@ -17,11 +17,7 @@ export default async function LangLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-
-  return (
-    <html lang={lang}>
-      <body suppressHydrationWarning>{children}</body>
-    </html>
-  );
+  // lang is used by root layout via <html lang=...> — no nested html needed
+  await params;
+  return <>{children}</>;
 }
