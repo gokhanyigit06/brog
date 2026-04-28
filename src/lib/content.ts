@@ -636,7 +636,9 @@ export interface ServiceItem {
   title_en: string;
   description_tr: string;
   description_en: string;
-  pills: string[];
+  pills: string[];       // legacy fallback
+  pills_tr?: string[];   // Türkçe etiketler
+  pills_en?: string[];   // İngilizce etiketler
   order: number;
 }
 

@@ -60,8 +60,8 @@ export default function Footer({ lang }: Props) {
     : [{ label: "Home",      href: `/${lang}` }, { label: "Projects",  href: `/${lang}/projects`  }, { label: "Contact",  href: `/${lang}/contact`  }];
 
   const priorityLinks = [
-    { label: lang === "tr" ? "Kullan\u0131m Ko\u015fullar\u0131" : "Terms And Conditions", href: "#" },
-    { label: lang === "tr" ? "Gizlilik Politikas\u0131" : "Privacy & Policy",    href: "#" },
+    { label: lang === "tr" ? "Kullanım Koşulları" : "Terms And Conditions", href: `/${lang}/terms-of-service` },
+    { label: lang === "tr" ? "Gizlilik Politikası" : "Privacy & Policy",    href: `/${lang}/privacy-policy` },
   ];
 
   const labelStyle: React.CSSProperties = {
@@ -193,7 +193,7 @@ export default function Footer({ lang }: Props) {
         <div style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Yasal" : "Priority"}</p>
           {priorityLinks.map(l => (
-            <a key={l.label} href={l.href} style={linkStyle}
+            <Link key={l.label} href={l.href} style={linkStyle}
               onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
               onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
@@ -201,7 +201,7 @@ export default function Footer({ lang }: Props) {
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

@@ -82,7 +82,7 @@ export default function ServicesSection({ lang }: Props) {
 
                 {/* Pills */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, paddingTop: 4 }}>
-                  {(item.pills ?? []).map((pill) => (
+                  {((lang === "tr" ? item.pills_tr : item.pills_en) ?? item.pills ?? []).map((pill) => (
                     <span
                       key={pill}
                       style={{
