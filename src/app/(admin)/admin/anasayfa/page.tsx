@@ -177,7 +177,14 @@ export default function AnasayfaAdmin() {
       order: (showcase?.mediaItems.length ?? 0),
       duration: 3,
     };
-    setShowcase((prev) => prev ? { ...prev, mediaItems: [...prev.mediaItems, newItem] } : prev);
+    const newShowcase = showcase ? { ...showcase, mediaItems: [...showcase.mediaItems, newItem] } : null;
+    if (newShowcase) {
+      setShowcase(newShowcase);
+      setShowcaseSaving(true);
+      await saveShowcaseContent(newShowcase);
+      setShowcaseSaving(false); setShowcaseSaved(true);
+      setTimeout(() => setShowcaseSaved(false), 2500);
+    }
   }
 
   function removeShowcaseMedia(id: string) {
@@ -302,7 +309,14 @@ service cloud.firestore {
               <Field label="Logo Görseli" hint="PNG/SVG önerilir, şeffaf arka plan">
                 <ImageUpload
                   url={navbar!.logoUrl}
-                  onUpload={(url) => setNavbar({ ...navbar!, logoUrl: url })}
+                  onUpload={async (url) => { 
+                    const newNav = { ...navbar!, logoUrl: url };
+                    setNavbar(newNav);
+                    setNavSaving(true);
+                    await saveNavbarContent(newNav);
+                    setNavSaving(false); setNavSaved(true);
+                    setTimeout(() => setNavSaved(false), 2500);
+                  }}
                   storagePath="navbar"
                   aspect="3/1"
                   label="Logo Yükle"
@@ -419,7 +433,14 @@ service cloud.firestore {
               <p className="text-xs text-zinc-600 mb-3">Boş bırakılırsa menü arka planı siyah kalır</p>
               <ImageUpload
                 url={navbar!.menuBgImage}
-                onUpload={(url) => setNavbar({ ...navbar!, menuBgImage: url })}
+                onUpload={async (url) => { 
+                  const newNav = { ...navbar!, menuBgImage: url };
+                  setNavbar(newNav);
+                  setNavSaving(true);
+                  await saveNavbarContent(newNav);
+                  setNavSaving(false); setNavSaved(true);
+                  setTimeout(() => setNavSaved(false), 2500);
+                }}
                 storagePath="menu"
                 aspect="16/9"
                 label="Arka Plan Görseli Yükle"
@@ -469,7 +490,14 @@ service cloud.firestore {
                   <p className="text-xs text-zinc-400 font-medium mb-2">{label}</p>
                   <ImageUpload
                     url={(hero as any)[key]}
-                    onUpload={(url) => setHero({ ...hero!, [key]: url })}
+                    onUpload={async (url) => {
+                      const newHero = { ...hero!, [key]: url };
+                      setHero(newHero);
+                      setHeroSaving(true);
+                      await saveHeroContent(newHero);
+                      setHeroSaving(false); setHeroSaved(true);
+                      setTimeout(() => setHeroSaved(false), 2500);
+                    }}
                     storagePath="hero/cards"
                     aspect="16/9"
                     label="Görsel Yükle"
@@ -492,7 +520,14 @@ service cloud.firestore {
             <div className="space-y-4">
               <ImageUpload
                 url={hero!.bgImage}
-                onUpload={(url) => setHero({ ...hero!, bgImage: url })}
+                onUpload={async (url) => {
+                  const newHero = { ...hero!, bgImage: url };
+                  setHero(newHero);
+                  setHeroSaving(true);
+                  await saveHeroContent(newHero);
+                  setHeroSaving(false); setHeroSaved(true);
+                  setTimeout(() => setHeroSaved(false), 2500);
+                }}
                 storagePath="hero"
                 aspect="16/9"
                 label="Hero Arka Plan Görseli Yükle"
@@ -733,7 +768,14 @@ service cloud.firestore {
                       <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
                         const f = e.target.files?.[0]; if (!f) return;
                         const url = await uploadImage(f, `projects/${Date.now()}_${f.name}`);
-                        setProjects(prev => prev ? { ...prev, projects: prev.projects.map(p => p.id === proj.id ? {...p, imageUrl: url} : p) } : prev);
+                        const newProjects = projects ? { ...projects, projects: projects.projects.map(p => p.id === proj.id ? {...p, imageUrl: url} : p) } : null;
+                        if (newProjects) {
+                          setProjects(newProjects);
+                          setProjectsSaving(true);
+                          await saveProjectsContent(newProjects);
+                          setProjectsSaving(false); setProjectsSaved(true);
+                          setTimeout(() => setProjectsSaved(false), 2500);
+                        }
                         e.target.value = "";
                       }} />
                     </label>
@@ -817,11 +859,21 @@ service cloud.firestore {
               <div className="flex flex-col gap-2">
                 <label className="flex items-center gap-2 px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white text-xs rounded-lg cursor-pointer transition-colors">
                   <ImageIcon size={12} /> Görsel Yükle
-                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const f=e.target.files?.[0]; if(!f) return; const url=await uploadImage(f,`why/${Date.now()}_${f.name}`); setWhy({...why, mediaUrl: url, mediaType: "image"}); e.target.value=""; }} />
+                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const f=e.target.files?.[0]; if(!f) return; const url=await uploadImage(f,`why/${Date.now()}_${f.name}`); const newWhy = {...why, mediaUrl: url, mediaType: "image"} as any;
+                    setWhy(newWhy);
+                    setWhySaving(true);
+                    await saveWhyContent(newWhy);
+                    setWhySaving(false); setWhySaved(true);
+                    setTimeout(() => setWhySaved(false), 2500); e.target.value=""; }} />
                 </label>
                 <label className="flex items-center gap-2 px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white text-xs rounded-lg cursor-pointer transition-colors">
                   <Video size={12} /> Video Yükle
-                  <input type="file" accept="video/*" className="hidden" onChange={async (e) => { const f=e.target.files?.[0]; if(!f) return; const url=await uploadImage(f,`why/${Date.now()}_${f.name}`); setWhy({...why, mediaUrl: url, mediaType: "video"}); e.target.value=""; }} />
+                  <input type="file" accept="video/*" className="hidden" onChange={async (e) => { const f=e.target.files?.[0]; if(!f) return; const url=await uploadImage(f,`why/${Date.now()}_${f.name}`); const newWhy = {...why, mediaUrl: url, mediaType: "video"} as any;
+                    setWhy(newWhy);
+                    setWhySaving(true);
+                    await saveWhyContent(newWhy);
+                    setWhySaving(false); setWhySaved(true);
+                    setTimeout(() => setWhySaved(false), 2500); e.target.value=""; }} />
                 </label>
                 {why.mediaUrl && <button onClick={() => setWhy({...why, mediaUrl: ""})} className="text-xs text-red-400 hover:text-red-300 text-left">Kaldır</button>}
               </div>

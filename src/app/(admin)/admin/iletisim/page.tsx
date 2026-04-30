@@ -130,7 +130,14 @@ export default function IletisimAdmin() {
             label="Hero Görseli (üst kapak)"
             hint="Sayfa başındaki büyük görsel — 1400px genişlik önerilir"
             value={data.heroImage}
-            onChange={v => setData({ ...data, heroImage: v })}
+            onChange={async v => {
+              const newData = { ...data, heroImage: v };
+              setData(newData);
+              setSaving(true);
+              await saveContactContent(newData);
+              setSaving(false); setSaved(true);
+              setTimeout(() => setSaved(false), 3000);
+            }}
             storagePath="hero"
           />
 
@@ -138,13 +145,27 @@ export default function IletisimAdmin() {
             <ImageField
               label="Alt Görsel 1 (sol)"
               value={data.image1}
-              onChange={v => setData({ ...data, image1: v })}
+              onChange={async v => {
+                const newData = { ...data, image1: v };
+                setData(newData);
+                setSaving(true);
+                await saveContactContent(newData);
+                setSaving(false); setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+              }}
               storagePath="img1"
             />
             <ImageField
               label="Alt Görsel 2 (sağ)"
               value={data.image2}
-              onChange={v => setData({ ...data, image2: v })}
+              onChange={async v => {
+                const newData = { ...data, image2: v };
+                setData(newData);
+                setSaving(true);
+                await saveContactContent(newData);
+                setSaving(false); setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+              }}
               storagePath="img2"
             />
           </div>
