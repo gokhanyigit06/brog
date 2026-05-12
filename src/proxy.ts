@@ -27,6 +27,8 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/_next") ||
     pathname.startsWith("/ads") ||
     pathname.startsWith("/portal-static") ||
+    pathname.startsWith("/studio") ||
+    pathname.startsWith("/studio-static") ||
     pathname.includes(".")
   ) {
     return NextResponse.next();

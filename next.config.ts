@@ -27,6 +27,14 @@ const nextConfig: NextConfig = {
       { source: "/:lang/portal-static/:path*", destination: `${ORCHESTRA_URL}/portal-static/:path*` },
       { source: "/api/public/:path*", destination: `${ORCHESTRA_URL}/api/public/:path*` },
       { source: "/:lang/api/public/:path*", destination: `${ORCHESTRA_URL}/api/public/:path*` },
+
+      // Internal operator dashboard (Basic Auth gated). Locale-agnostic.
+      { source: "/studio", destination: `${ORCHESTRA_URL}/studio` },
+      { source: "/studio/:path*", destination: `${ORCHESTRA_URL}/studio/:path*` },
+      { source: "/:lang/studio", destination: `${ORCHESTRA_URL}/studio` },
+      { source: "/:lang/studio/:path*", destination: `${ORCHESTRA_URL}/studio/:path*` },
+      { source: "/studio-static/:path*", destination: `${ORCHESTRA_URL}/studio-static/:path*` },
+      { source: "/:lang/studio-static/:path*", destination: `${ORCHESTRA_URL}/studio-static/:path*` },
     ];
   },
 };
