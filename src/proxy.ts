@@ -17,11 +17,16 @@ function getLocale(request: NextRequest): string {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip admin, api, _next, static files
+  // Skip admin, api, _next, static files, AND Vogolab Orchestra customer
+  // portal (locale-agnostic, single-language). If we let the locale redirect
+  // catch /ads or /portal-static, the URL becomes /tr/ads which Orchestra
+  // service doesn't recognize → 404.
   if (
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
+    pathname.startsWith("/ads") ||
+    pathname.startsWith("/portal-static") ||
     pathname.includes(".")
   ) {
     return NextResponse.next();

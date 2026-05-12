@@ -15,26 +15,18 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
-      // Public customer portal — proxies to Vogolab Orchestra dashboard
-      // service. Cookies (portal_session) are passed through; user sees
-      // everything at vogolab.com/ads/* with no cross-domain CORS issues.
-      {
-        source: "/ads",
-        destination: `${ORCHESTRA_URL}/ads`,
-      },
-      {
-        source: "/ads/:path*",
-        destination: `${ORCHESTRA_URL}/ads/:path*`,
-      },
-      // Static portal assets + public API endpoints
-      {
-        source: "/portal-static/:path*",
-        destination: `${ORCHESTRA_URL}/portal-static/:path*`,
-      },
-      {
-        source: "/api/public/:path*",
-        destination: `${ORCHESTRA_URL}/api/public/:path*`,
-      },
+      // Public customer portal — proxies to Vogolab Orchestra dashboard.
+      // Brog uses [lang] dynamic route (vogolab.com/tr/...), so we must
+      // match both /ads and /:lang/ads. Cookies pass through transparently.
+      { source: "/ads", destination: `${ORCHESTRA_URL}/ads` },
+      { source: "/ads/:path*", destination: `${ORCHESTRA_URL}/ads/:path*` },
+      { source: "/:lang/ads", destination: `${ORCHESTRA_URL}/ads` },
+      { source: "/:lang/ads/:path*", destination: `${ORCHESTRA_URL}/ads/:path*` },
+      // Static portal assets + public API endpoints (same locale handling)
+      { source: "/portal-static/:path*", destination: `${ORCHESTRA_URL}/portal-static/:path*` },
+      { source: "/:lang/portal-static/:path*", destination: `${ORCHESTRA_URL}/portal-static/:path*` },
+      { source: "/api/public/:path*", destination: `${ORCHESTRA_URL}/api/public/:path*` },
+      { source: "/:lang/api/public/:path*", destination: `${ORCHESTRA_URL}/api/public/:path*` },
     ];
   },
 };
