@@ -135,7 +135,7 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
           <img
             src={nbData?.logoUrl || (isDark ? "/vogolab-vg-lockup.svg" : "/vogolab-vg-lockup-white.svg")}
             alt="VOGOLAB"
-            className="h-9 w-auto object-contain"
+            className="h-11 w-auto object-contain"
             style={{ transition: "opacity 0.35s ease" }}
           />
         </Link>
@@ -211,6 +211,11 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
               backgroundPosition: "center",
             }}
           >
+            {/* CENTER: logo mark */}
+            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none", zIndex: 0 }}>
+              <img src="/vogolab-vg-mark-white.svg" alt="" style={{ width: "clamp(120px, 16vw, 220px)", opacity: 0.07 }} />
+            </div>
+
             {/* LEFT: brand + clock + socials */}
             <div className="flex flex-col justify-center w-1/2" style={{ gap: "24px" }}>
               {/* Brand */}
