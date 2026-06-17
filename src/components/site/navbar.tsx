@@ -131,30 +131,13 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
         }}
       >
         {/* Logo */}
-        <Link href={`/${lang}`} className="flex items-center gap-2.5">
+        <Link href={`/${lang}`} className="flex items-center">
           <img
-            src={nbData?.logoUrl || "/logo.png"}
-            alt="Vogo Lab Logo"
+            src={nbData?.logoUrl || (isDark ? "/vogolab-vg-lockup.svg" : "/vogolab-vg-lockup-white.svg")}
+            alt="VOGOLAB"
             className="h-7 w-auto object-contain"
-            style={{
-              filter: isDark
-                ? (nbData?.logoUrl ? "none" : "brightness(0)")
-                : (nbData?.logoUrl ? "none" : "brightness(0) invert(1)"),
-              transition: "filter 0.35s ease",
-            }}
+            style={{ transition: "opacity 0.35s ease" }}
           />
-          <span
-            style={{
-              color: isDark ? "#0a0a0a" : "#fff",
-              transition: "color 0.35s ease",
-              fontWeight: 700,
-              fontSize: "1.125rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
-          >
-            {brandText}
-          </span>
         </Link>
 
         {/* Right: contact info + hamburger */}

@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "VOGOLAB",
   description: "VOGOLAB Creative Agency",
+  icons: {
+    icon: [
+      { url: "/vogolab-vg-mark.svg", type: "image/svg+xml" },
+    ],
+    apple: "/vogolab-vg-mark.svg",
+  },
 };
 
 export default function RootLayout({

@@ -9,6 +9,10 @@ export async function generateStaticParams() {
 export const metadata: Metadata = {
   title: "VOGOLAB",
   description: "Creative Agency",
+  icons: {
+    icon: [{ url: "/vogolab-vg-mark.svg", type: "image/svg+xml" }],
+    apple: "/vogolab-vg-mark.svg",
+  },
 };
 
 export default async function LangLayout({
