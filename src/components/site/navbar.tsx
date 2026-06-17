@@ -135,7 +135,7 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
           <img
             src={nbData?.logoUrl || (isDark ? "/vogolab-vg-lockup.svg" : "/vogolab-vg-lockup-white.svg")}
             alt="VOGOLAB"
-            className="h-7 w-auto object-contain"
+            className="h-9 w-auto object-contain"
             style={{ transition: "opacity 0.35s ease" }}
           />
         </Link>

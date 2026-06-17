@@ -226,15 +226,12 @@ export default function Footer({ lang }: Props) {
               {lang === "tr" ? "Tarafından oluşturuldu" : "Created by"}
             </span>
             <Image
-              src="/logo.png"
+              src="/vogolab-vg-lockup-white.svg"
               alt="Vogolab"
-              width={20}
-              height={20}
-              style={{ filter: "invert(1)", opacity: 0.9 }}
+              width={110}
+              height={24}
+              style={{ opacity: 0.9 }}
             />
-            <span style={{ fontSize: 14, color: "#ffffff", fontWeight: 700, letterSpacing: "0.08em" }}>
-              VOGOLAB
-            </span>
           </a>
 
           {/* Right: copyright */}
