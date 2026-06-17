@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getFaqContent, type FaqContent, type FaqItem } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
 
-interface Props { lang: string }
+interface Props { lang: string; initialContent?: FaqContent | null }
 
 function AccordionItem({ item, lang }: { item: FaqItem; lang: string }) {
   const [open, setOpen] = useState(false);
@@ -62,11 +62,14 @@ function AccordionItem({ item, lang }: { item: FaqItem; lang: string }) {
   );
 }
 
-export default function FaqSection({ lang }: Props) {
-  const [content, setContent] = useState<FaqContent | null>(null);
+export default function FaqSection({ lang, initialContent }: Props) {
+  const [content, setContent] = useState<FaqContent | null>(initialContent ?? null);
   const config = useSiteConfig();
 
-  useEffect(() => { getFaqContent().then(setContent); }, []);
+  useEffect(() => {
+    if (initialContent) return;
+    getFaqContent().then(setContent).catch(() => {});
+  }, [initialContent]);
 
   if (config && !(config as any).showFaq && (config as any).showFaq !== undefined) return null;
 

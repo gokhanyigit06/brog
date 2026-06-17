@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { getShowcaseContent, type ShowcaseContent, type ShowcaseMediaItem } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
 
-interface Props { lang: string }
+interface Props { lang: string; initialContent?: ShowcaseContent | null }
 
 function MediaSlide({ item, active }: { item: ShowcaseMediaItem; active: boolean }) {
   return (
@@ -39,15 +39,16 @@ function MediaSlide({ item, active }: { item: ShowcaseMediaItem; active: boolean
   );
 }
 
-export default function ShowcaseSection({ lang }: Props) {
-  const [content, setContent] = useState<ShowcaseContent | null>(null);
+export default function ShowcaseSection({ lang, initialContent }: Props) {
+  const [content, setContent] = useState<ShowcaseContent | null>(initialContent ?? null);
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const config = useSiteConfig();
 
   useEffect(() => {
-    getShowcaseContent().then(setContent);
-  }, []);
+    if (initialContent) return;
+    getShowcaseContent().then(setContent).catch(() => {});
+  }, [initialContent]);
 
   const items: ShowcaseMediaItem[] = (content?.mediaItems ?? [])
     .slice()

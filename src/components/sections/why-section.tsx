@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import { getWhyContent, type WhyContent } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
 
-interface Props { lang: string }
+interface Props { lang: string; initialContent?: WhyContent | null }
 
-export default function WhySection({ lang }: Props) {
-  const [content, setContent] = useState<WhyContent | null>(null);
+export default function WhySection({ lang, initialContent }: Props) {
+  const [content, setContent] = useState<WhyContent | null>(initialContent ?? null);
   const config = useSiteConfig();
 
-  useEffect(() => { getWhyContent().then(setContent); }, []);
+  useEffect(() => {
+    if (initialContent) return;
+    getWhyContent().then(setContent).catch(() => {});
+  }, [initialContent]);
 
   if (config && !config.showWhy) return null;
 

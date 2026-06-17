@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import { getServicesContent, type ServicesContent, type ServiceItem } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
 
-interface Props { lang: string }
+interface Props { lang: string; initialContent?: ServicesContent | null }
 
-export default function ServicesSection({ lang }: Props) {
-  const [content, setContent] = useState<ServicesContent | null>(null);
+export default function ServicesSection({ lang, initialContent }: Props) {
+  const [content, setContent] = useState<ServicesContent | null>(initialContent ?? null);
   const config = useSiteConfig();
 
-  useEffect(() => { getServicesContent().then(setContent); }, []);
+  useEffect(() => {
+    if (initialContent) return;
+    getServicesContent().then(setContent).catch(() => {});
+  }, [initialContent]);
 
   // Visibility check — default true until config loads
   if (config && !config.showServices) return null;

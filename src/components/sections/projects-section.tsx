@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getFeaturedProjects, getProjectsContent, slugify, type Project, type ProjectsContent } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
 
-interface Props { lang: string }
+interface Props { lang: string; initialContent?: ProjectsContent | null; initialFeatured?: Project[] }
 
 function ProjectCard({ project }: { project: Project }) {
   const [hovered, setHovered] = useState(false);
@@ -96,15 +96,16 @@ function ProjectCard({ project }: { project: Project }) {
   );
 }
 
-export default function ProjectsSection({ lang }: Props) {
-  const [content, setContent] = useState<ProjectsContent | null>(null);
-  const [featured, setFeatured] = useState<Project[]>([]);
+export default function ProjectsSection({ lang, initialContent, initialFeatured }: Props) {
+  const [content, setContent] = useState<ProjectsContent | null>(initialContent ?? null);
+  const [featured, setFeatured] = useState<Project[]>(initialFeatured ?? []);
   const config = useSiteConfig();
 
   useEffect(() => {
-    getProjectsContent().then(setContent);
-    getFeaturedProjects().then(setFeatured);
-  }, []);
+    if (initialContent && initialFeatured) return;
+    getProjectsContent().then(setContent).catch(() => {});
+    getFeaturedProjects().then(setFeatured).catch(() => {});
+  }, [initialContent, initialFeatured]);
 
   if (config && !config.showProjects) return null;
 

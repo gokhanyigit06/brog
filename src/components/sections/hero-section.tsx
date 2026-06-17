@@ -16,16 +16,18 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 interface HeroSectionProps {
   lang: string;
+  initialContent?: HeroContent | null;
 }
 
-export default function HeroSection({ lang }: HeroSectionProps) {
+export default function HeroSection({ lang, initialContent }: HeroSectionProps) {
   const [phase, setPhase] = useState<Phase>("idle");
-  const [content, setContent] = useState<HeroContent | null>(null);
+  const [content, setContent] = useState<HeroContent | null>(initialContent ?? null);
 
-  const [contentReady, setContentReady] = useState(false);
+  const [contentReady, setContentReady] = useState(!!initialContent);
 
-  // Load Firebase content first
+  // Server'dan veri prop ile geldiyse fetch atlanır; aksi halde client'tan çek.
   useEffect(() => {
+    if (initialContent) return;
     // Max 1.5s wait — then proceed with defaults
     const timeout = setTimeout(() => setContentReady(true), 1500);
     getHeroContent().then((data) => {
@@ -34,7 +36,7 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       clearTimeout(timeout);
     }).catch(() => setContentReady(true));
     return () => clearTimeout(timeout);
-  }, []);
+  }, [initialContent]);
 
   // Animation sequence — only starts after content is ready
   useEffect(() => {
