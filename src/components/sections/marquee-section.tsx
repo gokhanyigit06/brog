@@ -27,9 +27,13 @@ export default function MarqueeSection({ brands }: Props) {
 
   if (config && !config.showMarquee) return null;
 
-  const items = (brands && brands.length > 0)
-    ? brands
+  const usingBrands = !!(brands && brands.length > 0);
+  const items = usingBrands
+    ? brands!
     : (content.items.length > 0 ? content.items : ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING"]);
+
+  // Marka modunda daha yavaş aksın
+  const speed = usingBrands ? 55 : content.speed;
 
   // Repeat enough times to fill wide screens seamlessly
   const repeated = [...items, ...items, ...items, ...items];
@@ -43,7 +47,7 @@ export default function MarqueeSection({ brands }: Props) {
           to   { transform: translateX(-50%); }
         }
         .marquee-track {
-          animation: marquee-scroll ${content.speed}s linear infinite;
+          animation: marquee-scroll ${speed}s linear infinite;
         }
         .marquee-track:hover {
           animation-play-state: paused;
@@ -89,11 +93,10 @@ export default function MarqueeSection({ brands }: Props) {
                   fontWeight: 600,
                   letterSpacing: "0.18em",
                   color: "#0a0a0a",
-                  textTransform: "uppercase",
                   padding: "0 40px",
                 }}
               >
-                {item}
+                {item.toLocaleUpperCase("tr-TR")}
               </span>
               <span style={{ color: "#9ca3af", fontSize: 10 }}>{SEPARATOR}</span>
             </span>

@@ -43,10 +43,19 @@ export default async function HomePage({
       getFaqContent(),
     ]);
 
-  // Akan marquee için çalışılan markaların kısa isimleri (en-dash sonrasını at)
+  // Akan marquee için çalışılan markaların kısa isimleri
+  // (en-dash sonrasını at, " Shop" ekini kaldır, tekrarları temizle)
+  const seenBrands = new Set<string>();
   const brands = allProjects
     .map((p) => (p.brandName || p.title || "").split(/[–—]/)[0].trim())
-    .filter(Boolean);
+    .map((s) => s.replace(/\s+shop$/i, "").trim())
+    .filter(Boolean)
+    .filter((s) => {
+      const k = s.toLowerCase();
+      if (seenBrands.has(k)) return false;
+      seenBrands.add(k);
+      return true;
+    });
 
   return (
     <main className="bg-white min-h-screen">
