@@ -6,7 +6,12 @@ import { useSiteConfig } from "@/hooks/use-site-config";
 
 const SEPARATOR = "·";
 
-export default function MarqueeSection() {
+interface Props {
+  /** Çalışılan markaların isimleri — verilirse marquee bunları akıtır */
+  brands?: string[];
+}
+
+export default function MarqueeSection({ brands }: Props) {
   const [content, setContent] = useState<MarqueeContent>({
     items: ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING", "STRATEGY", "MOTION", "UX/UI"],
     speed: 30,
@@ -15,12 +20,16 @@ export default function MarqueeSection() {
   const config = useSiteConfig();
 
   useEffect(() => {
+    // Marka listesi prop ile geldiyse Firestore'dan çekmeye gerek yok
+    if (brands && brands.length > 0) return;
     getMarqueeContent().then(setContent);
-  }, []);
+  }, [brands]);
 
   if (config && !config.showMarquee) return null;
 
-  const items = content.items.length > 0 ? content.items : ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING"];
+  const items = (brands && brands.length > 0)
+    ? brands
+    : (content.items.length > 0 ? content.items : ["BRANDING", "DESIGN", "DEVELOPMENT", "PHOTOGRAPHY", "MARKETING"]);
 
   // Repeat enough times to fill wide screens seamlessly
   const repeated = [...items, ...items, ...items, ...items];

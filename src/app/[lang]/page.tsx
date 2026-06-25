@@ -13,6 +13,7 @@ import {
   getShowcaseContent,
   getProjectsContent,
   getFeaturedProjects,
+  getProjects,
   getWhyContent,
   getServicesContent,
   getFaqContent,
@@ -30,23 +31,29 @@ export default async function HomePage({
   const { lang } = await params;
 
   // Tüm section verisini server'da paralel çek — client-fetch race'i ortadan kalkar.
-  const [hero, showcase, projectsContent, featured, why, services, faq] =
+  const [hero, showcase, projectsContent, featured, allProjects, why, services, faq] =
     await Promise.all([
       getHeroContent(),
       getShowcaseContent(),
       getProjectsContent(),
       getFeaturedProjects(),
+      getProjects(),
       getWhyContent(),
       getServicesContent(),
       getFaqContent(),
     ]);
+
+  // Akan marquee için çalışılan markaların kısa isimleri (en-dash sonrasını at)
+  const brands = allProjects
+    .map((p) => (p.brandName || p.title || "").split(/[–—]/)[0].trim())
+    .filter(Boolean);
 
   return (
     <main className="bg-white min-h-screen">
       <Navbar lang={lang as Locale} />
       <HeroSection lang={lang} initialContent={hero} />
       <ShowcaseSection lang={lang} initialContent={showcase} />
-      <MarqueeSection />
+      <MarqueeSection brands={brands} />
       <ProjectsSection lang={lang} initialContent={projectsContent} initialFeatured={featured} />
       <WhySection lang={lang} initialContent={why} />
       <ServicesSection lang={lang} initialContent={services} />
