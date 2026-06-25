@@ -119,6 +119,7 @@ export interface Project {
   order: number;
   featured: boolean;
   blocks?: ProjectBlock[];    // detail page content blocks
+  cardRatio?: "portrait" | "landscape"; // kart oranı — varsayılan landscape (16:10)
 }
 
 export interface Service {

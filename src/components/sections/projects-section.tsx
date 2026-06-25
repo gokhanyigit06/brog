@@ -20,7 +20,7 @@ function ProjectCard({ project }: { project: Project }) {
         style={{
           position: "relative",
           width: "100%",
-          aspectRatio: "16 / 10",
+          ...(project.cardRatio === "portrait" ? { height: 680 } : { aspectRatio: "16 / 10" }),
           borderRadius: 14,
           overflow: "hidden",
           cursor: project.link ? "pointer" : "default",
@@ -174,7 +174,7 @@ export default function ProjectsSection({ lang, initialContent, initialFeatured 
               : "No featured projects yet — mark projects as featured in admin/projeler"}
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24, alignItems: "start" }}>
             {featured.map((project) => {
               const rawSlug = (project as any).slug;
               const slug = (rawSlug && !rawSlug.includes(".") && !rawSlug.startsWith("http"))

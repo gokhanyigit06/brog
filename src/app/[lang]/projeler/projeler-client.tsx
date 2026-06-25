@@ -41,7 +41,7 @@ function ProjectCard({ project, lang }: { project: Project; lang: string }) {
       style={{
         position: "relative",
         width: "100%",
-        aspectRatio: "16 / 10",
+        ...(project.cardRatio === "portrait" ? { height: 800 } : { aspectRatio: "16 / 10" }),
         borderRadius: 16,
         overflow: "hidden",
         cursor: project.link ? "pointer" : "default",
