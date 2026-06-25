@@ -20,7 +20,7 @@ function ProjectCard({ project }: { project: Project }) {
         style={{
           position: "relative",
           width: "100%",
-          height: 680,
+          aspectRatio: "16 / 10",
           borderRadius: 14,
           overflow: "hidden",
           cursor: project.link ? "pointer" : "default",
