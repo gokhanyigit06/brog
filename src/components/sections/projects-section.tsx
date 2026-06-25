@@ -174,8 +174,18 @@ export default function ProjectsSection({ lang, initialContent, initialFeatured 
               : "No featured projects yet — mark projects as featured in admin/projeler"}
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24, alignItems: "start" }}>
-            {featured.map((project) => {
+          (() => {
+            // Masonry: her projeyi o an daha kısa olan kolona ekle (boşluksuz, sıra korunur)
+            const cols: Project[][] = [[], []];
+            const heights = [0, 0];
+            featured.forEach((project) => {
+              // Tahmini yükseklik: portrait sabit, landscape 16:10 + başlık payı
+              const h = (project.cardRatio === "portrait" ? 680 : 392) + 60;
+              const c = heights[0] <= heights[1] ? 0 : 1;
+              cols[c].push(project);
+              heights[c] += h + 24;
+            });
+            const renderCard = (project: Project) => {
               const rawSlug = (project as any).slug;
               const slug = (rawSlug && !rawSlug.includes(".") && !rawSlug.startsWith("http"))
                 ? rawSlug
@@ -185,8 +195,17 @@ export default function ProjectsSection({ lang, initialContent, initialFeatured 
                   <ProjectCard project={project} />
                 </Link>
               );
-            })}
-          </div>
+            };
+            return (
+              <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+                {cols.map((col, ci) => (
+                  <div key={ci} style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 24 }}>
+                    {col.map(renderCard)}
+                  </div>
+                ))}
+              </div>
+            );
+          })()
         )}
       </div>
     </section>
