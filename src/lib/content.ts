@@ -85,6 +85,8 @@ export interface SiteSettings {
   social_dribbble: string;
   social_instagram: string;
   social_linkedin: string;
+  whatsapp?: string;   // wa.me için sadece rakamlar, örn "905551112233"
+  waMessage?: string;  // WhatsApp'a önceden doldurulacak hazır mesaj
 }
 
 // ─────────────────────────────────────────────
@@ -235,6 +237,8 @@ const SETTINGS_DEFAULT: SiteSettings = {
   social_dribbble: "https://dribbble.com",
   social_instagram: "https://instagram.com",
   social_linkedin: "https://linkedin.com",
+  whatsapp: "",
+  waMessage: "Merhaba, web / reklam / SEO hizmetleriniz hakkında bilgi almak istiyorum.",
 };
 
 export async function getSiteSettings(): Promise<SiteSettings> {
@@ -719,4 +723,53 @@ export async function saveFaqContent(data: FaqContent): Promise<void> {
     ...data,
     updatedAt: new Date().toISOString(),
   });
+}
+
+// ─────────────────────────────────────────────
+// LEADS — teklif formu talepleri (koleksiyon: "leads")
+// ─────────────────────────────────────────────
+
+export type LeadService = "web" | "reklam" | "seo" | "hepsi";
+export type LeadStatus = "new" | "read" | "contacted" | "archived";
+
+export interface Lead {
+  id?: string;
+  name: string;
+  phone: string;
+  service: LeadService;
+  message?: string;
+  source: string;       // "teklif-form" | "teklif-hero" | "teklif-sticky"
+  status: LeadStatus;   // yeni kayıtta "new"
+  createdAt: string;    // new Date().toISOString()
+  updatedAt?: string;
+}
+
+/** Teklif formundan gelen talebi Firestore'a yazar, doc id döner. */
+export async function saveLead(
+  data: Omit<Lead, "id" | "status" | "createdAt" | "updatedAt">
+): Promise<string> {
+  const ref = await addDoc(collection(db, "leads"), {
+    ...data,
+    status: "new" as LeadStatus,
+    createdAt: new Date().toISOString(),
+  });
+  return ref.id;
+}
+
+/** Tüm talepleri en yeni önce döner. */
+export async function getLeads(): Promise<Lead[]> {
+  const q = query(collection(db, "leads"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Lead));
+}
+
+export async function updateLead(id: string, patch: Partial<Lead>): Promise<void> {
+  await updateDoc(doc(db, "leads", id), {
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+export async function deleteLead(id: string): Promise<void> {
+  await deleteDoc(doc(db, "leads", id));
 }

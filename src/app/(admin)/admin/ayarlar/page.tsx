@@ -60,6 +60,24 @@ export default function AyarlarAdmin() {
           </div>
         </div>
 
+        {/* WhatsApp / Teklif sayfası */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+          <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-4">WhatsApp &amp; Teklif Sayfası</h2>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-zinc-500 mb-1.5">
+                WhatsApp Numarası <span className="text-zinc-600">— sadece rakam, ülke koduyla (örn. 905551112233)</span>
+              </label>
+              <input value={data!.whatsapp ?? ""} onChange={(e) => setData({ ...data!, whatsapp: e.target.value })} className={INPUT} placeholder="905551112233" />
+            </div>
+            <div>
+              <label className="block text-xs text-zinc-500 mb-1.5">WhatsApp Hazır Mesaj</label>
+              <textarea value={data!.waMessage ?? ""} onChange={(e) => setData({ ...data!, waMessage: e.target.value })} rows={2} className={`${INPUT} resize-none`} placeholder="Merhaba, hizmetleriniz hakkında bilgi almak istiyorum." />
+            </div>
+            <p className="text-xs text-zinc-600">Bu numara /tr/teklif sayfasındaki WhatsApp ve arama butonlarında kullanılır. Boşsa yukarıdaki telefon numarasından türetilir.</p>
+          </div>
+        </div>
+
         {/* Sosyal medya */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
           <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-4">Sosyal Medya (Menü)</h2>

@@ -4,6 +4,18 @@ import type { NextRequest } from "next/server";
 const locales = ["tr", "en"];
 const defaultLocale = "tr";
 
+// Admin panel Basic Auth bilgileri (.env.local → ADMIN_USER / ADMIN_PASS).
+// Env yoksa güvenli varsayılan; yayından önce mutlaka değiştir.
+const ADMIN_USER = process.env.ADMIN_USER || "vogolab";
+const ADMIN_PASS = process.env.ADMIN_PASS || "vogolab2026";
+
+function unauthorized(): NextResponse {
+  return new NextResponse("Yetkilendirme gerekli.", {
+    status: 401,
+    headers: { "WWW-Authenticate": 'Basic realm="Vogolab Admin", charset="UTF-8"' },
+  });
+}
+
 function getLocale(request: NextRequest): string {
   const acceptLanguage = request.headers.get("accept-language") || "";
   for (const locale of locales) {
@@ -17,12 +29,27 @@ function getLocale(request: NextRequest): string {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip admin, api, _next, static files, AND Vogolab Orchestra customer
+  // Admin panel — HTTP Basic Auth (leadler kişisel veri içerir)
+  if (pathname.startsWith("/admin")) {
+    const auth = request.headers.get("authorization");
+    if (auth) {
+      const [scheme, encoded] = auth.split(" ");
+      if (scheme === "Basic" && encoded) {
+        const decoded = atob(encoded);
+        const i = decoded.indexOf(":");
+        if (decoded.slice(0, i) === ADMIN_USER && decoded.slice(i + 1) === ADMIN_PASS) {
+          return NextResponse.next();
+        }
+      }
+    }
+    return unauthorized();
+  }
+
+  // Skip api, _next, static files, AND Vogolab Orchestra customer
   // portal (locale-agnostic, single-language). If we let the locale redirect
   // catch /ads or /portal-static, the URL becomes /tr/ads which Orchestra
   // service doesn't recognize → 404.
   if (
-    pathname.startsWith("/admin") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/ads") ||

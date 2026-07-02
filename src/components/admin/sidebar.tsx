@@ -9,6 +9,7 @@ import {
   Wrench,
   Users,
   Mail,
+  Inbox,
   Settings,
   ExternalLink,
 } from "lucide-react";
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/admin",            label: "Dashboard",  icon: LayoutDashboard, exact: true },
   { href: "/admin/anasayfa",   label: "Anasayfa",   icon: Home },
   { href: "/admin/projeler",   label: "Projeler",   icon: Briefcase },
+  { href: "/admin/leads",      label: "Talepler",   icon: Inbox },
   { href: "/admin/hizmetler",  label: "Hizmetler",  icon: Wrench },
   { href: "/admin/hakkimizda", label: "Hakkımızda", icon: Users },
   { href: "/admin/iletisim",   label: "İletişim",   icon: Mail },
