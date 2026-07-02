@@ -803,3 +803,40 @@ export async function saveClientLogos(data: ClientLogosContent): Promise<void> {
     updatedAt: new Date().toISOString(),
   });
 }
+
+// ─────────────────────────────────────────────
+// TEKLİF VİTRİNİ — teklif sayfası referans showcase (doc: siteContent/teklifShowcase)
+// Projeler koleksiyonuna referans verir; bu bölüme özel kapak override edilebilir.
+// ─────────────────────────────────────────────
+
+export interface TeklifShowcaseItem {
+  id: string;
+  projectId: string;   // projects koleksiyonundaki doc id
+  coverUrl?: string;   // bu bölüme özel kapak (boşsa projenin imageUrl'i)
+  order: number;
+}
+
+export interface TeklifShowcaseContent {
+  label: string;
+  title_tr: string;
+  items: TeklifShowcaseItem[];
+}
+
+const TEKLIF_SHOWCASE_DEFAULT: TeklifShowcaseContent = {
+  label: "Referanslar",
+  title_tr: "Seçili işlerimiz",
+  items: [],
+};
+
+export async function getTeklifShowcase(): Promise<TeklifShowcaseContent> {
+  const snap = await getDoc(doc(db, "siteContent", "teklifShowcase"));
+  if (!snap.exists()) return TEKLIF_SHOWCASE_DEFAULT;
+  return { ...TEKLIF_SHOWCASE_DEFAULT, ...snap.data() } as TeklifShowcaseContent;
+}
+
+export async function saveTeklifShowcase(data: TeklifShowcaseContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "teklifShowcase"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}

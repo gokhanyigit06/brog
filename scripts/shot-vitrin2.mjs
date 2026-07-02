@@ -1,0 +1,11 @@
+import { chromium } from "playwright";
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1440, height: 1600 } });
+await page.goto("http://localhost:3000/tr/teklif", { waitUntil: "domcontentloaded", timeout: 60000 });
+await page.waitForTimeout(2000);
+await page.evaluate(() => { const h=[...document.querySelectorAll("h2")].find(e=>/Seçili işlerimiz/i.test(e.textContent||"")); if(h) h.scrollIntoView({block:"start"}); });
+await page.waitForTimeout(6000);
+await page.screenshot({ path: "scripts/vitrin_page2.jpg", type: "jpeg", quality: 84 });
+await browser.close();
+console.log("done");
+process.exit(0);
