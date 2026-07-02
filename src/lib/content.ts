@@ -773,3 +773,33 @@ export async function updateLead(id: string, patch: Partial<Lead>): Promise<void
 export async function deleteLead(id: string): Promise<void> {
   await deleteDoc(doc(db, "leads", id));
 }
+
+// ─────────────────────────────────────────────
+// CLIENT LOGOS — kayan logo şeridi (doc: siteContent/clientLogos)
+// ─────────────────────────────────────────────
+
+export interface ClientLogo {
+  id: string;
+  name: string;     // marka adı (alt metni + admin etiketi)
+  logoUrl: string;  // şeffaf PNG/SVG logo
+  order: number;
+}
+
+export interface ClientLogosContent {
+  logos: ClientLogo[];
+}
+
+const CLIENT_LOGOS_DEFAULT: ClientLogosContent = { logos: [] };
+
+export async function getClientLogos(): Promise<ClientLogosContent> {
+  const snap = await getDoc(doc(db, "siteContent", "clientLogos"));
+  if (!snap.exists()) return CLIENT_LOGOS_DEFAULT;
+  return { ...CLIENT_LOGOS_DEFAULT, ...snap.data() } as ClientLogosContent;
+}
+
+export async function saveClientLogos(data: ClientLogosContent): Promise<void> {
+  await setDoc(doc(db, "siteContent", "clientLogos"), {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}

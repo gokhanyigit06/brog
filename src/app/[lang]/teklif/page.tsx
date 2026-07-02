@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
-import MarqueeSection from "@/components/sections/marquee-section";
+import LogoMarquee from "@/components/sections/logo-marquee";
 import ProjectsSection from "@/components/sections/projects-section";
 import FaqSection from "@/components/sections/faq-section";
 import {
@@ -11,6 +11,7 @@ import {
   getProjectsContent,
   getFaqContent,
   getSiteSettings,
+  getClientLogos,
 } from "@/lib/content";
 
 import TeklifHero from "./teklif-hero";
@@ -56,12 +57,13 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 export default async function TeklifPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = await params;
 
-  const [featured, allProjects, projectsContent, faq, settings] = await Promise.all([
+  const [featured, allProjects, projectsContent, faq, settings, clientLogos] = await Promise.all([
     getFeaturedProjects(),
     getProjects(),
     getProjectsContent(),
     getFaqContent(),
     getSiteSettings(),
+    getClientLogos(),
   ]);
 
   // Marka marquee'si için kısa marka isimleri (ana sayfadaki mantık)
@@ -119,7 +121,7 @@ export default async function TeklifPage({ params }: { params: Promise<{ lang: L
       <Navbar lang={lang} />
       <main className="bg-white" style={{ paddingBottom: 0 }}>
         <TeklifHero settings={settings} />
-        <MarqueeSection brands={brands} />
+        <LogoMarquee initialLogos={clientLogos.logos} fallbackBrands={brands} />
         <ValuePropSection />
         <ProjectsSection lang={lang} initialContent={projectsContent} initialFeatured={featured} />
         <ProcessSection />
