@@ -7,7 +7,7 @@ import {
 } from "@/lib/content";
 import { RefreshCw, Trash2, Phone, MessageCircle, Check, Archive } from "lucide-react";
 
-const SERVICE_LABEL: Record<string, string> = { web: "Web", reklam: "Reklam", seo: "SEO", hepsi: "Hepsi" };
+const SERVICE_LABEL: Record<string, string> = { web: "Web", reklam: "Reklam", seo: "SEO", hepsi: "Hepsi", diger: "İletişim" };
 const STATUS_LABEL: Record<LeadStatus, string> = { new: "Yeni", read: "Okundu", contacted: "İletişim kuruldu", archived: "Arşiv" };
 
 const FILTERS: { key: "all" | LeadStatus; label: string }[] = [
@@ -99,7 +99,7 @@ export default function LeadsAdmin() {
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2.5 flex-wrap">
-                    <h3 className="font-semibold text-white">{l.name}</h3>
+                    <h3 className="font-semibold text-white">{l.name || l.email || "İsimsiz"}</h3>
                     <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 text-xs font-medium">{SERVICE_LABEL[l.service] ?? l.service}</span>
                     <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${
                       l.status === "new" ? "bg-yellow-400/15 text-yellow-400"
@@ -109,8 +109,15 @@ export default function LeadsAdmin() {
                     }`}>{STATUS_LABEL[l.status]}</span>
                   </div>
                   <div className="flex items-center gap-3 mt-2 text-sm text-zinc-400 flex-wrap">
-                    <a href={`tel:${l.phone.replace(/[^\d+]/g, "")}`} className="inline-flex items-center gap-1.5 hover:text-white"><Phone size={13} /> {l.phone}</a>
-                    <a href={waLink(l.phone)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-green-400"><MessageCircle size={13} /> WhatsApp</a>
+                    {l.phone && (
+                      <>
+                        <a href={`tel:${l.phone.replace(/[^\d+]/g, "")}`} className="inline-flex items-center gap-1.5 hover:text-white"><Phone size={13} /> {l.phone}</a>
+                        <a href={waLink(l.phone)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-green-400"><MessageCircle size={13} /> WhatsApp</a>
+                      </>
+                    )}
+                    {l.email && (
+                      <a href={`mailto:${l.email}`} className="inline-flex items-center gap-1.5 hover:text-white">✉ {l.email}</a>
+                    )}
                     <span className="text-zinc-600">·</span>
                     <span className="text-zinc-500">{relTime(l.createdAt)}</span>
                     <span className="text-zinc-600">·</span>

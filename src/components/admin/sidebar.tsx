@@ -12,6 +12,7 @@ import {
   Inbox,
   ImageIcon,
   LayoutTemplate,
+  Newspaper,
   Settings,
   ExternalLink,
 } from "lucide-react";
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/admin",             label: "Dashboard",     icon: LayoutDashboard, exact: true },
   { href: "/admin/anasayfa",    label: "Anasayfa",      icon: Home },
   { href: "/admin/projeler",    label: "Projeler",      icon: Briefcase },
+  { href: "/admin/blog",        label: "Blog",          icon: Newspaper },
   { href: "/admin/leads",       label: "Talepler",      icon: Inbox },
   { href: "/admin/teklif-vitrin", label: "Teklif Vitrini", icon: LayoutTemplate },
   { href: "/admin/logolar",     label: "Logolar",       icon: ImageIcon },

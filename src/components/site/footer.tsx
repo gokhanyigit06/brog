@@ -47,6 +47,23 @@ export default function Footer({ lang }: Props) {
   const [email, setEmail]     = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent]       = useState(false);
+  const [sending, setSending] = useState(false);
+
+  async function handleFooterSend() {
+    if (!email || !message || sending) return;
+    setSending(true);
+    try {
+      const { saveLead } = await import("@/lib/content");
+      await saveLead({ name: "", phone: "", email: email.trim(), service: "diger", message: message.trim(), source: "footer-form" });
+      setSent(true);
+      setEmail(""); setMessage("");
+      setTimeout(() => setSent(false), 3000);
+    } catch {
+      // sessizce geç — kullanıcı tekrar deneyebilir
+    } finally {
+      setSending(false);
+    }
+  }
 
   const socials = [
     { label: "X.com",      href: "#" },
@@ -56,8 +73,8 @@ export default function Footer({ lang }: Props) {
   ];
 
   const navLinks = lang === "tr"
-    ? [{ label: "Ana Sayfa", href: `/${lang}` }, { label: "Projeler", href: `/${lang}/projeler` }, { label: "\u0130leti\u015fim", href: `/${lang}/iletisim` }]
-    : [{ label: "Home",      href: `/${lang}` }, { label: "Projects",  href: `/${lang}/projects`  }, { label: "Contact",  href: `/${lang}/contact`  }];
+    ? [{ label: "Ana Sayfa", href: `/${lang}` }, { label: "Hakk\u0131m\u0131zda", href: `/${lang}/hakkimizda` }, { label: "Hizmetler", href: `/${lang}/hizmetler` }, { label: "Projeler", href: `/${lang}/projeler` }, { label: "Blog", href: `/${lang}/blog` }, { label: "\u0130leti\u015fim", href: `/${lang}/iletisim` }]
+    : [{ label: "Home",      href: `/${lang}` }, { label: "About",      href: `/${lang}/hakkimizda` }, { label: "Services",  href: `/${lang}/hizmetler` }, { label: "Projects",  href: `/${lang}/projeler`  }, { label: "Blog", href: `/${lang}/blog` }, { label: "Contact",  href: `/${lang}/iletisim`  }];
 
   const priorityLinks = [
     { label: lang === "tr" ? "Kullanım Koşulları" : "Terms And Conditions", href: `/${lang}/terms-of-service` },
@@ -137,7 +154,7 @@ export default function Footer({ lang }: Props) {
           />
 
           <button
-            onClick={() => { if (email && message) { setSent(true); setEmail(""); setMessage(""); setTimeout(() => setSent(false), 3000); } }}
+            onClick={handleFooterSend}
             style={{
               width: "100%", textAlign: "center",
               background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)",

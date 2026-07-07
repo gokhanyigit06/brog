@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getContactContent, type ContactContent } from "@/lib/content";
+import { getContactContent, saveLead, type ContactContent } from "@/lib/content";
 
 interface Props { lang: string }
 
@@ -38,16 +38,26 @@ export default function IletisimClient({ lang }: Props) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => { getContactContent().then(setContact); }, []);
 
   const address = lang === "tr" ? contact?.address_tr : contact?.address_en;
 
-  function handleSend() {
-    if (!name || !email || !message) return;
-    setSent(true);
-    setName(""); setEmail(""); setMessage("");
-    setTimeout(() => setSent(false), 4000);
+  async function handleSend() {
+    if (!name || !email || !message || sending) return;
+    setSending(true);
+    try {
+      // Talep, admin panelindeki "Talepler" gelen kutusuna düşer
+      await saveLead({ name: name.trim(), phone: "", email: email.trim(), service: "diger", message: message.trim(), source: "iletisim-form" });
+      setSent(true);
+      setName(""); setEmail(""); setMessage("");
+      setTimeout(() => setSent(false), 4000);
+    } catch {
+      // yazım hatasında sessizce düşme — kullanıcı tekrar deneyebilsin
+    } finally {
+      setSending(false);
+    }
   }
 
   return (

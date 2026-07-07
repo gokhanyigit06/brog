@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getProjectBySlug, getProjects, slugify, type Project, type ProjectBlock } from "@/lib/content";
+import BrowserMockup from "@/components/ui/browser-mockup";
+import ServiceTags from "@/components/ui/service-tags";
 
 /* ────────────────────────────────────────────────────────
    Media renderer (image or video)
@@ -219,26 +221,27 @@ function MetaRow({ label, value }: { label: string; value: string }) {
    Mini project card (More Works)
 ──────────────────────────────────────────────────────── */
 function MiniCard({ project, lang }: { project: Project; lang: string }) {
-  const [hovered, setHovered] = useState(false);
   const slug = project.slug || slugify(project.brandName || project.title || "");
+  const category = lang === "tr" ? (project.industry_tr || project.category) : (project.industry_en || project.category);
   return (
     <Link href={`/${lang}/projeler/${slug}`} style={{ display: "block", textDecoration: "none" }}>
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{ position: "relative", width: "100%", height: 480, borderRadius: 16, overflow: "hidden", background: "#111" }}
-      >
-        {project.imageUrl && (
-          <img src={project.imageUrl} alt={project.brandName}
-            style={{ width: "100%", height: "100%", objectFit: "cover", transform: hovered ? "scale(1.04)" : "scale(1)", transition: "transform 0.7s cubic-bezier(.4,0,.2,1)" }} />
-        )}
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0,
-          background: "rgba(5,5,5,0.88)", padding: "20px 24px",
-        }}>
-          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>{project.category}</p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>{project.brandName || project.title}</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <BrowserMockup
+          imageUrl={project.imageUrl || project.listingImageUrl}
+          videoUrl={project.videoUrl}
+          link={project.link}
+          alt={project.brandName}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          ratio="16 / 10"
+        />
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, minWidth: 0 }}>
+            <span style={{ fontSize: 19, fontWeight: 700, color: "#0a0a0a", letterSpacing: "-0.01em" }}>{project.brandName || project.title}</span>
+            {category && <span style={{ fontSize: 13, color: "#6b7280" }}>· {category}</span>}
+          </div>
+          <span style={{ fontSize: 14, color: "#9ca3af", flexShrink: 0 }}>{project.year}</span>
         </div>
+        <ServiceTags tags={project.tags} category={project.category} max={3} />
       </div>
     </Link>
   );

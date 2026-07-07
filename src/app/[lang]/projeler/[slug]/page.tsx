@@ -1,7 +1,39 @@
+import type { Metadata } from "next";
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
+import StickyCta from "@/components/site/sticky-cta";
 import ProjectDetailClient from "./project-detail-client";
+import { getProjectBySlug } from "@/lib/content";
+
+export const dynamic = "force-dynamic";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string; slug: string }> }): Promise<Metadata> {
+  const { lang, slug } = await params;
+  try {
+    const p = await getProjectBySlug(slug);
+    if (!p) return { title: "Proje | Vogolab" };
+    const name = (p.brandName || p.title || "").split(/[–—]/)[0].trim();
+    const title = `${name} — ${p.category || "Proje"} | Vogolab Referansları`;
+    const rawDesc = (lang === "tr" ? p.description_tr : p.description_en) || p.description_tr || "";
+    const description = rawDesc.replace(/\s+/g, " ").slice(0, 158);
+    const url = `${SITE_URL}/${lang}/projeler/${slug}`;
+    return {
+      metadataBase: new URL(SITE_URL),
+      title,
+      description,
+      alternates: { canonical: url },
+      openGraph: {
+        title, description, url, siteName: "Vogolab", type: "article", locale: "tr_TR",
+        images: p.imageUrl ? [{ url: p.imageUrl, alt: name }] : [{ url: "/og-teklif.jpg", width: 1200, height: 630 }],
+      },
+      twitter: { card: "summary_large_image", title, description },
+    };
+  } catch {
+    return { title: "Proje | Vogolab" };
+  }
+}
 
 export default async function ProjectDetailPage({
   params,
@@ -15,6 +47,7 @@ export default async function ProjectDetailPage({
       <Navbar lang={lang} lightBg />
       <ProjectDetailClient slug={slug} lang={lang} />
       <Footer lang={lang} />
+      <StickyCta lang={lang} />
     </>
   );
 }

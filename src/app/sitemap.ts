@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/i18n";
 import { getProjects, slugify } from "@/lib/content";
+import { getAllPosts } from "@/lib/blog";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
-const STATIC_ROUTES = ["", "teklif", "projeler", "hizmetler", "hakkimizda", "iletisim"];
+const STATIC_ROUTES = ["", "teklif", "projeler", "hizmetler", "hakkimizda", "iletisim", "blog"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
@@ -38,6 +39,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch {
     // Firestore erişilemezse statik rotalarla devam et
+  }
+
+  // Yayındaki blog yazıları
+  try {
+    const posts = await getAllPosts(true);
+    for (const lang of locales) {
+      for (const p of posts) {
+        if (!p.slug) continue;
+        entries.push({
+          url: `${SITE_URL}/${lang}/blog/${p.slug}`,
+          lastModified: p.updatedAt || p.publishedAt || undefined,
+          changeFrequency: "monthly",
+          priority: 0.6,
+        });
+      }
+    }
+  } catch {
+    // blog erişilemezse geç
   }
 
   return entries;

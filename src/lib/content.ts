@@ -755,16 +755,17 @@ export async function saveFaqContent(data: FaqContent): Promise<void> {
 // LEADS — teklif formu talepleri (koleksiyon: "leads")
 // ─────────────────────────────────────────────
 
-export type LeadService = "web" | "reklam" | "seo" | "hepsi";
+export type LeadService = "web" | "reklam" | "seo" | "hepsi" | "diger";
 export type LeadStatus = "new" | "read" | "contacted" | "archived";
 
 export interface Lead {
   id?: string;
   name: string;
-  phone: string;
+  phone: string;        // iletişim/footer formlarında boş olabilir
+  email?: string;       // iletişim/footer formlarından gelir
   service: LeadService;
   message?: string;
-  source: string;       // "teklif-form" | "teklif-hero" | "teklif-sticky"
+  source: string;       // "teklif-form" | "iletisim-form" | "footer-form" ...
   status: LeadStatus;   // yeni kayıtta "new"
   createdAt: string;    // new Date().toISOString()
   updatedAt?: string;

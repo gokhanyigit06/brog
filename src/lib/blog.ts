@@ -16,14 +16,16 @@ import type { BlogPost } from "@/types/blog";
 const COLLECTION = "blog_posts";
 
 // ─── Get all posts ────────────────────────────────────────────────────────────
+// Not: where+orderBy birlikte composite index ister; index gerektirmemek için
+// createdAt'e göre çekip published filtresini/sıralamayı JS'te yapıyoruz.
 export async function getAllPosts(publishedOnly = true): Promise<BlogPost[]> {
   const col = collection(db, COLLECTION);
-  const q = publishedOnly
-    ? query(col, where("published", "==", true), orderBy("publishedAt", "desc"))
-    : query(col, orderBy("createdAt", "desc"));
-
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => d.data() as BlogPost);
+  const snap = await getDocs(query(col, orderBy("createdAt", "desc")));
+  const all = snap.docs.map((d) => d.data() as BlogPost);
+  if (!publishedOnly) return all;
+  return all
+    .filter((p) => p.published)
+    .sort((a, b) => (b.publishedAt || "").localeCompare(a.publishedAt || ""));
 }
 
 // ─── Get one post by slug ─────────────────────────────────────────────────────
