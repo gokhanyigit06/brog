@@ -1,6 +1,7 @@
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
+import StickyCta from "@/components/site/sticky-cta";
 import HeroSection from "@/components/sections/hero-section";
 import ShowcaseSection from "@/components/sections/showcase-section";
 import MarqueeSection from "@/components/sections/marquee-section";
@@ -68,6 +69,7 @@ export default async function HomePage({
       <ServicesSection lang={lang} initialContent={services} />
       <FaqSection lang={lang} initialContent={faq} />
       <Footer lang={lang} />
+      <StickyCta lang={lang as Locale} />
     </main>
   );
 }

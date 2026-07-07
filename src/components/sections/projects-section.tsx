@@ -1,97 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { getFeaturedProjects, getProjectsContent, slugify, type Project, type ProjectsContent } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
+import BrowserMockup from "@/components/ui/browser-mockup";
+import ServiceTags from "@/components/ui/service-tags";
 
 interface Props { lang: string; initialContent?: ProjectsContent | null; initialFeatured?: Project[] }
 
 function ProjectCard({ project }: { project: Project }) {
-  const [hovered, setHovered] = useState(false);
-
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      {/* Image container */}
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{
-          position: "relative",
-          width: "100%",
-          ...(project.cardRatio === "portrait" ? { height: 680 } : { aspectRatio: "16 / 10" }),
-          borderRadius: 14,
-          overflow: "hidden",
-          cursor: project.link ? "pointer" : "default",
-          background: "#e5e7eb",
-        }}
-      >
-        {project.videoUrl ? (
-          <video
-            src={project.videoUrl}
-            autoPlay muted loop playsInline
-            style={{
-              position: "absolute", inset: 0, width: "100%", height: "100%",
-              objectFit: "cover",
-              transition: "transform 0.7s cubic-bezier(0.4,0,0.2,1)",
-              transform: hovered ? "scale(1.04)" : "scale(1)",
-            }}
-          />
-        ) : project.imageUrl ? (
-          <Image
-            src={project.imageUrl}
-            alt={`${project.brandName} — ${project.category} projesi`}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            style={{
-              objectFit: "cover",
-              transition: "transform 0.7s cubic-bezier(0.4,0,0.2,1)",
-              transform: hovered ? "scale(1.04)" : "scale(1)",
-            }}
-          />
-        ) : null}
-
-        {/* Hover overlay — category */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(0,0,0,0.38)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: hovered ? 1 : 0,
-            transition: "opacity 0.4s ease",
-          }}
-        >
-          <span
-            style={{
-              fontSize: "clamp(18px, 2vw, 26px)",
-              fontWeight: 700,
-              color: "#fff",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              transform: hovered ? "translateY(0)" : "translateY(8px)",
-              transition: "transform 0.4s ease",
-              textAlign: "center",
-              padding: "0 24px",
-            }}
-          >
-            {project.category}
-          </span>
-        </div>
-      </div>
-
-      {/* Below card: brand + year */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 2px" }}>
-        <span style={{ fontSize: 14, fontWeight: 500, color: "#0a0a0a" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <BrowserMockup
+        imageUrl={project.imageUrl}
+        videoUrl={project.videoUrl}
+        link={project.link}
+        alt={`${project.brandName} — ${project.category} projesi`}
+        sizes="(max-width: 768px) 100vw, 50vw"
+        ratio="16 / 10"
+      />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, padding: "0 2px" }}>
+        <span style={{ fontSize: 17, fontWeight: 700, color: "#0a0a0a", letterSpacing: "-0.01em" }}>
           {project.brandName || project.title}
         </span>
-        <span style={{ fontSize: 14, color: "#6b7280", fontWeight: 400 }}>
+        <span style={{ fontSize: 14, color: "#6b7280", fontWeight: 400, flexShrink: 0 }}>
           {project.year}
         </span>
       </div>
+      <ServiceTags tags={project.tags} category={project.category} />
     </div>
   );
 }
@@ -174,18 +111,8 @@ export default function ProjectsSection({ lang, initialContent, initialFeatured 
               : "No featured projects yet — mark projects as featured in admin/projeler"}
           </div>
         ) : (
-          (() => {
-            // Masonry: her projeyi o an daha kısa olan kolona ekle (boşluksuz, sıra korunur)
-            const cols: Project[][] = [[], []];
-            const heights = [0, 0];
-            featured.forEach((project) => {
-              // Tahmini yükseklik: portrait sabit, landscape 16:10 + başlık payı
-              const h = (project.cardRatio === "portrait" ? 680 : 392) + 60;
-              const c = heights[0] <= heights[1] ? 0 : 1;
-              cols[c].push(project);
-              heights[c] += h + 24;
-            });
-            const renderCard = (project: Project) => {
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 440px), 1fr))", columnGap: 40, rowGap: 56 }}>
+            {featured.map((project) => {
               const rawSlug = (project as any).slug;
               const slug = (rawSlug && !rawSlug.includes(".") && !rawSlug.startsWith("http"))
                 ? rawSlug
@@ -195,17 +122,8 @@ export default function ProjectsSection({ lang, initialContent, initialFeatured 
                   <ProjectCard project={project} />
                 </Link>
               );
-            };
-            return (
-              <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-                {cols.map((col, ci) => (
-                  <div key={ci} style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 24 }}>
-                    {col.map(renderCard)}
-                  </div>
-                ))}
-              </div>
-            );
-          })()
+            })}
+          </div>
         )}
       </div>
     </section>

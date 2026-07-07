@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { slugify, type Project, type TeklifShowcaseContent } from "@/lib/content";
+import BrowserMockup from "@/components/ui/browser-mockup";
+import ServiceTags from "@/components/ui/service-tags";
 
 interface Props {
   lang: string;
@@ -24,36 +24,16 @@ function resolveSlug(p: Project): string {
 }
 
 function ShowcaseRow({ row, lang }: { row: Row; lang: string }) {
-  const [hovered, setHovered] = useState(false);
   const { project, cover, video } = row;
   const category = lang === "tr" ? (project.industry_tr || project.category) : (project.industry_en || project.category);
 
   return (
     <Link href={`/${lang}/projeler/${resolveSlug(project)}`} style={{ textDecoration: "none", display: "block" }}>
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        style={{ display: "flex", flexDirection: "column", gap: 18 }}
-      >
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", borderRadius: 18, overflow: "hidden", background: "#e5e7eb" }}>
-          {video ? (
-            <video src={video} autoPlay muted loop playsInline
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: hovered ? "scale(1.03)" : "scale(1)", transition: "transform 0.8s cubic-bezier(0.4,0,0.2,1)" }} />
-          ) : cover ? (
-            <Image src={cover} alt={`${project.brandName} — ${project.category}`} fill sizes="100vw"
-              style={{ objectFit: "cover", transform: hovered ? "scale(1.03)" : "scale(1)", transition: "transform 0.8s cubic-bezier(0.4,0,0.2,1)" }} />
-          ) : null}
+      <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+        <BrowserMockup imageUrl={cover} videoUrl={video} link={project.link} alt={`${project.brandName} — ${project.category}`} sizes="100vw" ratio="16 / 10" />
 
-          {/* Hover katmanı — kategori */}
-          <div style={{ position: "absolute", inset: 0, background: "rgba(10,10,10,0.32)", display: "flex", alignItems: "center", justifyContent: "center", opacity: hovered ? 1 : 0, transition: "opacity 0.4s ease" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#fff", fontSize: "clamp(15px, 1.6vw, 20px)", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", transform: hovered ? "translateY(0)" : "translateY(8px)", transition: "transform 0.4s ease" }}>
-              Projeyi İncele <span style={{ fontSize: "1.1em" }}>↗</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Alt satır: marka · kategori ... yıl */}
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16, paddingBottom: 8, borderBottom: "1px solid #e5e7eb" }}>
+        {/* Marka · kategori ... yıl */}
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 14, minWidth: 0 }}>
             <span style={{ fontSize: "clamp(20px, 2.4vw, 30px)", fontWeight: 800, color: "#0a0a0a", letterSpacing: "-0.02em" }}>
               {project.brandName || project.title}
@@ -62,6 +42,8 @@ function ShowcaseRow({ row, lang }: { row: Row; lang: string }) {
           </div>
           <span style={{ fontSize: 15, color: "#9ca3af", fontWeight: 500, flexShrink: 0 }}>{project.year}</span>
         </div>
+
+        <ServiceTags tags={project.tags} category={project.category} />
       </div>
     </Link>
   );

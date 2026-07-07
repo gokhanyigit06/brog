@@ -1,6 +1,7 @@
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
+import StickyCta from "@/components/site/sticky-cta";
 import ProjelerClient from "./projeler-client";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -25,6 +26,7 @@ export default async function ProjelerPage({
       <Navbar lang={lang} lightBg />
       <ProjelerClient lang={lang} />
       <Footer lang={lang} />
+      <StickyCta lang={lang} />
     </>
   );
 }

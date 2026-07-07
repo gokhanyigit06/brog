@@ -1,9 +1,10 @@
 "use client";
-import Image from "next/image";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getProjects, slugify, type Project } from "@/lib/content";
+import BrowserMockup from "@/components/ui/browser-mockup";
+import ServiceTags from "@/components/ui/service-tags";
 
 /* ─────────────────────────────────────────────────────
    Seed projects — shown when Firestore collection empty
@@ -22,158 +23,37 @@ const SEED: Project[] = [
 ];
 
 /* ─────────────────────────────────────────────────────
-   Single project card with expanding bottom bar
+   Proje kartı — tarayıcı mockup'ı + marka/kategori + hizmet etiketleri
 ───────────────────────────────────────────────────── */
 function ProjectCard({ project, lang }: { project: Project; lang: string }) {
-  const [hovered, setHovered] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (!videoRef.current) return;
-    if (hovered) videoRef.current.play().catch(() => {});
-    else videoRef.current.pause();
-  }, [hovered]);
-
-  const card = (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: "relative",
-        width: "100%",
-        ...(project.cardRatio === "portrait" ? { height: 800 } : { aspectRatio: "16 / 10" }),
-        borderRadius: 16,
-        overflow: "hidden",
-        cursor: project.link ? "pointer" : "default",
-        background: "#111",
-      }}
-    >
-      {/* ── Cover media ── */}
-      {project.listingVideoUrl ? (
-        <video
-          ref={videoRef}
-          src={project.listingVideoUrl}
-          muted loop playsInline
-          style={{
-            position: "absolute", inset: 0, width: "100%", height: "100%",
-            objectFit: "cover",
-            transform: hovered ? "scale(1.03)" : "scale(1)",
-            transition: "transform 0.8s cubic-bezier(0.4,0,0.2,1)",
-          }}
-        />
-      ) : (project.listingImageUrl || project.imageUrl) ? (
-        <Image
-          src={project.listingImageUrl || project.imageUrl || ""}
-          alt={`${project.brandName} — ${project.category} projesi`}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          style={{
-            objectFit: "cover",
-            transform: hovered ? "scale(1.03)" : "scale(1)",
-            transition: "transform 0.8s cubic-bezier(0.4,0,0.2,1)",
-          }}
-        />
-      ) : (
-        <div style={{ position: "absolute", inset: 0, background: "#1a1a1a" }} />
-      )}
-
-      {/* ── Bottom info bar (expands on hover) ── */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          background: "rgba(5,5,5,0.92)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          height: hovered ? 118 : 72,
-          transition: "height 0.45s cubic-bezier(0.4,0,0.2,1)",
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "0 32px",
-          gap: 0,
-        }}
-      >
-        <span
-          style={{
-            fontSize: 12,
-            fontWeight: 500,
-            color: "rgba(255,255,255,0.5)",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            display: "block",
-            marginBottom: 6,
-          }}
-        >
-          {project.category}
-        </span>
-        <span
-          style={{
-            fontSize: 26,
-            fontWeight: 700,
-            color: "#ffffff",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.15,
-            display: "block",
-          }}
-        >
-          {project.brandName || project.title}
-        </span>
-        {/* Year — slides in when bar expands */}
-        <span
-          style={{
-            fontSize: 15,
-            fontWeight: 400,
-            color: "rgba(255,255,255,0.45)",
-            display: "block",
-            marginTop: 8,
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? "translateY(0)" : "translateY(6px)",
-            transition: "opacity 0.35s ease 0.1s, transform 0.35s ease 0.1s",
-          }}
-        >
-          {project.year}
-        </span>
-      </div>
-
-      {/* ── Arrow indicator (top-right) ── */}
-      {project.link && (
-        <div
-          style={{
-            position: "absolute",
-            top: 20,
-            right: 24,
-            width: 38,
-            height: 38,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.12)",
-            backdropFilter: "blur(4px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? "scale(1)" : "scale(0.8)",
-            transition: "opacity 0.3s ease, transform 0.3s ease",
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 13L13 3M13 3H6M13 3V10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-      )}
-    </div>
-  );
-
+  const category = lang === "tr" ? (project.industry_tr || project.category) : (project.industry_en || project.category);
   const rawSlug = project.slug;
   const slug = (rawSlug && !rawSlug.includes(".") && !rawSlug.startsWith("http"))
     ? rawSlug
     : slugify(project.brandName || project.title || "");
+
   return (
     <Link href={`/${lang}/projeler/${slug}`} style={{ display: "block", textDecoration: "none" }}>
-      {card}
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <BrowserMockup
+          imageUrl={project.listingImageUrl || project.imageUrl}
+          videoUrl={project.listingVideoUrl}
+          link={project.link}
+          alt={`${project.brandName} — ${project.category} projesi`}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          ratio="16 / 10"
+        />
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 14, minWidth: 0 }}>
+            <span style={{ fontSize: "clamp(22px, 2.4vw, 32px)", fontWeight: 800, color: "#0a0a0a", letterSpacing: "-0.02em" }}>
+              {project.brandName || project.title}
+            </span>
+            {category && <span style={{ fontSize: 14, color: "#6b7280", fontWeight: 500 }}>· {category}</span>}
+          </div>
+          <span style={{ fontSize: 15, color: "#9ca3af", fontWeight: 500, flexShrink: 0 }}>{project.year}</span>
+        </div>
+        <ServiceTags tags={project.tags} category={project.category} />
+      </div>
     </Link>
   );
 }
@@ -220,6 +100,7 @@ interface Props { lang: string }
 export default function ProjelerClient({ lang }: Props) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [active, setActive] = useState<string>("all");
 
   useEffect(() => {
     getProjects()
@@ -235,47 +116,62 @@ export default function ProjelerClient({ lang }: Props) {
 
   const sorted = [...projects].sort((a, b) => a.order - b.order);
 
+  // Kategori filtreleri — projelerin category alanından türetilir
+  const categories = Array.from(new Set(sorted.map((p) => p.category).filter(Boolean)));
+  const filtered = active === "all" ? sorted : sorted.filter((p) => p.category === active);
+
   return (
     <main style={{ background: "#ffffff", minHeight: "100vh" }}>
 
       {/* ── Page Header ── */}
-      <div style={{ paddingTop: 140, paddingBottom: 64, textAlign: "center" }}>
+      <div style={{ paddingTop: 140, paddingBottom: 48, textAlign: "center" }}>
         <p style={{
-          fontSize: 13,
-          fontWeight: 500,
-          color: "#9ca3af",
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          marginBottom: 20,
+          fontSize: 13, fontWeight: 500, color: "#9ca3af",
+          letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 20,
         }}>
           {lang === "tr" ? "Tüm Çalışmalar" : "Explore All Creations"}
         </p>
         <h1 style={{
-          fontSize: "clamp(56px, 9vw, 120px)",
-          fontWeight: 900,
-          letterSpacing: "-0.04em",
-          lineHeight: 0.9,
-          color: "#0a0a0a",
+          fontSize: "clamp(56px, 9vw, 120px)", fontWeight: 900,
+          letterSpacing: "-0.04em", lineHeight: 0.9, color: "#0a0a0a",
         }}>
           {lang === "tr" ? "Seçilmiş\nÇalışmalar" : "Selected\nWorks"}
         </h1>
       </div>
 
-      {/* ── Project list ── */}
       <div className="section-container" style={{ paddingBottom: 120 }}>
+        {/* ── Kategori filtre çubuğu ── */}
+        {!loading && categories.length > 1 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", marginBottom: 56 }}>
+            {[{ key: "all", label: lang === "tr" ? "Tüm Projeler" : "All Projects" }, ...categories.map((c) => ({ key: c, label: c }))].map((f) => {
+              const on = active === f.key;
+              return (
+                <button
+                  key={f.key}
+                  onClick={() => setActive(f.key)}
+                  style={{
+                    borderRadius: 999, padding: "9px 20px", fontSize: 13.5, fontWeight: 600, cursor: "pointer",
+                    letterSpacing: "0.01em", transition: "all 0.2s ease",
+                    ...(on
+                      ? { background: "var(--accent)", color: "var(--accent-ink)", border: "1px solid var(--accent)" }
+                      : { background: "transparent", color: "#374151", border: "1px solid #d1d5db" }),
+                  }}
+                >
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: 400 }}>
-            <div style={{
-              width: 28, height: 28, borderRadius: "50%",
-              border: "2px solid #e5e7eb",
-              borderTopColor: "#0a0a0a",
-              animation: "spin 0.8s linear infinite",
-            }} />
+            <div style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid #e5e7eb", borderTopColor: "#0a0a0a", animation: "spin 0.8s linear infinite" }} />
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {sorted.map((project) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 440px), 1fr))", columnGap: 40, rowGap: 64 }}>
+            {filtered.map((project) => (
               <RevealOnScroll key={project.id}>
                 <ProjectCard project={project} lang={lang} />
               </RevealOnScroll>

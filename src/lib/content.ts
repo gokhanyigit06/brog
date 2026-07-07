@@ -644,7 +644,33 @@ export interface ServiceItem {
   pills: string[];       // legacy fallback
   pills_tr?: string[];   // Türkçe etiketler
   pills_en?: string[];   // İngilizce etiketler
+  matchTags?: string[];  // hizmetler sayfasında bu hizmete eşleşecek proje etiketleri (boşsa başlık/pills'ten otomatik)
   order: number;
+}
+
+/**
+ * Bir hizmete ait referans projeleri döndürür (hizmetler sayfası için).
+ * matchTags verilmişse ona göre; yoksa başlık + pills anahtar kelimelerini
+ * projenin category / industry / tags alanlarıyla token bazlı eşleştirir.
+ */
+export function getProjectsForService(item: ServiceItem, projects: Project[]): Project[] {
+  const source = (item.matchTags && item.matchTags.length
+    ? item.matchTags
+    : [item.title_tr, item.title_en, ...(item.pills || []), ...(item.pills_tr || [])]
+  );
+  const tokens = source
+    .flatMap((k) => (k || "").split(/[\s,&/|]+/))
+    .map((t) => t.toLowerCase().trim())
+    .filter((t) => t.length > 2);
+  if (!tokens.length) return [];
+  const uniq = Array.from(new Set(tokens));
+  return projects.filter((p) => {
+    const hay = [p.category, p.industry_tr, p.industry_en, ...(p.tags || [])]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return uniq.some((tk) => hay.includes(tk));
+  });
 }
 
 export interface ServicesContent {
