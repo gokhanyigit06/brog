@@ -23,6 +23,9 @@ export default function LeadFormSection({ settings }: Props) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  // Spam koruması: botlar gizli alanı doldurur / formu insandan hızlı gönderir
+  const [honeypot, setHoneypot] = useState("");
+  const [mountedAt] = useState(() => Date.now());
 
   const waUrl = buildWhatsAppUrl(settings.whatsapp || "", settings.waMessage || "", settings.phone);
   const telUrl = buildTelUrl(settings.phone);
@@ -34,13 +37,17 @@ export default function LeadFormSection({ settings }: Props) {
     if (phone.replace(/[^\d]/g, "").length < 10) return setError("Lütfen geçerli bir telefon numarası girin.");
     if (!service) return setError("Lütfen bir hizmet seçin.");
 
+    // Bot: sessizce "başarılı" göster, kaydetme
+    if (honeypot || Date.now() - mountedAt < 3000) { setSent(true); return; }
+
     setSubmitting(true);
     try {
       await saveLead({ name: name.trim(), phone: phone.trim(), service, message: message.trim() || undefined, source: "teklif-form" });
       trackLead(service);
       setSent(true);
       setName(""); setPhone(""); setService(""); setMessage("");
-    } catch {
+    } catch (err) {
+      console.error("Lead kaydı başarısız:", err);
       setError("Bir hata oluştu. Lütfen WhatsApp'tan yazın, hemen dönelim.");
     } finally {
       setSubmitting(false);
@@ -105,6 +112,12 @@ export default function LeadFormSection({ settings }: Props) {
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                {/* Honeypot — insanlar görmez, botlar doldurur */}
+                <input
+                  type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)}
+                  name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                  style={{ position: "absolute", left: -9999, width: 1, height: 1, opacity: 0 }}
+                />
                 <Field label="Adınız *">
                   <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Adınız Soyadınız" style={inputStyle} />
                 </Field>
@@ -149,8 +162,12 @@ export default function LeadFormSection({ settings }: Props) {
                   {submitting ? "Gönderiliyor..." : "Ücretsiz Teklif İste"}
                   {!submitting && <span style={{ fontSize: 16 }}>↗</span>}
                 </button>
-                <p style={{ fontSize: 12, color: "#9ca3af", margin: 0, textAlign: "center" }}>
-                  Bilgileriniz yalnızca sizinle iletişim için kullanılır.
+                <p style={{ fontSize: 12, color: "#9ca3af", margin: 0, textAlign: "center", lineHeight: 1.5 }}>
+                  Bilgileriniz yalnızca sizinle iletişim için kullanılır. Formu göndererek{" "}
+                  <a href="/tr/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: "#6b7280", textDecoration: "underline" }}>
+                    KVKK Aydınlatma Metni
+                  </a>
+                  &apos;ni kabul etmiş olursunuz.
                 </p>
               </form>
             )}

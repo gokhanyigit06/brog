@@ -1,0 +1,17 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const p = await (await b.newContext()).newPage();
+p.on("console", (m) => console.log(`[${m.type()}]`, m.text().slice(0, 180)));
+p.on("pageerror", (e) => console.log("[pageerror]", String(e).slice(0, 180)));
+p.on("requestfailed", (r) => console.log("[reqfail]", r.url().slice(0, 90), r.failure()?.errorText));
+await p.goto("http://localhost:3000/tr/teklif", { waitUntil: "domcontentloaded", timeout: 60000 });
+await p.waitForTimeout(2000);
+await p.locator("#teklif").scrollIntoViewIfNeeded();
+await p.fill("input[placeholder='Adınız Soyadınız']", "Test Debug");
+await p.fill("input[placeholder='05xx xxx xx xx']", "0555 111 22 33");
+await p.getByRole("button", { name: "Web Sitesi", exact: true }).click();
+await p.waitForTimeout(3500);
+await p.getByRole("button", { name: /Ücretsiz Teklif İste/ }).click();
+await p.waitForTimeout(8000);
+console.log("başarı:", (await p.locator("text=Talebiniz alındı").count()) > 0);
+await b.close();

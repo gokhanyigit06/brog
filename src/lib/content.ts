@@ -775,8 +775,10 @@ export interface Lead {
 export async function saveLead(
   data: Omit<Lead, "id" | "status" | "createdAt" | "updatedAt">
 ): Promise<string> {
+  // Firestore undefined alan kabul etmez (örn. boş bırakılan opsiyonel mesaj)
+  const clean = Object.fromEntries(Object.entries(data).filter(([, v]) => v !== undefined));
   const ref = await addDoc(collection(db, "leads"), {
-    ...data,
+    ...clean,
     status: "new" as LeadStatus,
     createdAt: new Date().toISOString(),
   });

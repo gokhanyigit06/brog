@@ -39,6 +39,9 @@ export default function IletisimClient({ lang }: Props) {
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  // Spam koruması: botlar gizli alanı doldurur / formu insandan hızlı gönderir
+  const [honeypot, setHoneypot] = useState("");
+  const [mountedAt] = useState(() => Date.now());
 
   useEffect(() => { getContactContent().then(setContact); }, []);
 
@@ -46,6 +49,11 @@ export default function IletisimClient({ lang }: Props) {
 
   async function handleSend() {
     if (!name || !email || !message || sending) return;
+    if (honeypot || Date.now() - mountedAt < 3000) {
+      setSent(true);
+      setTimeout(() => setSent(false), 4000);
+      return;
+    }
     setSending(true);
     try {
       // Talep, admin panelindeki "Talepler" gelen kutusuna düşer
@@ -114,9 +122,22 @@ export default function IletisimClient({ lang }: Props) {
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+              {/* Honeypot — insanlar görmez, botlar doldurur */}
+              <input
+                type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)}
+                name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                style={{ position: "absolute", left: -9999, width: 1, height: 1, opacity: 0 }}
+              />
               <Field label={lang === "tr" ? "İsim" : "Name"} value={name} onChange={setName} placeholder={lang === "tr" ? "Adınız" : "Your Name"} />
               <Field label="Email" value={email} onChange={setEmail} placeholder={lang === "tr" ? "E-posta adresiniz" : "Your Email"} type="email" />
               <Field label={lang === "tr" ? "Mesaj" : "Message"} value={message} onChange={setMessage} placeholder={lang === "tr" ? "Mesajınız" : "Your Message"} multiline />
+              <p style={{ fontSize: 12, color: "#9ca3af", margin: 0, lineHeight: 1.5 }}>
+                {lang === "tr" ? (
+                  <>Formu göndererek <a href={`/${lang}/privacy-policy`} target="_blank" rel="noopener noreferrer" style={{ color: "#6b7280", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a>&apos;ni kabul etmiş olursunuz.</>
+                ) : (
+                  <>By submitting this form you accept our <a href={`/${lang}/privacy-policy`} target="_blank" rel="noopener noreferrer" style={{ color: "#6b7280", textDecoration: "underline" }}>Privacy Policy</a>.</>
+                )}
+              </p>
             </div>
 
             <div style={{ marginTop: 36 }}>

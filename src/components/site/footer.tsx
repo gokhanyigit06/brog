@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getNavbarContent, type NavbarContent } from "@/lib/content";
 
 interface Props { lang: string }
 
@@ -48,9 +49,23 @@ export default function Footer({ lang }: Props) {
   const [message, setMessage] = useState("");
   const [sent, setSent]       = useState(false);
   const [sending, setSending] = useState(false);
+  // Spam koruması: botlar gizli alanı doldurur
+  const [honeypot, setHoneypot] = useState("");
+  const [contactData, setContactData] = useState<NavbarContent | null>(null);
+
+  useEffect(() => { getNavbarContent().then(setContactData).catch(() => {}); }, []);
+
+  const contactPhone = contactData?.phone || "+90 507 734 75 21";
+  const contactEmail = contactData?.email || "info@vogolab.com";
 
   async function handleFooterSend() {
     if (!email || !message || sending) return;
+    if (honeypot) {
+      setSent(true);
+      setEmail(""); setMessage("");
+      setTimeout(() => setSent(false), 3000);
+      return;
+    }
     setSending(true);
     try {
       const { saveLead } = await import("@/lib/content");
@@ -124,6 +139,12 @@ export default function Footer({ lang }: Props) {
             {lang === "tr" ? "Bir projeniz mi var?" : "Have a project in mind?"}
           </h3>
 
+          {/* Honeypot — insanlar görmez, botlar doldurur */}
+          <input
+            type="text" value={honeypot} onChange={(e) => setHoneypot(e.target.value)}
+            name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"
+            style={{ position: "absolute", left: -9999, width: 1, height: 1, opacity: 0 }}
+          />
           <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.35)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>
             Email
           </p>
@@ -165,25 +186,32 @@ export default function Footer({ lang }: Props) {
           >
             {sent ? (lang === "tr" ? "Gönderildi ✓" : "Sent ✓") : (lang === "tr" ? "Mesaj Gönder" : "Send a Message")}
           </button>
+          <p style={{ fontSize: 11.5, color: "rgba(255,255,255,0.35)", marginTop: 12, lineHeight: 1.5 }}>
+            {lang === "tr" ? (
+              <>Formu göndererek <a href={`/${lang}/privacy-policy`} style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>KVKK Aydınlatma Metni</a>&apos;ni kabul etmiş olursunuz.</>
+            ) : (
+              <>By submitting you accept our <a href={`/${lang}/privacy-policy`} style={{ color: "rgba(255,255,255,0.5)", textDecoration: "underline" }}>Privacy Policy</a>.</>
+            )}
+          </p>
         </div>
 
         {/* Lets Talk */}
         <div className="ft-col" style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Konuşalım" : "Lets Talk"}</p>
-          <a href="tel:+15108956500" style={linkStyle}
+          <a href={`tel:${contactPhone.replace(/[^\d+]/g, "")}`} style={linkStyle}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
           >
-            <span>(510) 895-6500</span>
+            <span>{contactPhone}</span>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
               <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </a>
-          <a href="mailto:hello@vogolab.com" style={linkStyle}
+          <a href={`mailto:${contactEmail}`} style={linkStyle}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
             onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
           >
-            <span>Hello@vogolab.com</span>
+            <span>{contactEmail}</span>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginTop: 4 }}>
               <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

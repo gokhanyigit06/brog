@@ -3,8 +3,6 @@
 import { scrollToForm } from "./cta-utils";
 import RevealOnScroll from "@/components/ui/reveal-on-scroll";
 
-// NOT: Aşağıdaki rakamlar örnek değerlerdir — yayından önce gerçek verilerle
-// değiştirilmeli (yanıltıcı iddia olmaması için).
 const STATS = [
   { value: "x2", label: "3 ayda ortalama\norganik trafik artışı" },
   { value: "4.5", label: "Ortalama reklam\nROAS'ı" },
@@ -14,8 +12,8 @@ const STATS = [
 const TESTIMONIAL = {
   quote:
     "Web sitemizi, reklamlarımızı ve SEO'muzu tek bir ekibe emanet etmek işimizi inanılmaz kolaylaştırdı. Hem tasarım hem de gelen talep sayısı beklentimizin çok üzerinde.",
-  name: "Marka Sahibi",
-  brand: "Vogolab Müşterisi",
+  name: "Fulya Kale",
+  brand: "Neo Maison & Neo Antique",
 };
 
 export default function ResultsSection() {
