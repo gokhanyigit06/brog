@@ -839,7 +839,7 @@ service cloud.firestore {
                 <input value={why.title_tr} onChange={(e) => setWhy({...why, title_tr: e.target.value})} className={INPUT} placeholder="Neden Biz?" />
               </Field>
               <Field label="🇬🇧 Title EN">
-                <input value={why.title_en} onChange={(e) => setWhy({...why, title_en: e.target.value})} className={INPUT} placeholder="Why Brog?" />
+                <input value={why.title_en} onChange={(e) => setWhy({...why, title_en: e.target.value})} className={INPUT} placeholder="Why Vogolab?" />
               </Field>
             </div>
           </Card>

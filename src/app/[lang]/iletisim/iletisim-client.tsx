@@ -195,7 +195,7 @@ export default function IletisimClient({ lang }: Props) {
               </span>
             </div>
             <p style={{ fontSize: 15, color: "#374151", lineHeight: 1.6, paddingLeft: 28 }}>
-              {address || (lang === "tr" ? "İstanbul, Türkiye" : "Istanbul, Turkey")}
+              {address || "Ankara, Türkiye"}
               {contact?.maps_link && (
                 <>
                   {" "}·{" "}
@@ -217,10 +217,10 @@ export default function IletisimClient({ lang }: Props) {
               </span>
             </div>
             <a
-              href={`mailto:${contact?.email || "hello@brog.com"}`}
+              href={`mailto:${contact?.email || "info@vogolab.com"}`}
               style={{ fontSize: 15, color: "#374151", textDecoration: "underline", paddingLeft: 28, display: "block" }}
             >
-              {contact?.email || "Hello@brog.com"}
+              {contact?.email || "info@vogolab.com"}
             </a>
             {contact?.phone && (
               <a

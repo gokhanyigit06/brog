@@ -181,7 +181,7 @@ export default function IletisimAdmin() {
                 value={data.email}
                 onChange={e => setData({ ...data, email: e.target.value })}
                 className={INPUT}
-                placeholder="hello@brog.com"
+                placeholder="info@vogolab.com"
                 type="email"
               />
             </Field>

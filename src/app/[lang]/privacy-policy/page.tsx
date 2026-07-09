@@ -61,7 +61,7 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
               <div>
                 <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#fff", marginBottom: "10px" }}>7. İletişim</h2>
                 <p>Gizlilik politikamız veya kişisel verilerinizle ilgili sorularınız için{" "}
-                  <a href="mailto:hello@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>hello@vogolab.com</a>{" "}
+                  <a href="mailto:info@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>info@vogolab.com</a>{" "}
                   adresi üzerinden bizimle iletişime geçebilirsiniz.
                 </p>
               </div>
@@ -105,7 +105,7 @@ export default async function PrivacyPolicyPage({ params }: { params: Promise<{ 
               <div>
                 <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#fff", marginBottom: "10px" }}>7. Contact</h2>
                 <p>For questions regarding our privacy policy or your personal data, contact us at{" "}
-                  <a href="mailto:hello@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>hello@vogolab.com</a>.
+                  <a href="mailto:info@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>info@vogolab.com</a>.
                 </p>
               </div>
             </>

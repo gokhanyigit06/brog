@@ -7,22 +7,6 @@ import BrowserMockup from "@/components/ui/browser-mockup";
 import ServiceTags from "@/components/ui/service-tags";
 
 /* ─────────────────────────────────────────────────────
-   Seed projects — shown when Firestore collection empty
-───────────────────────────────────────────────────── */
-const SEED: Project[] = [
-  { id: "s1", title: "Urban Glow", brandName: "Urban Glow", description_tr: "Modern bir moda markası için bütünleşik kimlik çalışması.", description_en: "Integrated identity work for a modern fashion brand.", imageUrl: "https://images.unsplash.com/photo-1536766820879-059fec98ec0a?w=1400&q=80", year: "2025", category: "Brand Identity", tags: ["Branding", "Fashion"], link: "", order: 0, featured: true },
-  { id: "s2", title: "Noir Studio", brandName: "Noir Studio", description_tr: "Lüks iç mimarlık stüdyosu için dijital deneyim.", description_en: "Digital experience for a luxury interior architecture studio.", imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=80", year: "2024", category: "Web Design", tags: ["Web", "Luxury"], link: "", order: 1, featured: false },
-  { id: "s3", title: "Soleil", brandName: "Soleil", description_tr: "Güneş enerjisi şirketi için temiz ve minimalist marka kimliği.", description_en: "Clean and minimalist brand identity for a solar energy company.", imageUrl: "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1400&q=80", year: "2024", category: "Art Direction", tags: ["Sustainability", "Branding"], link: "", order: 2, featured: true },
-  { id: "s4", title: "Mira Collective", brandName: "Mira Collective", description_tr: "Yaratıcı kolektif için kampanya yönetimi ve görsel dil.", description_en: "Campaign management and visual language for a creative collective.", imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80", year: "2024", category: "Campaign Art", tags: ["Campaign", "Photography"], link: "", order: 3, featured: false },
-  { id: "s5", title: "Atelier Nord", brandName: "Atelier Nord", description_tr: "İskandinav tasarım stüdyosu için kurumsal kimlik.", description_en: "Corporate identity for a Scandinavian design studio.", imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1400&q=80", year: "2023", category: "Brand Identity", tags: ["Identity", "Minimalism"], link: "", order: 4, featured: false },
-  { id: "s6", title: "Pulse Motion", brandName: "Pulse Motion", description_tr: "Spor ekipmanları markası için dinamik hareket tasarımı.", description_en: "Dynamic motion design for a sports equipment brand.", imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1400&q=80", year: "2023", category: "Motion Direction", tags: ["Motion", "Sports"], link: "", order: 5, featured: true },
-  { id: "s7", title: "Verdant", brandName: "Verdant", description_tr: "Organik gıda markası için sürdürülebilir ambalaj tasarımı.", description_en: "Sustainable packaging design for an organic food brand.", imageUrl: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1400&q=80", year: "2023", category: "Packaging", tags: ["Packaging", "Organic"], link: "", order: 6, featured: false },
-  { id: "s8", title: "Obsidian", brandName: "Obsidian", description_tr: "Fintech girişimi için kullanıcı deneyimi ve arayüz tasarımı.", description_en: "UX and interface design for a fintech startup.", imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80", year: "2022", category: "UI / UX", tags: ["Fintech", "UX"], link: "", order: 7, featured: false },
-  { id: "s9", title: "Echo Spaces", brandName: "Echo Spaces", description_tr: "Mimari fotoğrafçılık için kurumsal portfolyo sitesi.", description_en: "Corporate portfolio site for architectural photography.", imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1400&q=80", year: "2022", category: "Web Design", tags: ["Architecture", "Portfolio"], link: "", order: 8, featured: false },
-  { id: "s10", title: "Luminary", brandName: "Luminary", description_tr: "Premium mum markası için bütünleşik marka deneyimi.", description_en: "Integrated brand experience for a premium candle brand.", imageUrl: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=1400&q=80", year: "2022", category: "Brand Experience", tags: ["Luxury", "Lifestyle"], link: "", order: 9, featured: false },
-];
-
-/* ─────────────────────────────────────────────────────
    Proje kartı — tarayıcı mockup'ı + marka/kategori + hizmet etiketleri
 ───────────────────────────────────────────────────── */
 function ProjectCard({ project, lang }: { project: Project; lang: string }) {
@@ -100,18 +84,25 @@ interface Props { lang: string }
 export default function ProjelerClient({ lang }: Props) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+
   const [active, setActive] = useState<string>("all");
 
   useEffect(() => {
-    getProjects()
-      .then((data) => {
-        setProjects(data.length > 0 ? data : SEED);
-        setLoading(false);
-      })
-      .catch(() => {
-        setProjects(SEED);
-        setLoading(false);
-      });
+    let cancelled = false;
+    // Bağlantı takılırsa asla sahte proje gösterme — kısa aralıklarla yeniden dene
+    async function load(attempt = 0) {
+      try {
+        const data = await getProjects();
+        if (!cancelled) { setProjects(data); setLoading(false); setFailed(false); }
+      } catch {
+        if (cancelled) return;
+        if (attempt < 3) setTimeout(() => load(attempt + 1), 2000);
+        else { setLoading(false); setFailed(true); }
+      }
+    }
+    load();
+    return () => { cancelled = true; };
   }, []);
 
   const sorted = [...projects].sort((a, b) => a.order - b.order);
@@ -168,6 +159,10 @@ export default function ProjelerClient({ lang }: Props) {
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: 400 }}>
             <div style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid #e5e7eb", borderTopColor: "#0a0a0a", animation: "spin 0.8s linear infinite" }} />
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        ) : failed ? (
+          <div style={{ textAlign: "center", padding: "100px 0", color: "#6b7280", fontSize: 15 }}>
+            {lang === "tr" ? "Projeler şu an yüklenemedi — lütfen sayfayı yenileyin." : "Projects couldn't load right now — please refresh the page."}
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 440px), 1fr))", columnGap: 40, rowGap: 64 }}>

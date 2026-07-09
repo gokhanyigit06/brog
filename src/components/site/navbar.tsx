@@ -103,19 +103,20 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
     { href: `/${lang}/iletisim`,   label: nbData ? (lang === "tr" ? nbData.nav_contact_tr  : nbData.nav_contact_en)  : (lang === "tr" ? "İletişim"  : "Contact")  },
   ];
 
+  // Sadece admin'de URL'si girilmiş sosyal hesaplar gösterilir — generic siteye götüren link olmasın
   const socials = [
-    { href: nbData?.social_x         || "https://x.com",         label: "X.com"     },
-    { href: nbData?.social_dribbble  || "https://dribbble.com",  label: "Dribbble"  },
-    { href: nbData?.social_instagram || "https://instagram.com", label: "Instagram" },
-    { href: nbData?.social_linkedin  || "https://linkedin.com",  label: "LinkedIn"  },
-  ];
+    { href: nbData?.social_x         || "", label: "X.com"     },
+    { href: nbData?.social_dribbble  || "", label: "Dribbble"  },
+    { href: nbData?.social_instagram || "", label: "Instagram" },
+    { href: nbData?.social_linkedin  || "", label: "LinkedIn"  },
+  ].filter((s) => s.href && s.href !== "#" && !/^https?:\/\/(x|dribbble|instagram|linkedin)\.com\/?$/.test(s.href));
 
   const brandText      = nbData?.brandText      || "vogolab";
   const menuBrandLine1 = nbData?.menuBrandLine1 || "vogolab";
   const menuBrandLine2 = nbData?.menuBrandLine2 || "lab.";
-  const email          = nbData?.email          || "hello@vogolab.com";
-  const phone          = nbData?.phone          || "+90 555 000 0000";
-  const location       = nbData?.location       || "Istanbul, Turkey";
+  const email          = nbData?.email          || "info@vogolab.com";
+  const phone          = nbData?.phone          || "+90 507 734 75 21";
+  const location       = nbData?.location       || "Ankara, Türkiye";
   const menuBgImage    = nbData?.menuBgImage    || "";
 
   return (

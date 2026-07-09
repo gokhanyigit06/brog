@@ -8,8 +8,10 @@ import { getNavbarContent, type NavbarContent } from "@/lib/content";
 interface Props { lang: string }
 
 /* ── Infinite marquee with edge fade (inside section-container padding) ── */
-function FooterMarquee() {
-  const text = "STUDIO / Design / Development BROG / Creative /\u00a0";
+function FooterMarquee({ lang }: { lang: string }) {
+  const text = lang === "tr"
+    ? "VOGOLAB / Web Tasar\u0131m / Reklam / SEO / Kreatif /\u00a0"
+    : "VOGOLAB / Web Design / Ads / SEO / Creative /\u00a0";
   const repeated = Array(6).fill(text).join("");
   return (
     <div className="section-container" style={{ overflow: "hidden", paddingTop: 40, paddingBottom: 32 }}>
@@ -80,12 +82,13 @@ export default function Footer({ lang }: Props) {
     }
   }
 
+  // Sadece admin'de URL'si girilmiş sosyal hesaplar gösterilir — ölü link olmasın
   const socials = [
-    { label: "X.com",      href: "#" },
-    { label: "Dribbble",   href: "#" },
-    { label: "Instagram",  href: "#" },
-    { label: "LinkedIn",   href: "#" },
-  ];
+    { label: "X.com",      href: contactData?.social_x || "" },
+    { label: "Dribbble",   href: contactData?.social_dribbble || "" },
+    { label: "Instagram",  href: contactData?.social_instagram || "" },
+    { label: "LinkedIn",   href: contactData?.social_linkedin || "" },
+  ].filter((s) => s.href && s.href !== "#");
 
   const navLinks = lang === "tr"
     ? [{ label: "Ana Sayfa", href: `/${lang}` }, { label: "Hakk\u0131m\u0131zda", href: `/${lang}/hakkimizda` }, { label: "Hizmetler", href: `/${lang}/hizmetler` }, { label: "Projeler", href: `/${lang}/projeler` }, { label: "Blog", href: `/${lang}/blog` }, { label: "\u0130leti\u015fim", href: `/${lang}/iletisim` }]
@@ -113,6 +116,9 @@ export default function Footer({ lang }: Props) {
       {/* ── Social bar top ── */}
       <div className="section-container" style={{ paddingTop: 38, paddingBottom: 38, borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div className="ft-social" style={{ display: "flex", gap: 38 }}>
+          {socials.length === 0 && (
+            <span style={{ fontSize: 16, color: "rgba(255,255,255,0.55)" }}>Vogolab — Ankara</span>
+          )}
           {socials.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
               style={{ fontSize: 16, color: "#ffffff", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, transition: "opacity 0.2s" }}
@@ -125,7 +131,7 @@ export default function Footer({ lang }: Props) {
         </div>
         {/* Small brand dot */}
         <div style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>B</span>
+          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", fontWeight: 700 }}>V</span>
         </div>
       </div>
 
@@ -252,7 +258,7 @@ export default function Footer({ lang }: Props) {
       </div>
 
       {/* ── Giant scrolling marquee ── */}
-      <FooterMarquee />
+      <FooterMarquee lang={lang} />
 
       {/* ── Bottom bar ── */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
@@ -268,7 +274,7 @@ export default function Footer({ lang }: Props) {
             style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}
           >
             <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", letterSpacing: "0.04em" }}>
-              {lang === "tr" ? "Tarafından oluşturuldu" : "Created by"}
+              {lang === "tr" ? "Ankara'dan sevgilerle" : "Made with love in Ankara"}
             </span>
             <Image
               src="/vogolab-vg-lockup-white.svg"

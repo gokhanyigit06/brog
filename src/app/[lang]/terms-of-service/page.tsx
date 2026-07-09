@@ -56,7 +56,7 @@ export default async function TermsOfServicePage({ params }: { params: Promise<{
               <div>
                 <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#fff", marginBottom: "10px" }}>6. İletişim</h2>
                 <p>Bu sözleşme ile ilgili sorularınız için bizimle{" "}
-                  <a href="mailto:hello@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>hello@vogolab.com</a>{" "}
+                  <a href="mailto:info@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>info@vogolab.com</a>{" "}
                   adresi üzerinden iletişime geçebilirsiniz.
                 </p>
               </div>
@@ -95,7 +95,7 @@ export default async function TermsOfServicePage({ params }: { params: Promise<{
               <div>
                 <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#fff", marginBottom: "10px" }}>6. Contact</h2>
                 <p>For questions regarding this agreement, contact us at{" "}
-                  <a href="mailto:hello@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>hello@vogolab.com</a>.
+                  <a href="mailto:info@vogolab.com" style={{ color: "#fff", textDecoration: "underline" }}>info@vogolab.com</a>.
                 </p>
               </div>
             </>
