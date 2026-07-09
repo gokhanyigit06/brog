@@ -6,8 +6,8 @@ import Link from "next/link";
 export default function StickyCta({ lang }: { lang: string }) {
   return (
     <>
-      <Link href={`/${lang}/teklif`} className="sticky-cta-tab" aria-label="Ücretsiz Teklif Al">
-        Teklif Al ↗
+      <Link href={`/${lang}/teklif`} className="sticky-cta-tab" aria-label={lang === "tr" ? "Ücretsiz Teklif Al" : "Get a Free Quote"}>
+        {lang === "tr" ? "Teklif Al ↗" : "Get a Quote ↗"}
       </Link>
       <style>{`
         .sticky-cta-tab {

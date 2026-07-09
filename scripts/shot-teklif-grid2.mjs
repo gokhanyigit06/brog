@@ -1,0 +1,12 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1440, height: 1000 } });
+await p.goto("http://localhost:3000/tr/teklif", { waitUntil: "domcontentloaded", timeout: 60000 });
+await p.waitForTimeout(3000);
+await p.evaluate(() => { const h=[...document.querySelectorAll("h2")].find(e=>/Seçili işlerimiz/i.test(e.textContent||"")); if(h) h.scrollIntoView({block:"start"}); });
+await p.waitForTimeout(3500);
+await p.evaluate(() => window.scrollBy(0, 1100));
+await p.waitForTimeout(2500);
+await p.screenshot({ path: "scripts/teklif_grid2.jpg", type: "jpeg", quality: 84 });
+await b.close();
+console.log("done");

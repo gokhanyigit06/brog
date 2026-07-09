@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { locales } from "@/i18n";
 import LenisProvider from "@/components/providers/lenis-provider";
+import HtmlLang from "@/components/site/html-lang";
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -22,6 +23,11 @@ export default async function LangLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }) {
-  await params;
-  return <LenisProvider>{children}</LenisProvider>;
+  const { lang } = await params;
+  return (
+    <LenisProvider>
+      <HtmlLang lang={lang} />
+      {children}
+    </LenisProvider>
+  );
 }

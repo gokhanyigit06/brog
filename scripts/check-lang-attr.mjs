@@ -1,0 +1,10 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const p = await (await b.newContext()).newPage();
+await p.goto("http://localhost:3000/en/hizmetler", { waitUntil: "domcontentloaded", timeout: 60000 });
+await p.waitForTimeout(1800);
+console.log("html lang:", await p.evaluate(() => document.documentElement.lang));
+console.log("eyebrow:", await p.locator("main p").first().evaluate(el => getComputedStyle(el).textTransform) , "-", await p.locator("main p").first().textContent());
+const shots = "C:/Users/PC/AppData/Local/Temp/claude/c--Users-PC--gemini-antigravity-scratch-brog-brog/d21a068c-e37f-4cff-907e-b7f7419813ff/scratchpad";
+await p.screenshot({ path: `${shots}/en-hizmetler-fixed.png`, clip: { x: 0, y: 100, width: 800, height: 140 } });
+await b.close();
