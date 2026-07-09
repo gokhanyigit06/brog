@@ -9,19 +9,22 @@ import ClientLogosGrid from "@/components/sections/client-logos-grid";
 import RevealOnScroll from "@/components/ui/reveal-on-scroll";
 import { getAboutContent, getShowcaseContent, getClientLogos } from "@/lib/content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  const title = "Hakkımızda — Vogolab | Dijital Büyüme Ajansı";
-  const description = "Ankara merkezli dijital büyüme ajansı Vogolab: kaliteli web siteleri kurar, Meta & Google reklamlarını yönetir, uçtan uca SEO yaparız. Bizi yakından tanıyın.";
+  const tr = lang === "tr";
+  const title = tr ? "Hakkımızda — Vogolab | Dijital Büyüme Ajansı" : "About Us — Vogolab | Digital Growth Agency";
+  const description = tr
+    ? "Ankara merkezli dijital büyüme ajansı Vogolab: kaliteli web siteleri kurar, Meta & Google reklamlarını yönetir, uçtan uca SEO yaparız. Bizi yakından tanıyın."
+    : "Vogolab is an Ankara-based digital growth agency: we build high-quality websites, manage Meta & Google ads and run end-to-end SEO. Get to know us.";
   return {
     metadataBase: new URL(SITE_URL),
     title,
     description,
     alternates: { canonical: `${SITE_URL}/${lang}/hakkimizda` },
-    openGraph: { title, description, url: `${SITE_URL}/${lang}/hakkimizda`, siteName: "Vogolab", type: "website", locale: "tr_TR", images: [{ url: "/og-teklif.jpg", width: 1200, height: 630 }] },
+    openGraph: { title, description, url: `${SITE_URL}/${lang}/hakkimizda`, siteName: "Vogolab", type: "website", locale: tr ? "tr_TR" : "en_US", images: [{ url: "/og-teklif.jpg", width: 1200, height: 630 }] },
   };
 }
 
@@ -33,11 +36,21 @@ const accentPill: React.CSSProperties = {
 const DEFAULT_BIO_TR =
   "Vogolab, markaların dijitalde büyümesi için kurulmuş Ankara merkezli bir dijital ajanstır. Hazır şablonlarla değil, her markaya özel kodlanmış web siteleriyle çalışırız; Meta ve Google reklamlarını sonuç odaklı yönetir, teknik altyapıdan içeriğe uçtan uca SEO yaparız.\n\nBizi farklı kılan şey, üç disiplini tek çatı altında toplamamız: siteyi kuran ekip ile reklamı yöneten ve SEO'yu yürüten ekip aynı masada oturur. Böylece strateji kopmaz, sonuç hızlanır.\n\nE-ticaretten kurumsala, restoran teknolojilerinden sağlığa kadar birçok sektörde işler ürettik. Her projede aynı soruyu sorarız: bu iş, müşterimize ölçülebilir ne kazandıracak?";
 
+const DEFAULT_BIO_EN =
+  "Vogolab is an Ankara-based digital agency built to grow brands online. We don't work with off-the-shelf templates — every website we ship is custom-coded for the brand; we manage Meta and Google campaigns with a results-first mindset, and run SEO end to end, from technical foundations to content.\n\nWhat sets us apart is that we bring three disciplines under one roof: the team that builds your site sits at the same table as the team running your ads and SEO. Strategy never breaks, results come faster.\n\nFrom e-commerce to corporate, from restaurant tech to healthcare, we've delivered across many industries. On every project we ask the same question: what measurable value will this create for our client?";
+
 const VALUES_TR = [
   { icon: "✦", title: "Tek ekip, tek hedef", desc: "Tasarım, yazılım, reklam ve SEO aynı masada — strateji hiçbir aşamada kopmaz." },
   { icon: "◎", title: "Ölçülebilir sonuç", desc: "Beğeni değil rakam konuşur: trafik, dönüşüm, ROAS ve satış." },
   { icon: "▦", title: "Özel üretim", desc: "Hazır tema değil, markanıza özel kodlanan hızlı ve esnek altyapılar." },
   { icon: "↗", title: "Uzun vadeli ortaklık", desc: "Lansmanla bitmez — büyüme sürdükçe yanınızda kalırız." },
+];
+
+const VALUES_EN = [
+  { icon: "✦", title: "One team, one goal", desc: "Design, engineering, ads and SEO at the same table — strategy never breaks along the way." },
+  { icon: "◎", title: "Measurable results", desc: "Numbers talk, not likes: traffic, conversion, ROAS and sales." },
+  { icon: "▦", title: "Custom-built", desc: "No off-the-shelf themes — fast, flexible infrastructure coded for your brand." },
+  { icon: "↗", title: "Long-term partnership", desc: "It doesn't end at launch — we stay with you as growth continues." },
 ];
 
 export default async function HakkimizdaPage({ params }: { params: Promise<{ lang: Locale }> }) {
@@ -46,12 +59,13 @@ export default async function HakkimizdaPage({ params }: { params: Promise<{ lan
   const tr = lang === "tr";
 
   const title = ((tr ? about.title_tr : about.title_en) || about.title_tr || "Hakkımızda").trim();
-  const bio = ((tr ? about.bio_tr : about.bio_en) || about.bio_tr || DEFAULT_BIO_TR).trim();
+  const bio = (tr ? (about.bio_tr || DEFAULT_BIO_TR) : (about.bio_en || DEFAULT_BIO_EN)).trim();
+  const values = tr ? VALUES_TR : VALUES_EN;
 
   const stats = [
-    { value: showcase.stat1_value || "120+", label: (tr ? showcase.stat1_label_tr : showcase.stat1_label_en) || "Tamamlanan Proje" },
-    { value: showcase.stat2_value || "%98", label: (tr ? showcase.stat2_label_tr : showcase.stat2_label_en) || "Müşteri Memnuniyeti" },
-    { value: showcase.stat3_value || "5+", label: (tr ? showcase.stat3_label_tr : showcase.stat3_label_en) || "Yıllık Deneyim" },
+    { value: showcase.stat1_value || "120+", label: (tr ? showcase.stat1_label_tr : showcase.stat1_label_en) || (tr ? "Tamamlanan Proje" : "Completed Projects") },
+    { value: showcase.stat2_value || "%98", label: (tr ? showcase.stat2_label_tr : showcase.stat2_label_en) || (tr ? "Müşteri Memnuniyeti" : "Client Satisfaction") },
+    { value: showcase.stat3_value || "5+", label: (tr ? showcase.stat3_label_tr : showcase.stat3_label_en) || (tr ? "Yıllık Deneyim" : "Years of Experience") },
   ];
 
   return (
@@ -65,7 +79,7 @@ export default async function HakkimizdaPage({ params }: { params: Promise<{ lan
             {tr ? "Biz Kimiz" : "Who We Are"}
           </p>
           <h1 style={{ fontSize: "clamp(44px, 7vw, 104px)", fontWeight: 900, lineHeight: 0.96, letterSpacing: "-0.04em", color: "#0a0a0a", maxWidth: 1000, margin: 0 }}>
-            {title === "Hakkımızda" ? "Markaları dijitalde büyüten ekip." : title}
+            {title === "Hakkımızda" ? (tr ? "Markaları dijitalde büyüten ekip." : "The team that grows brands online.") : title}
           </h1>
         </section>
 
@@ -75,7 +89,7 @@ export default async function HakkimizdaPage({ params }: { params: Promise<{ lan
             <RevealOnScroll>
               <div style={{ fontSize: 17, lineHeight: 1.85, color: "#374151", whiteSpace: "pre-line" }}>{bio}</div>
               <div style={{ marginTop: 36 }}>
-                <Link href={`/${lang}/teklif`} style={accentPill}>Ücretsiz Teklif Al ↗</Link>
+                <Link href={`/${lang}/teklif`} style={accentPill}>{tr ? "Ücretsiz Teklif Al ↗" : "Get a Free Quote ↗"}</Link>
               </div>
             </RevealOnScroll>
             <RevealOnScroll delay={0.1}>
@@ -114,11 +128,11 @@ export default async function HakkimizdaPage({ params }: { params: Promise<{ lan
               {tr ? "Nasıl Çalışırız" : "How We Work"}
             </p>
             <h2 style={{ fontSize: "clamp(36px, 5.5vw, 76px)", fontWeight: 900, lineHeight: 0.98, letterSpacing: "-0.04em", color: "#0a0a0a", maxWidth: 860, marginBottom: 56 }}>
-              Bizi farklı kılan dört şey.
+              {tr ? "Bizi farklı kılan dört şey." : "Four things that set us apart."}
             </h2>
           </RevealOnScroll>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 40 }}>
-            {VALUES_TR.map((v, i) => (
+            {values.map((v, i) => (
               <RevealOnScroll key={v.title} delay={i * 0.06}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                   <div style={{ fontSize: 24, color: "var(--accent)", lineHeight: 1 }}>{v.icon}</div>
@@ -130,7 +144,7 @@ export default async function HakkimizdaPage({ params }: { params: Promise<{ lan
           </div>
         </section>
 
-        <ClientLogosGrid initialLogos={logos.logos} />
+        <ClientLogosGrid initialLogos={logos.logos} label={tr ? "Referanslar" : "References"} title={tr ? "Çalıştığımız Markalar" : "Brands We Work With"} />
 
         {/* ── Final CTA ── */}
         <section style={{ background: "#0a0a0a", width: "100%" }}>
@@ -139,10 +153,10 @@ export default async function HakkimizdaPage({ params }: { params: Promise<{ lan
               {tr ? "Birlikte büyüyelim." : "Let's grow together."}
             </h2>
             <p style={{ fontSize: 17, color: "rgba(255,255,255,0.7)", marginTop: 20, maxWidth: 520, marginLeft: "auto", marginRight: "auto" }}>
-              Projenizi anlatın; 24 saat içinde yol haritası ve teklifle dönelim.
+              {tr ? "Projenizi anlatın; 24 saat içinde yol haritası ve teklifle dönelim." : "Tell us about your project; we'll return with a roadmap and quote within 24 hours."}
             </p>
             <div style={{ marginTop: 34 }}>
-              <Link href={`/${lang}/teklif`} style={accentPill}>Ücretsiz Teklif Al ↗</Link>
+              <Link href={`/${lang}/teklif`} style={accentPill}>{tr ? "Ücretsiz Teklif Al ↗" : "Get a Free Quote ↗"}</Link>
             </div>
           </div>
         </section>

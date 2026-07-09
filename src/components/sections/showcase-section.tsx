@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { getShowcaseContent, type ShowcaseContent, type ShowcaseMediaItem } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
+import LazyVideo from "@/components/ui/lazy-video";
 
 interface Props { lang: string; initialContent?: ShowcaseContent | null }
 
@@ -18,16 +19,11 @@ function MediaSlide({ item, active }: { item: ShowcaseMediaItem; active: boolean
       }}
     >
       {item.type === "video" ? (
-        <video
+        <LazyVideo
           key={item.url}
-          autoPlay
-          muted
-          loop
-          playsInline
+          src={item.url}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        >
-          <source src={item.url} />
-        </video>
+        />
       ) : (
         <img
           src={item.url}

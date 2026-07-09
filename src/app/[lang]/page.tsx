@@ -22,7 +22,7 @@ import {
 
 // Veri her istekte server'da taze çekilir — görseller HTML'de hazır gelir,
 // admin panelinden yapılan değişiklikler anında yansır.
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 
 export default async function HomePage({
   params,

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getProjectBySlug, getProjects, slugify, type Project, type ProjectBlock } from "@/lib/content";
 import BrowserMockup from "@/components/ui/browser-mockup";
 import ServiceTags from "@/components/ui/service-tags";
+import LazyVideo from "@/components/ui/lazy-video";
 
 /* ────────────────────────────────────────────────────────
    Media renderer (image or video)
@@ -13,7 +14,7 @@ function Media({ url, alt = "" }: { url: string; alt?: string }) {
   if (!url) return <div style={{ width: "100%", height: "100%", background: "#e5e7eb" }} />;
   const isVideo = /\.(mp4|webm|mov)$/i.test(url);
   return isVideo ? (
-    <video src={url} autoPlay muted loop playsInline
+    <LazyVideo src={url}
       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
   ) : (
     <img src={url} alt={alt}

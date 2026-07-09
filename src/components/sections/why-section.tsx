@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getWhyContent, type WhyContent } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
+import LazyVideo from "@/components/ui/lazy-video";
 
 interface Props { lang: string; initialContent?: WhyContent | null }
 
@@ -48,9 +49,7 @@ export default function WhySection({ lang, initialContent }: Props) {
           {content?.mediaUrl ? (
             <div style={{ width: 250, height: 170, borderRadius: 10, overflow: "hidden", flexShrink: 0, marginLeft: 40, marginTop: 8, background: "#e5e7eb" }}>
               {content.mediaType === "video" ? (
-                <video autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }}>
-                  <source src={content.mediaUrl} />
-                </video>
+                <LazyVideo src={content.mediaUrl} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               ) : (
                 <img src={content.mediaUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               )}

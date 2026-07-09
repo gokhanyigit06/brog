@@ -6,7 +6,7 @@ import StickyCta from "@/components/site/sticky-cta";
 import ProjectDetailClient from "./project-detail-client";
 import { getProjectBySlug } from "@/lib/content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string; slug: string }> }): Promise<Metadata> {

@@ -9,7 +9,7 @@ import { getPostBySlug, getAllPosts } from "@/lib/blog";
 import type { BlogBlock, BlogPost } from "@/types/blog";
 import type { LocaleText, MediaItem } from "@/types/content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
 function pick(t: LocaleText | undefined, lang: string): string {
@@ -135,8 +135,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ lang:
       <>
         <Navbar lang={lang} lightBg />
         <main style={{ background: "#fff", minHeight: "70vh", paddingTop: 180, textAlign: "center" }}>
-          <h1 style={{ fontSize: 32, fontWeight: 800, color: "#0a0a0a" }}>Yazı bulunamadı</h1>
-          <Link href={`/${lang}/blog`} style={{ color: "var(--accent)", fontSize: 15, marginTop: 16, display: "inline-block", textDecoration: "none", fontWeight: 600 }}>← Tüm yazılar</Link>
+          <h1 style={{ fontSize: 32, fontWeight: 800, color: "#0a0a0a" }}>{lang === "tr" ? "Yazı bulunamadı" : "Post not found"}</h1>
+          <Link href={`/${lang}/blog`} style={{ color: "var(--accent)", fontSize: 15, marginTop: 16, display: "inline-block", textDecoration: "none", fontWeight: 600 }}>{lang === "tr" ? "← Tüm yazılar" : "← All posts"}</Link>
         </main>
         <Footer lang={lang} />
       </>
@@ -210,7 +210,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ lang:
         {others.length > 0 && (
           <div className="section-container" style={{ paddingBottom: 110 }}>
             <h2 style={{ fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#0a0a0a", marginBottom: 40 }}>
-              Diğer yazılar
+              {lang === "tr" ? "Diğer yazılar" : "More posts"}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 340px), 1fr))", gap: 36 }}>
               {others.map((p) => (

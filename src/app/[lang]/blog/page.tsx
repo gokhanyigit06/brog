@@ -7,20 +7,24 @@ import Footer from "@/components/site/footer";
 import StickyCta from "@/components/site/sticky-cta";
 import { getAllPosts } from "@/lib/blog";
 import type { BlogPost } from "@/types/blog";
+import LazyVideo from "@/components/ui/lazy-video";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  const title = "Blog — Web, Reklam & SEO Rehberleri | Vogolab";
-  const description = "Web tasarım, dijital reklam ve SEO üzerine güncel rehberler, ipuçları ve sektör analizleri. Vogolab ekibinden markanızı büyütecek içerikler.";
+  const tr = lang === "tr";
+  const title = tr ? "Blog — Web, Reklam & SEO Rehberleri | Vogolab" : "Blog — Web, Advertising & SEO Guides | Vogolab";
+  const description = tr
+    ? "Web tasarım, dijital reklam ve SEO üzerine güncel rehberler, ipuçları ve sektör analizleri. Vogolab ekibinden markanızı büyütecek içerikler."
+    : "Up-to-date guides, tips and industry insights on web design, digital advertising and SEO from the Vogolab team.";
   return {
     metadataBase: new URL(SITE_URL),
     title,
     description,
     alternates: { canonical: `${SITE_URL}/${lang}/blog` },
-    openGraph: { title, description, url: `${SITE_URL}/${lang}/blog`, siteName: "Vogolab", type: "website", locale: "tr_TR", images: [{ url: "/og-teklif.jpg", width: 1200, height: 630 }] },
+    openGraph: { title, description, url: `${SITE_URL}/${lang}/blog`, siteName: "Vogolab", type: "website", locale: tr ? "tr_TR" : "en_US", images: [{ url: "/og-teklif.jpg", width: 1200, height: 630 }] },
   };
 }
 
@@ -41,7 +45,7 @@ function PostCard({ post, lang }: { post: BlogPost; lang: string }) {
       <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10", borderRadius: 16, overflow: "hidden", background: "#eef0f2", border: "1px solid #e5e7eb" }}>
         {cover ? (
           post.coverMedia?.type === "video" ? (
-            <video src={cover} muted loop playsInline autoPlay style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            <LazyVideo src={cover} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
           ) : (
             <Image src={cover} alt={title} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: "cover" }} />
           )
@@ -85,17 +89,19 @@ export default async function BlogPage({ params }: { params: Promise<{ lang: Loc
             Blog
           </p>
           <h1 style={{ fontSize: "clamp(52px, 8vw, 110px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 0.92, color: "#0a0a0a", margin: 0 }}>
-            Fikirler &amp;<br />Rehberler
+            {lang === "tr" ? <>Fikirler &amp;<br />Rehberler</> : <>Ideas &amp;<br />Guides</>}
           </h1>
           <p style={{ fontSize: 16, color: "#6b7280", marginTop: 24, maxWidth: 480, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
-            Web tasarım, reklam ve SEO üzerine markanızı büyütecek güncel içerikler.
+            {lang === "tr"
+              ? "Web tasarım, reklam ve SEO üzerine markanızı büyütecek güncel içerikler."
+              : "Fresh content on web design, advertising and SEO to grow your brand."}
           </p>
         </div>
 
         <div className="section-container" style={{ paddingBottom: 120 }}>
           {posts.length === 0 ? (
             <div style={{ textAlign: "center", padding: "80px 0", color: "#9ca3af", fontSize: 15 }}>
-              İlk yazılar çok yakında burada.
+              {lang === "tr" ? "İlk yazılar çok yakında burada." : "First posts are coming soon."}
             </div>
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 340px), 1fr))", columnGap: 36, rowGap: 64 }}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { getHeroContent, type HeroContent } from "@/lib/content";
 
@@ -96,7 +97,7 @@ export default function HeroSection({ lang, initialContent }: HeroSectionProps) 
         }}
       >
         {content?.card1Image && (
-          <img src={content.card1Image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <Image src={content.card1Image} alt="" fill priority sizes="38vw" style={{ objectFit: "cover" }} />
         )}
       </motion.div>
 
@@ -122,7 +123,7 @@ export default function HeroSection({ lang, initialContent }: HeroSectionProps) 
         }}
       >
         {content?.card2Image && (
-          <img src={content.card2Image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <Image src={content.card2Image} alt="" fill priority sizes="50vw" style={{ objectFit: "cover" }} />
         )}
       </motion.div>
 
@@ -154,7 +155,7 @@ export default function HeroSection({ lang, initialContent }: HeroSectionProps) 
       >
         {/* Background image (only when URL set) */}
         {content?.card3Image && (
-          <img src={content.card3Image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <Image src={content.card3Image} alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
         )}
         {/* Vignette */}
         <div

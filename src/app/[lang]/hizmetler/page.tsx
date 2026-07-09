@@ -12,19 +12,24 @@ import {
   type Project, type ServiceItem,
 } from "@/lib/content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  const title = "Hizmetlerimiz — Ankara Web Tasarım, Reklam & SEO | Vogolab";
-  const description = "Ankara ve çevre iller için web sitesi tasarımı, Meta & Google reklam yönetimi ve uçtan uca SEO — her hizmette gerçek referans projelerimizle. Markanızı büyütmek için tek ekip.";
+  const tr = lang === "tr";
+  const title = tr
+    ? "Hizmetlerimiz — Ankara Web Tasarım, Reklam & SEO | Vogolab"
+    : "Our Services — Web Design, Advertising & SEO | Vogolab";
+  const description = tr
+    ? "Ankara ve çevre iller için web sitesi tasarımı, Meta & Google reklam yönetimi ve uçtan uca SEO — her hizmette gerçek referans projelerimizle. Markanızı büyütmek için tek ekip."
+    : "Web design, Meta & Google ads management and end-to-end SEO — with real reference projects under every service. One team to grow your brand.";
   return {
     metadataBase: new URL(SITE_URL),
     title,
     description,
     alternates: { canonical: `${SITE_URL}/${lang}/hizmetler` },
-    openGraph: { title, description, url: `${SITE_URL}/${lang}/hizmetler`, siteName: "Vogolab", type: "website", locale: "tr_TR", images: [{ url: "/og-teklif.jpg", width: 1200, height: 630 }] },
+    openGraph: { title, description, url: `${SITE_URL}/${lang}/hizmetler`, siteName: "Vogolab", type: "website", locale: tr ? "tr_TR" : "en_US", images: [{ url: "/og-teklif.jpg", width: 1200, height: 630 }] },
   };
 }
 
@@ -55,15 +60,17 @@ export default async function HizmetlerPage({ params }: { params: Promise<{ lang
 
         {/* Hero */}
         <section className="section-container" style={{ paddingTop: 150, paddingBottom: 72 }}>
-          <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 22 }}>Hizmetlerimiz</p>
+          <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 22 }}>{tr ? "Hizmetlerimiz" : "Our Services"}</p>
           <h1 style={{ fontSize: "clamp(44px, 7vw, 104px)", fontWeight: 900, lineHeight: 0.96, letterSpacing: "-0.04em", color: "#0a0a0a", maxWidth: 1000, margin: 0 }}>
-            Web, reklam ve SEO&apos;yu tek ekipten yönetin.
+            {tr ? "Web, reklam ve SEO'yu tek ekipten yönetin." : "Web, ads and SEO — managed by one team."}
           </h1>
           <p style={{ fontSize: "clamp(16px, 1.5vw, 20px)", lineHeight: 1.6, color: "#4b5563", maxWidth: 620, marginTop: 26 }}>
-            Ankara merkezli ekibimizle kaliteli web siteleri kurar, Meta &amp; Google reklamlarını yönetir, uçtan uca SEO yaparız. Her hizmetin altında o alanda yaptığımız gerçek işleri görebilirsiniz.
+            {tr
+              ? "Ankara merkezli ekibimizle kaliteli web siteleri kurar, Meta & Google reklamlarını yönetir, uçtan uca SEO yaparız. Her hizmetin altında o alanda yaptığımız gerçek işleri görebilirsiniz."
+              : "We build high-quality websites, manage Meta & Google campaigns and run end-to-end SEO. Under each service you can see real work we've delivered in that field."}
           </p>
           <div style={{ marginTop: 36 }}>
-            <Link href={`/${lang}/teklif`} style={accentPill}>Ücretsiz Teklif Al ↗</Link>
+            <Link href={`/${lang}/teklif`} style={accentPill}>{tr ? "Ücretsiz Teklif Al ↗" : "Get a Free Quote ↗"}</Link>
           </div>
         </section>
 
@@ -90,7 +97,7 @@ export default async function HizmetlerPage({ params }: { params: Promise<{ lang
 
                       {refs.length > 0 && (
                         <div style={{ marginTop: 40 }}>
-                          <p style={{ fontSize: 12.5, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 20 }}>Bu alandaki işlerimiz</p>
+                          <p style={{ fontSize: 12.5, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 20 }}>{tr ? "Bu alandaki işlerimiz" : "Our work in this field"}</p>
                           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 300px), 1fr))", gap: 28 }}>
                             {refs.map((p) => (
                               <Link key={p.id} href={`/${lang}/projeler/${resolveSlug(p)}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column", gap: 14 }}>
@@ -102,7 +109,7 @@ export default async function HizmetlerPage({ params }: { params: Promise<{ lang
                               </Link>
                             ))}
                           </div>
-                          <Link href={`/${lang}/projeler`} style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 24, fontSize: 14, fontWeight: 600, color: "var(--accent)", textDecoration: "none" }}>Tüm projeleri gör ↗</Link>
+                          <Link href={`/${lang}/projeler`} style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 24, fontSize: 14, fontWeight: 600, color: "var(--accent)", textDecoration: "none" }}>{tr ? "Tüm projeleri gör ↗" : "See all projects ↗"}</Link>
                         </div>
                       )}
                     </div>
@@ -113,15 +120,15 @@ export default async function HizmetlerPage({ params }: { params: Promise<{ lang
           })}
         </section>
 
-        <ClientLogosGrid initialLogos={logos.logos} />
+        <ClientLogosGrid initialLogos={logos.logos} label={tr ? "Referanslar" : "References"} title={tr ? "Çalıştığımız Markalar" : "Brands We Work With"} />
 
         {/* Final CTA */}
         <section style={{ background: "#0a0a0a", width: "100%" }}>
           <div className="section-container" style={{ paddingTop: 96, paddingBottom: 96, textAlign: "center" }}>
-            <h2 style={{ fontSize: "clamp(36px, 6vw, 84px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#fff", margin: 0 }}>Projenizi konuşalım.</h2>
-            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.7)", marginTop: 20, maxWidth: 520, marginLeft: "auto", marginRight: "auto" }}>24 saat içinde size özel bir yol haritası ve fiyat teklifiyle dönelim.</p>
+            <h2 style={{ fontSize: "clamp(36px, 6vw, 84px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#fff", margin: 0 }}>{tr ? "Projenizi konuşalım." : "Let's talk about your project."}</h2>
+            <p style={{ fontSize: 17, color: "rgba(255,255,255,0.7)", marginTop: 20, maxWidth: 520, marginLeft: "auto", marginRight: "auto" }}>{tr ? "24 saat içinde size özel bir yol haritası ve fiyat teklifiyle dönelim." : "We'll get back within 24 hours with a tailored roadmap and quote."}</p>
             <div style={{ marginTop: 34 }}>
-              <Link href={`/${lang}/teklif`} style={accentPill}>Ücretsiz Teklif Al ↗</Link>
+              <Link href={`/${lang}/teklif`} style={accentPill}>{tr ? "Ücretsiz Teklif Al ↗" : "Get a Free Quote ↗"}</Link>
             </div>
           </div>
         </section>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import LazyVideo from "@/components/ui/lazy-video";
 
 interface Props {
   imageUrl?: string;
@@ -64,9 +65,8 @@ export default function BrowserMockup({ imageUrl, videoUrl, link, alt = "", size
       {/* Gövde — ekran görüntüsü */}
       <div style={{ position: "relative", width: "100%", aspectRatio: ratio, background: "#e5e7eb" }}>
         {videoUrl ? (
-          <video
+          <LazyVideo
             src={videoUrl}
-            autoPlay muted loop playsInline
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: hovered ? "scale(1.03)" : "scale(1)", transition: "transform 0.8s cubic-bezier(.4,0,.2,1)" }}
           />
         ) : imageUrl ? (
