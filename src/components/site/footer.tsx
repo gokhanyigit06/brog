@@ -88,7 +88,7 @@ export default function Footer({ lang }: Props) {
     { label: "Dribbble",   href: contactData?.social_dribbble || "" },
     { label: "Instagram",  href: contactData?.social_instagram || "" },
     { label: "LinkedIn",   href: contactData?.social_linkedin || "" },
-  ].filter((s) => s.href && s.href !== "#");
+  ].filter((s) => s.href && s.href !== "#" && !/^https?:\/\/(x|dribbble|instagram|linkedin)\.com\/?$/.test(s.href));
 
   const navLinks = lang === "tr"
     ? [{ label: "Ana Sayfa", href: `/${lang}` }, { label: "Hakk\u0131m\u0131zda", href: `/${lang}/hakkimizda` }, { label: "Hizmetler", href: `/${lang}/hizmetler` }, { label: "Projeler", href: `/${lang}/projeler` }, { label: "Blog", href: `/${lang}/blog` }, { label: "\u0130leti\u015fim", href: `/${lang}/iletisim` }]
