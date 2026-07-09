@@ -23,26 +23,29 @@ function resolveSlug(p: Project): string {
   return (raw && !raw.includes(".") && !raw.startsWith("http")) ? raw : slugify(p.brandName || p.title || "");
 }
 
-function ShowcaseRow({ row, lang }: { row: Row; lang: string }) {
+/* Ana sayfadaki proje kartıyla aynı görünüm (2 sütun grid kartı) */
+function ShowcaseCard({ row, lang }: { row: Row; lang: string }) {
   const { project, cover, video } = row;
-  const category = lang === "tr" ? (project.industry_tr || project.category) : (project.industry_en || project.category);
 
   return (
     <Link href={`/${lang}/projeler/${resolveSlug(project)}`} style={{ textDecoration: "none", display: "block" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-        <BrowserMockup imageUrl={cover} videoUrl={video} link={project.link} alt={`${project.brandName} — ${project.category}`} sizes="100vw" ratio="16 / 10" />
-
-        {/* Marka · kategori ... yıl */}
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 14, minWidth: 0 }}>
-            <span style={{ fontSize: "clamp(20px, 2.4vw, 30px)", fontWeight: 800, color: "#0a0a0a", letterSpacing: "-0.02em" }}>
-              {project.brandName || project.title}
-            </span>
-            {category && <span style={{ fontSize: 14, color: "#6b7280", fontWeight: 500 }}>· {category}</span>}
-          </div>
-          <span style={{ fontSize: 15, color: "#9ca3af", fontWeight: 500, flexShrink: 0 }}>{project.year}</span>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <BrowserMockup
+          imageUrl={cover}
+          videoUrl={video}
+          link={project.link}
+          alt={`${project.brandName} — ${project.category}`}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          ratio="16 / 10"
+        />
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, padding: "0 2px" }}>
+          <span style={{ fontSize: 17, fontWeight: 700, color: "#0a0a0a", letterSpacing: "-0.01em" }}>
+            {project.brandName || project.title}
+          </span>
+          <span style={{ fontSize: 14, color: "#6b7280", fontWeight: 400, flexShrink: 0 }}>
+            {project.year}
+          </span>
         </div>
-
         <ServiceTags tags={project.tags} category={project.category} />
       </div>
     </Link>
@@ -62,7 +65,7 @@ export default function TeklifShowcase({ lang, content, projects, featured }: Pr
       })
       .filter(Boolean) as Row[];
   } else {
-    rows = featured.slice(0, 5).map((p) => ({ project: p, cover: p.imageUrl || p.listingImageUrl || "", video: p.videoUrl }));
+    rows = featured.slice(0, 6).map((p) => ({ project: p, cover: p.imageUrl || p.listingImageUrl || "", video: p.videoUrl }));
   }
 
   if (rows.length === 0) return null;
@@ -88,10 +91,10 @@ export default function TeklifShowcase({ lang, content, projects, featured }: Pr
           </Link>
         </div>
 
-        {/* Tam genişlik büyük vitrin sıraları */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 72 }}>
+        {/* Ana sayfadaki gibi 2 sütunlu grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 440px), 1fr))", columnGap: 40, rowGap: 56 }}>
           {rows.map((row) => (
-            <ShowcaseRow key={row.project.id} row={row} lang={lang} />
+            <ShowcaseCard key={row.project.id} row={row} lang={lang} />
           ))}
         </div>
       </div>
