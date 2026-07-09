@@ -53,3 +53,39 @@ body {
     padding-right: 20px;
   }
 }
+
+/* ─── Mobil düzeltmeleri ─────────────────────────────────────────────────────
+   Bileşenler inline style kullandığı için mobil kırılımlar buradan
+   !important ile yönetilir. Class'lar ilgili bileşenlere eklidir.
+   ────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Footer: 4 sütun → tek sütun (sistemik yatay taşmanın kaynağı) */
+  .ft-grid { grid-template-columns: 1fr !important; gap: 44px !important; }
+  .ft-col { text-align: left !important; }
+  .ft-col a { justify-content: flex-start !important; }
+  .ft-social { flex-wrap: wrap !important; gap: 18px !important; }
+}
+
+@media (max-width: 767px) {
+  /* İletişim: boş etiket sütununu kaldır, formu tam genişlik yap */
+  .ct-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+  .ct-hero { height: 380px !important; }
+
+  /* Proje detay: başlık, metin blokları, galeri, diğer çalışmalar */
+  .pd-header { grid-template-columns: 1fr !important; gap: 36px !important; }
+  .pd-text { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .pd-gallery { grid-template-columns: 1fr !important; height: auto !important; }
+  .pd-gallery > * { min-height: 260px; }
+  .pd-more { grid-template-columns: 1fr !important; }
+
+  /* Ana sayfa bölümleri */
+  .ps-header { flex-wrap: wrap !important; gap: 20px !important; }
+  .faq-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+  .faq-left { position: static !important; }
+  .svc-row { grid-template-columns: 1fr !important; gap: 14px !important; padding: 32px 0 !important; }
+  .why-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+  .why-head { flex-direction: column !important; align-items: flex-start !important; }
+  .why-head > div:last-child { margin-left: 0 !important; }
+  .sc-media { width: 100% !important; max-width: 450px; height: auto !important; aspect-ratio: 3 / 4; }
+  .sc-wrap > div:last-child { min-height: 0 !important; }
+}

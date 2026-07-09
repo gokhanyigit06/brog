@@ -67,7 +67,7 @@ export default function IletisimClient({ lang }: Props) {
           1. HERO IMAGE  — full container width, 700 px tall
       ══════════════════════════════════════════════ */}
       <div className="section-container" style={{ paddingBottom: 0 }}>
-        <div style={{
+        <div className="ct-hero" style={{
           width: "100%", height: 700,
           borderRadius: 20, overflow: "hidden",
           background: "#e5e7eb",
@@ -86,7 +86,7 @@ export default function IletisimClient({ lang }: Props) {
           2. FORM SECTION
       ══════════════════════════════════════════════ */}
       <div className="section-container" style={{ paddingTop: 96, paddingBottom: 80 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 80, alignItems: "start" }}>
+        <div className="ct-grid" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 80, alignItems: "start" }}>
 
           {/* Left: small label */}
           <div style={{ paddingTop: 8 }}>

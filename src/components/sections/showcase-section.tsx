@@ -75,11 +75,12 @@ export default function ShowcaseSection({ lang, initialContent }: Props) {
   return (
     <section className="w-full bg-white">
       <div className="section-container py-20 lg:py-28">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+        <div className="sc-wrap flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
 
           {/* ── LEFT: rotating media ── */}
           <div className="flex-shrink-0">
             <div
+              className="sc-media"
               style={{
                 position: "relative",
                 width: 450,

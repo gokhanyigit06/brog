@@ -97,7 +97,7 @@ export default function Footer({ lang }: Props) {
 
       {/* ── Social bar top ── */}
       <div className="section-container" style={{ paddingTop: 38, paddingBottom: 38, borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", gap: 38 }}>
+        <div className="ft-social" style={{ display: "flex", gap: 38 }}>
           {socials.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
               style={{ fontSize: 16, color: "#ffffff", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, transition: "opacity 0.2s" }}
@@ -115,7 +115,7 @@ export default function Footer({ lang }: Props) {
       </div>
 
       {/* ── Main content grid ── */}
-      <div className="section-container" style={{ paddingTop: 77, paddingBottom: 0, display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 58 }}>
+      <div className="section-container ft-grid" style={{ paddingTop: 77, paddingBottom: 0, display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 58 }}>
 
         {/* Contact Us */}
         <div>
@@ -168,7 +168,7 @@ export default function Footer({ lang }: Props) {
         </div>
 
         {/* Lets Talk */}
-        <div style={{ textAlign: "right" }}>
+        <div className="ft-col" style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Konuşalım" : "Lets Talk"}</p>
           <a href="tel:+15108956500" style={linkStyle}
             onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
@@ -191,7 +191,7 @@ export default function Footer({ lang }: Props) {
         </div>
 
         {/* Navigation */}
-        <div style={{ textAlign: "right" }}>
+        <div className="ft-col" style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Navigasyon" : "Navigation"}</p>
           {navLinks.map(l => (
             <Link key={l.href} href={l.href} style={linkStyle}
@@ -207,7 +207,7 @@ export default function Footer({ lang }: Props) {
         </div>
 
         {/* Priority */}
-        <div style={{ textAlign: "right" }}>
+        <div className="ft-col" style={{ textAlign: "right" }}>
           <p style={labelStyle}>{lang === "tr" ? "Yasal" : "Priority"}</p>
           {priorityLinks.map(l => (
             <Link key={l.label} href={l.href} style={linkStyle}

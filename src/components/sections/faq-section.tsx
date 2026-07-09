@@ -89,10 +89,10 @@ export default function FaqSection({ lang, initialContent }: Props) {
   return (
     <section id="sss" className="w-full bg-white">
       <div className="section-container py-20 lg:py-28">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+        <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
 
           {/* LEFT: label + massive title */}
-          <div style={{ position: "sticky", top: 120 }}>
+          <div className="faq-left" style={{ position: "sticky", top: 120 }}>
             <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 500, letterSpacing: "0.06em", marginBottom: 28 }}>
               ({content?.label ?? "05"}) {lang === "tr" ? "SSS" : "FAQ"}
             </p>

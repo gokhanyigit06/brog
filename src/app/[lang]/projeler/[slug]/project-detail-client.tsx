@@ -61,7 +61,7 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
       }
 
       return (
-        <div style={{ display: "grid", gridTemplateColumns: hasLabel ? "1fr 3fr" : "1fr", gap: 64, padding: "80px 0", borderTop: "1px solid #e5e7eb" }}>
+        <div className="pd-text" style={{ display: "grid", gridTemplateColumns: hasLabel ? "1fr 3fr" : "1fr", gap: 64, padding: "80px 0", borderTop: "1px solid #e5e7eb" }}>
           {hasLabel && (
             <div style={{ paddingTop: 4 }}>
               <p style={{ fontSize: 12, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase" }}>
@@ -99,7 +99,7 @@ function Block({ block, lang }: { block: ProjectBlock; lang: string }) {
         </div>
       );
       return (
-        <div style={{ display: "grid", gridTemplateColumns: block.layout === "left_big" ? "2fr 1fr" : "1fr 2fr", gap: 12, height: 580 }}>
+        <div className="pd-gallery" style={{ display: "grid", gridTemplateColumns: block.layout === "left_big" ? "2fr 1fr" : "1fr 2fr", gap: 12, height: 580 }}>
           {block.layout === "left_big" ? <>{bigEl}{smallStack}</> : <>{smallStack}{bigEl}</>}
         </div>
       );
@@ -289,7 +289,7 @@ export default function ProjectDetailClient({ slug, lang }: Props) {
           HEADER — title + meta
       ═══════════════════════════════════════ */}
       <div className="section-container" style={{ paddingTop: 40, paddingBottom: 64 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "5fr 4fr", gap: 80, alignItems: "start" }}>
+        <div className="pd-header" style={{ display: "grid", gridTemplateColumns: "5fr 4fr", gap: 80, alignItems: "start" }}>
 
           {/* Left — title + link only */}
           <div>
@@ -346,7 +346,7 @@ export default function ProjectDetailClient({ slug, lang }: Props) {
           <h2 style={{ fontSize: "clamp(36px, 6vw, 80px)", fontWeight: 900, letterSpacing: "-0.04em", color: "#0a0a0a", marginBottom: 32 }}>
             {lang === "tr" ? "Diğer Çalışmalar" : "More works"}
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div className="pd-more" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {others.map(p => <MiniCard key={p.id} project={p} lang={lang} />)}
           </div>
         </div>

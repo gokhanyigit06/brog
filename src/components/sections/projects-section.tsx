@@ -56,7 +56,7 @@ export default function ProjectsSection({ lang, initialContent, initialFeatured 
       <div className="section-container py-20 lg:py-28">
 
         {/* ── Header ── */}
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
+        <div className="ps-header" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 40, paddingBottom: 32, borderBottom: "1px solid #e5e7eb" }}>
           <div>
             <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 500, marginBottom: 16, letterSpacing: "0.06em" }}>
               ({content?.label ?? "02"}) {lang === "tr" ? "PROJELER" : "PROJECTS"}

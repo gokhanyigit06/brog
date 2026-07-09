@@ -48,7 +48,7 @@ export default function TeklifHero({ settings }: Props) {
           transition={{ duration: 0.6, ease: EASE }}
           style={{ fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)", fontWeight: 600, marginBottom: 28 }}
         >
-          Dijital Büyüme Ajansı
+          Ankara Dijital Büyüme Ajansı
         </motion.p>
 
         {/* H1 */}
@@ -76,8 +76,8 @@ export default function TeklifHero({ settings }: Props) {
           transition={{ duration: 0.7, delay: 0.16, ease: EASE }}
           style={{ fontSize: "clamp(16px, 1.5vw, 21px)", lineHeight: 1.6, color: "rgba(255,255,255,0.72)", maxWidth: 640, marginTop: 28 }}
         >
-          Yüksek kaliteli özel web sitesi kurar, Meta &amp; Google reklamlarını yönetir, uçtan uca SEO
-          yaparız. Markanızı büyütmek için ihtiyacınız olan tek ekip.
+          Ankara ve çevresindeki işletmeler için yüksek kaliteli özel web sitesi kurar, Meta &amp; Google
+          reklamlarını yönetir, uçtan uca SEO yaparız. Markanızı büyütmek için ihtiyacınız olan tek ekip.
         </motion.p>
 
         {/* CTAs */}

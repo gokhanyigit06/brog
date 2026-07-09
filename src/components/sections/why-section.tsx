@@ -25,7 +25,7 @@ export default function WhySection({ lang, initialContent }: Props) {
       <div className="section-container py-20 lg:py-28">
 
         {/* ── TOP ROW: label + title (left) | media box (right) ── */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 64 }}>
+        <div className="why-head" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 64 }}>
           <div style={{ flex: 1 }}>
             {/* Label */}
             <p style={{ fontSize: 13, color: "#6b7280", fontWeight: 500, marginBottom: 20, letterSpacing: "0.06em" }}>
@@ -67,7 +67,7 @@ export default function WhySection({ lang, initialContent }: Props) {
         <div style={{ borderTop: "1px solid #e5e7eb", marginBottom: 56 }} />
 
         {/* ── FEATURES GRID ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 40 }}>
+        <div className="why-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 40 }}>
           {(features.length > 0 ? features : [
             { id: "1", icon: "✦", title_tr: "Strateji &\nAraştırma", title_en: "Strategy &\nResearch", description_tr: "Özelleştirilmiş stratejiler geliştirip derinlemesine araştırmalar yaparak kritik içgörüleri ortaya çıkarıyoruz.", description_en: "We begin by shaping tailored strategies and performing in-depth research to reveal critical insights.", order: 0 },
             { id: "2", icon: "◎", title_tr: "Tasarım &\nPrototip", title_en: "Design &\nPrototype", description_tr: "Fikirleri ilgi çekici tasarımlara ve işlevsel prototiplere dönüştürerek vizyonunuzu hayata geçiriyoruz.", description_en: "We transform ideas into engaging designs and functional prototypes that bring your vision to life.", order: 1 },

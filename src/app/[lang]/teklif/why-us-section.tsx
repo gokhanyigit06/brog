@@ -6,7 +6,7 @@ const ITEMS = [
   { icon: "✦", title: "Tek ekip, tek fatura", desc: "Web, reklam ve SEO için ayrı ajanslarla uğraşmayın. Hepsi tek çatı altında, uyum içinde." },
   { icon: "◎", title: "Sonuç odaklı raporlama", desc: "Şeffaf metrikler: ne yaptığımızı, ne kazandırdığımızı net rakamlarla görürsünüz." },
   { icon: "▦", title: "Şeffaf ve net fiyat", desc: "Sürpriz yok. İşin kapsamını ve bedelini baştan konuşur, sözümüzün arkasında dururuz." },
-  { icon: "↗", title: "Türkiye pazarına hâkim", desc: "Yerel tüketiciyi, sektörleri ve dijital alışkanlıkları bilen bir ekiple çalışırsınız." },
+  { icon: "↗", title: "Ankara'ya ve bölgesine hâkim", desc: "Ankara merkezliyiz; başkentin ve çevre illerin pazarını, tüketicisini ve rekabetini yakından tanırız. Gerektiğinde yüz yüze de çalışırız." },
 ];
 
 export default function WhyUsSection() {

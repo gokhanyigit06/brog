@@ -28,17 +28,17 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  const title = "Web Sitesi, Reklam ve SEO Ajansı | Vogolab";
+  const title = "Ankara Web Tasarım, Reklam ve SEO Ajansı | Vogolab";
   const description =
-    "Yüksek kaliteli özel web sitesi, sonuç odaklı Meta & Google reklam yönetimi ve uçtan uca SEO — tek ekipten. Markanızı büyütmek için ücretsiz teklif alın.";
+    "Ankara merkezli dijital ajans: özel web sitesi, sonuç odaklı Meta & Google reklam yönetimi ve uçtan uca SEO — tek ekipten. Ankara ve çevre illerdeki işletmeler için ücretsiz teklif alın.";
   const url = `${SITE_URL}/${lang}/teklif`;
   return {
     metadataBase: new URL(SITE_URL),
     title,
     description,
     keywords: [
-      "dijital ajans", "web tasarım ajansı", "reklam ajansı", "seo ajansı",
-      "google ads yönetimi", "meta reklam yönetimi", "web sitesi yaptırma", "vogolab",
+      "ankara dijital ajans", "ankara web tasarım", "ankara reklam ajansı", "ankara seo ajansı",
+      "google ads yönetimi ankara", "meta reklam yönetimi", "web sitesi yaptırma ankara", "vogolab",
     ],
     alternates: { canonical: url },
     openGraph: {
@@ -79,13 +79,21 @@ export default async function TeklifPage({ params }: { params: Promise<{ lang: L
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": ["Organization", "ProfessionalService"],
         "@id": `${SITE_URL}/#organization`,
         name: "Vogolab",
         url: SITE_URL,
         logo: `${SITE_URL}/vogolab-vg-mark.svg`,
-        description: "Web tasarım, dijital reklam ve SEO ajansı.",
-        areaServed: "TR",
+        description: "Ankara merkezli web tasarım, dijital reklam ve SEO ajansı.",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Ankara",
+          addressCountry: "TR",
+        },
+        areaServed: [
+          "Ankara", "Kırıkkale", "Çankırı", "Bolu", "Eskişehir",
+          "Konya", "Kırşehir", "Aksaray", "Çorum", "Yozgat",
+        ].map((name) => ({ "@type": "City", name })),
         sameAs: [settings.social_instagram, settings.social_linkedin, settings.social_x].filter(Boolean),
         contactPoint: {
           "@type": "ContactPoint",
@@ -100,7 +108,10 @@ export default async function TeklifPage({ params }: { params: Promise<{ lang: L
         "@type": "Service",
         name: "Web Tasarım, Dijital Reklam ve SEO",
         serviceType: ["Web Tasarım", "Dijital Reklam Yönetimi", "SEO"],
-        areaServed: { "@type": "Country", name: "Türkiye" },
+        areaServed: [
+          { "@type": "City", name: "Ankara" },
+          { "@type": "Country", name: "Türkiye" },
+        ],
         provider: { "@id": `${SITE_URL}/#organization` },
         url: `${SITE_URL}/${lang}/teklif`,
       },

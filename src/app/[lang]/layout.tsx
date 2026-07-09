@@ -7,8 +7,8 @@ export async function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: "VOGOLAB",
-  description: "Creative Agency",
+  title: "Vogolab — Ankara Web Tasarım, Reklam & SEO Ajansı",
+  description: "Ankara merkezli dijital ajans Vogolab: markaya özel web siteleri, Meta & Google reklam yönetimi ve uçtan uca SEO. Ankara ve çevre illerdeki işletmeler için sonuç odaklı dijital büyüme.",
   icons: {
     icon: [{ url: "/vogolab-vg-mark.svg", type: "image/svg+xml" }],
     apple: "/vogolab-vg-mark.svg",

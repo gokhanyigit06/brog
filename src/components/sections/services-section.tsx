@@ -61,7 +61,7 @@ export default function ServicesSection({ lang, initialContent }: Props) {
 
           return (
             <div key={item.id}>
-              <div style={{
+              <div className="svc-row" style={{
                 display: "grid",
                 gridTemplateColumns: "72px 1fr 1fr",
                 gap: 32,

@@ -17,8 +17,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  const title = "Hizmetlerimiz — Web Tasarım, Reklam & SEO | Vogolab";
-  const description = "Web sitesi tasarımı, Meta & Google reklam yönetimi ve uçtan uca SEO — her hizmette gerçek referans projelerimizle. Markanızı büyütmek için tek ekip.";
+  const title = "Hizmetlerimiz — Ankara Web Tasarım, Reklam & SEO | Vogolab";
+  const description = "Ankara ve çevre iller için web sitesi tasarımı, Meta & Google reklam yönetimi ve uçtan uca SEO — her hizmette gerçek referans projelerimizle. Markanızı büyütmek için tek ekip.";
   return {
     metadataBase: new URL(SITE_URL),
     title,
@@ -60,7 +60,7 @@ export default async function HizmetlerPage({ params }: { params: Promise<{ lang
             Web, reklam ve SEO&apos;yu tek ekipten yönetin.
           </h1>
           <p style={{ fontSize: "clamp(16px, 1.5vw, 20px)", lineHeight: 1.6, color: "#4b5563", maxWidth: 620, marginTop: 26 }}>
-            Kaliteli web siteleri kurar, Meta &amp; Google reklamlarını yönetir, uçtan uca SEO yaparız. Her hizmetin altında o alanda yaptığımız gerçek işleri görebilirsiniz.
+            Ankara merkezli ekibimizle kaliteli web siteleri kurar, Meta &amp; Google reklamlarını yönetir, uçtan uca SEO yaparız. Her hizmetin altında o alanda yaptığımız gerçek işleri görebilirsiniz.
           </p>
           <div style={{ marginTop: 36 }}>
             <Link href={`/${lang}/teklif`} style={accentPill}>Ücretsiz Teklif Al ↗</Link>
