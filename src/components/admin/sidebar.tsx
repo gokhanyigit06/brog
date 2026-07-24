@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Home,
@@ -15,6 +15,7 @@ import {
   Newspaper,
   Settings,
   ExternalLink,
+  LogOut,
 } from "lucide-react";
 
 const navItems = [
@@ -33,6 +34,16 @@ const navItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Login ekranı tam ekran — sidebar gizli
+  if (pathname === "/admin/login") return null;
+
+  async function handleLogout() {
+    try { await fetch("/api/admin/logout", { method: "POST" }); } catch {}
+    router.push("/admin/login");
+    router.refresh();
+  }
 
   return (
     <aside className="w-64 bg-zinc-950 border-r border-zinc-800 min-h-screen flex flex-col">
@@ -77,7 +88,7 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-zinc-800">
+      <div className="px-4 py-4 border-t border-zinc-800 space-y-3">
         <Link
           href="/"
           target="_blank"
@@ -86,6 +97,13 @@ export default function AdminSidebar() {
           <ExternalLink size={12} />
           Siteyi Görüntüle
         </Link>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 text-xs text-zinc-500 hover:text-red-400 transition-colors"
+        >
+          <LogOut size={12} />
+          Çıkış Yap
+        </button>
       </div>
     </aside>
   );

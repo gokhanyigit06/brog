@@ -1,20 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth";
 
 const locales = ["tr", "en"];
 const defaultLocale = "tr";
-
-// Admin panel Basic Auth bilgileri (.env.local → ADMIN_USER / ADMIN_PASS).
-// Env yoksa güvenli varsayılan; yayından önce mutlaka değiştir.
-const ADMIN_USER = process.env.ADMIN_USER || "vogolab";
-const ADMIN_PASS = process.env.ADMIN_PASS || "vogolab2026";
-
-function unauthorized(): NextResponse {
-  return new NextResponse("Yetkilendirme gerekli.", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="Vogolab Admin", charset="UTF-8"' },
-  });
-}
 
 function getLocale(request: NextRequest): string {
   const acceptLanguage = request.headers.get("accept-language") || "";
@@ -26,23 +15,27 @@ function getLocale(request: NextRequest): string {
   return defaultLocale;
 }
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Admin panel — HTTP Basic Auth (leadler kişisel veri içerir)
+  // Admin panel — çerez tabanlı oturum (leadler kişisel veri içerir).
+  // Giriş: /admin/login → /api/admin/login imzalı httpOnly çerez bırakır.
   if (pathname.startsWith("/admin")) {
-    const auth = request.headers.get("authorization");
-    if (auth) {
-      const [scheme, encoded] = auth.split(" ");
-      if (scheme === "Basic" && encoded) {
-        const decoded = atob(encoded);
-        const i = decoded.indexOf(":");
-        if (decoded.slice(0, i) === ADMIN_USER && decoded.slice(i + 1) === ADMIN_PASS) {
-          return NextResponse.next();
-        }
+    const hasSession = await verifyAdminToken(request.cookies.get(ADMIN_COOKIE)?.value);
+    if (pathname === "/admin/login") {
+      if (hasSession) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/admin";
+        url.search = "";
+        return NextResponse.redirect(url);
       }
+      return NextResponse.next();
     }
-    return unauthorized();
+    if (hasSession) return NextResponse.next();
+    const url = request.nextUrl.clone();
+    url.pathname = "/admin/login";
+    url.search = "";
+    return NextResponse.redirect(url);
   }
 
   // Skip api, _next, static files, AND Vogolab Orchestra customer
