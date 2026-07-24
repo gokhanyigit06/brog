@@ -7,7 +7,8 @@ import Script from "next/script";
  */
 export default function Analytics() {
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  // GA ölçüm kimliği halka açık bir değerdir; env yoksa gerçek kimliğe düşer
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || "G-7JD8Y701H5";
 
   return (
     <>

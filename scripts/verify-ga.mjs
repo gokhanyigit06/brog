@@ -1,0 +1,12 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const p = await (await b.newContext()).newPage();
+const gaReqs = [];
+p.on("request", (r) => { if (r.url().includes("googletagmanager.com") || r.url().includes("google-analytics.com")) gaReqs.push(r.url().slice(0, 90)); });
+await p.goto("http://localhost:3000/tr/teklif", { waitUntil: "load", timeout: 60000 });
+await p.waitForTimeout(4000);
+console.log("gtag script yüklendi:", gaReqs.some(u => u.includes("gtag/js?id=G-7JD8Y701H5")));
+console.log("dataLayer dolu:", await p.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.length > 0));
+console.log("gtag fonksiyonu:", await p.evaluate(() => typeof window.gtag === "function"));
+console.log("GA istekleri:", gaReqs.length ? gaReqs.join("\n  ") : "(yok)");
+await b.close();
