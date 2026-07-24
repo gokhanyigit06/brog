@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getServicesContent, type ServicesContent, type ServiceItem } from "@/lib/content";
 import { useSiteConfig } from "@/hooks/use-site-config";
+import { serviceSlugForTitle } from "@/app/[lang]/hizmetler/[slug]/service-content";
 
 interface Props { lang: string; initialContent?: ServicesContent | null }
 
@@ -58,6 +60,7 @@ export default function ServicesSection({ lang, initialContent }: Props) {
           const ititle = lang === "tr" ? item.title_tr : item.title_en;
           const idesc  = lang === "tr" ? item.description_tr : item.description_en;
           const num    = String(idx + 1).padStart(2, "0");
+          const detailSlug = serviceSlugForTitle(item.title_tr || item.title_en);
 
           return (
             <div key={item.id}>
@@ -75,12 +78,25 @@ export default function ServicesSection({ lang, initialContent }: Props) {
 
                 {/* Title + Description */}
                 <div>
-                  <h3 style={{ fontSize: 25, fontWeight: 700, color: "#ffffff", marginBottom: 14, lineHeight: 1.2 }}>
-                    {ititle}
-                  </h3>
+                  {detailSlug ? (
+                    <Link href={`/${lang}/hizmetler/${detailSlug}`} style={{ textDecoration: "none" }}>
+                      <h3 style={{ fontSize: 25, fontWeight: 700, color: "#ffffff", marginBottom: 14, lineHeight: 1.2 }}>
+                        {ititle}
+                      </h3>
+                    </Link>
+                  ) : (
+                    <h3 style={{ fontSize: 25, fontWeight: 700, color: "#ffffff", marginBottom: 14, lineHeight: 1.2 }}>
+                      {ititle}
+                    </h3>
+                  )}
                   <p style={{ fontSize: 14, lineHeight: 1.75, color: "rgba(255,255,255,0.75)", maxWidth: 420 }}>
                     {idesc}
                   </p>
+                  {detailSlug && (
+                    <Link href={`/${lang}/hizmetler/${detailSlug}`} style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 14, fontSize: 13.5, fontWeight: 700, color: "var(--accent)", textDecoration: "none" }}>
+                      {lang === "tr" ? "Detaylı incele ↗" : "Learn more ↗"}
+                    </Link>
+                  )}
                 </div>
 
                 {/* Pills */}

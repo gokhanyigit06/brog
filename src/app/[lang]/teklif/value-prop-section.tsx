@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { scrollToForm } from "./cta-utils";
 import RevealOnScroll from "@/components/ui/reveal-on-scroll";
 
@@ -8,6 +9,7 @@ interface Card {
   title: string;
   outcome: string;
   pills: string[];
+  detailHref: string;
 }
 
 const CARDS: Card[] = [
@@ -16,18 +18,21 @@ const CARDS: Card[] = [
     title: "Özel Web Sitesi",
     outcome: "Hazır şablon değil — markanıza özel kodlanmış, hızlı ve dönüşüm odaklı siteler.",
     pills: ["Özel Tasarım", "Mobil Öncelikli", "Yüksek Hız", "SEO Uyumlu", "Yönetim Paneli"],
+    detailHref: "/tr/hizmetler/web-tasarim",
   },
   {
     no: "02",
     title: "Reklam Yönetimi",
     outcome: "Meta ve Google reklamlarınızı ROAS odaklı yönetir, bütçenizi satışa çeviririz.",
     pills: ["Meta Ads", "Google Ads", "Retargeting", "A/B Test", "Dönüşüm Takibi"],
+    detailHref: "/tr/hizmetler/reklam-yonetimi",
   },
   {
     no: "03",
     title: "SEO",
     outcome: "Teknik altyapıdan içeriğe uçtan uca SEO ile Google'da kalıcı organik trafik.",
     pills: ["Teknik SEO", "İçerik Stratejisi", "Anahtar Kelime", "Yerel SEO", "Raporlama"],
+    detailHref: "/tr/hizmetler/seo",
   },
 ];
 
@@ -67,6 +72,9 @@ export default function ValuePropSection() {
                     <span key={p} style={{ display: "inline-block", padding: "6px 13px", background: "#0a0a0a", borderRadius: 999, fontSize: 12, fontWeight: 600, color: "#fff", lineHeight: 1 }}>{p}</span>
                   ))}
                 </div>
+                <Link href={c.detailHref} style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 6, fontSize: 13.5, fontWeight: 700, color: "var(--accent)", textDecoration: "none" }}>
+                  Detaylı incele ↗
+                </Link>
               </div>
             </RevealOnScroll>
           ))}

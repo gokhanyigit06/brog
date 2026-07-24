@@ -240,9 +240,26 @@ export default function Footer({ lang }: Props) {
           ))}
         </div>
 
-        {/* Priority */}
+        {/* Hizmetler + Yasal */}
         <div className="ft-col" style={{ textAlign: "right" }}>
-          <p style={labelStyle}>{lang === "tr" ? "Yasal" : "Priority"}</p>
+          <p style={labelStyle}>{lang === "tr" ? "Hizmetlerimiz" : "Services"}</p>
+          {[
+            { label: lang === "tr" ? "Web Tasarım" : "Web Design", href: `/${lang}/hizmetler/web-tasarim` },
+            { label: lang === "tr" ? "Reklam Yönetimi" : "Ads Management", href: `/${lang}/hizmetler/reklam-yonetimi` },
+            { label: "SEO", href: `/${lang}/hizmetler/seo` },
+            { label: lang === "tr" ? "Marka & Kreatif" : "Brand & Creative", href: `/${lang}/hizmetler/marka-kreatif` },
+          ].map(l => (
+            <Link key={l.href} href={l.href} style={linkStyle}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+            >
+              <span>{l.label}</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 12L12 2M12 2H5M12 2V9" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </Link>
+          ))}
+          <p style={{ ...labelStyle, marginTop: 34 }}>{lang === "tr" ? "Yasal" : "Legal"}</p>
           {priorityLinks.map(l => (
             <Link key={l.label} href={l.href} style={linkStyle}
               onMouseEnter={e => (e.currentTarget.style.opacity = "0.6")}
