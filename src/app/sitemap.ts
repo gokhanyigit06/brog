@@ -2,10 +2,14 @@ import type { MetadataRoute } from "next";
 import { locales } from "@/i18n";
 import { getProjects, slugify } from "@/lib/content";
 import { getAllPosts } from "@/lib/blog";
+import { SERVICE_DETAILS } from "./[lang]/hizmetler/[slug]/service-content";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
 
-const STATIC_ROUTES = ["", "teklif", "projeler", "hizmetler", "hakkimizda", "iletisim", "blog"];
+const STATIC_ROUTES = [
+  "", "teklif", "projeler", "hizmetler", "hakkimizda", "iletisim", "blog",
+  ...SERVICE_DETAILS.map((s) => `hizmetler/${s.slug}`),
+];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];

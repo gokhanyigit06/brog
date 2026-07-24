@@ -11,6 +11,7 @@ import {
   getServicesContent, getProjects, getClientLogos, getProjectsForService, slugify,
   type Project, type ServiceItem,
 } from "@/lib/content";
+import { serviceSlugForTitle } from "./[slug]/service-content";
 
 export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
@@ -79,14 +80,26 @@ export default async function HizmetlerPage({ params }: { params: Promise<{ lang
           {items.map((it, idx) => {
             const refs = getProjectsForService(it, projects).slice(0, 3);
             const num = String(idx + 1).padStart(2, "0");
+            const detailSlug = serviceSlugForTitle(it.title_tr || it.title_en);
             return (
               <RevealOnScroll key={it.id}>
                 <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 56, paddingBottom: 64 }}>
                   <div style={{ display: "grid", gridTemplateColumns: "72px 1fr", gap: 28, alignItems: "start" }} className="svc-grid">
                     <span style={{ fontSize: 16, fontWeight: 600, color: "var(--accent)", paddingTop: 8 }}>{num}</span>
                     <div>
-                      <h2 style={{ fontSize: "clamp(30px, 4.5vw, 56px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#0a0a0a", margin: 0 }}>{sTitle(it)}</h2>
+                      {detailSlug ? (
+                        <Link href={`/${lang}/hizmetler/${detailSlug}`} style={{ textDecoration: "none" }}>
+                          <h2 style={{ fontSize: "clamp(30px, 4.5vw, 56px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#0a0a0a", margin: 0 }}>{sTitle(it)}</h2>
+                        </Link>
+                      ) : (
+                        <h2 style={{ fontSize: "clamp(30px, 4.5vw, 56px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#0a0a0a", margin: 0 }}>{sTitle(it)}</h2>
+                      )}
                       <p style={{ fontSize: 16, lineHeight: 1.7, color: "#4b5563", maxWidth: 620, marginTop: 16 }}>{sDesc(it)}</p>
+                      {detailSlug && (
+                        <Link href={`/${lang}/hizmetler/${detailSlug}`} style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 14, fontSize: 14.5, fontWeight: 700, color: "var(--accent)", textDecoration: "none" }}>
+                          {tr ? "Detaylı incele ↗" : "Learn more ↗"}
+                        </Link>
+                      )}
                       {sPills(it).length > 0 && (
                         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 18 }}>
                           {sPills(it).map((p) => (
