@@ -70,7 +70,7 @@ const post2 = [
   { name: "3-reklam", slideNo: "02", body: `${kick("Reklam Yönetimi")}${h("Bütçeniz gidere değil, yatırıma dönüşsün.", 66)}<div class="body">Meta &amp; Google reklamlarınızı <b>ROAS odaklı</b> yönetiriz: doğru kitle, doğru kreatif, sürekli optimizasyon.</div>${pills(["Meta Ads", "Google Ads", "Retargeting", "Dönüşüm Takibi"])}` },
   { name: "4-seo", slideNo: "03", body: `${kick("SEO & Yerel SEO")}${h("Reklam durunca kaybolmayın.", 66)}<div class="body">Teknik altyapıdan içeriğe uçtan uca SEO. <b>“Ankara + sektörünüz”</b> aramalarında kalıcı görünürlük.</div>${pills(["Teknik SEO", "Yerel SEO", "İçerik Stratejisi", "Raporlama"])}` },
   { name: "5-marka", slideNo: "04", body: `${kick("Marka & Kreatif")}${h("Her temas noktasında aynı his.", 66)}<div class="body">Logo ve kurumsal kimlikten sosyal medya içeriğine, QR menüden kişisel marka sitelerine — <b>tutarlı görsel dil</b>.</div>${pills(["Marka Kimliği", "Logo", "Sosyal Medya", "QR Menü"])}` },
-  { name: "6-cta", center: true, body: `<div class="bigmark">${VG_MARK}</div>${h("Hangisi size lazım?", 88)}<div class="body" style="text-align:center">Ücretsiz teklif için DM atın ya da siteden yazın.</div><div class="cta">vogolab.com/tr/teklif</div>` },
+  { name: "6-cta", center: true, body: `<div class="bigmark">${VG_MARK}</div>${h("Size nasıl yardımcı olalım?", 80)}<div class="body" style="text-align:center">Ücretsiz teklif için DM atın ya da siteden yazın.</div><div class="cta">vogolab.com/tr/teklif</div>` },
 ];
 
 /* ── POST 3: NASIL YAPIYORUZ ── */
