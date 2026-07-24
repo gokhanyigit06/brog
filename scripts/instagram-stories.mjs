@@ -80,13 +80,15 @@ for (const pr of projects) {
   const domain = (pr.link || "").replace(/^https?:\/\//, "").replace(/\/$/, "") || "vogolab.com";
   const cat = pr.industry_tr || pr.category || "";
   const slug = (pr.slug && !pr.slug.includes(".")) ? pr.slug : name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  // Özel ibareler (iOS Website, Mobil Uygulama) meta satırında görünsün
+  const extra = (pr.tags || []).filter((t) => ["iOS Website", "Mobil Uygulama"].includes(t)).join(" · ");
   const inner = `
     <div class="browser">
       <div class="chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="domain">${domain}</div></div>
       <img class="shot" src="${pr.imageUrl}" />
     </div>
     <div class="pname">${name}</div>
-    <div class="pmeta"><b>${cat}</b> · ${pr.year || ""} · Vogolab imzalı</div>`;
+    <div class="pmeta"><b>${cat}</b> · ${pr.year || ""}${extra ? " · <b>" + extra + "</b>" : ""} · Vogolab imzalı</div>`;
   await shoot(shell(inner, { footRight: "Detay: vogolab.com/tr/projeler" }), `${OUT}/islerimiz/${slug}.jpg`, true);
 }
 
