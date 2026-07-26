@@ -45,7 +45,19 @@ export default function IletisimClient({ lang }: Props) {
 
   useEffect(() => { getContactContent().then(setContact); }, []);
 
-  const address = lang === "tr" ? contact?.address_tr : contact?.address_en;
+  // Kayıtlı iş adresi. Google Ads API başvurusu sitede açık adres görünmesini şart koşuyor.
+  // Firestore'da eski yer tutucu ("Ankara, Türkiye") kayıtlıysa onu kullanma —
+  // yer tutucu, adres değildir.
+  const KAYITLI_ADRES = {
+    tr: "Safahat Caddesi No: 2/28, Altındağ, 06140 Ankara, Türkiye",
+    en: "Safahat Caddesi No: 2/28, Altindag, 06140 Ankara, Türkiye",
+  };
+  const YER_TUTUCULAR = ["ankara, türkiye", "ankara, turkiye", "ankara, turkey", "ankara"];
+  const ham = (lang === "tr" ? contact?.address_tr : contact?.address_en)?.trim();
+  const address =
+    ham && !YER_TUTUCULAR.includes(ham.toLowerCase())
+      ? ham
+      : KAYITLI_ADRES[lang === "tr" ? "tr" : "en"];
 
   async function handleSend() {
     if (!name || !email || !message || sending) return;
@@ -195,9 +207,7 @@ export default function IletisimClient({ lang }: Props) {
               </span>
             </div>
             <p style={{ fontSize: 15, color: "#374151", lineHeight: 1.6, paddingLeft: 28 }}>
-              {address || (lang === "tr"
-                ? "Safahat Caddesi No: 2/28, Altındağ, 06140 Ankara, Türkiye"
-                : "Safahat Caddesi No: 2/28, Altindag, 06140 Ankara, Türkiye")}
+              {address}
               {contact?.maps_link && (
                 <>
                   {" "}·{" "}
