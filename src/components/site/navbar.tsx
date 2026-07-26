@@ -116,7 +116,12 @@ export default function Navbar({ lang, lightBg }: NavbarProps) {
   const menuBrandLine2 = nbData?.menuBrandLine2 || "lab.";
   const email          = nbData?.email          || "info@vogolab.com";
   const phone          = nbData?.phone          || "+90 507 734 75 21";
-  const location       = nbData?.location       || "Ankara, Türkiye";
+  // Kayıtlı iş adresi — yer tutucu ("Ankara, Türkiye") adres sayılmaz, ezilir.
+  const KAYITLI_ADRES  = "Safahat Cd. No: 2/28, Altındağ, 06140 Ankara";
+  const nbKonum        = nbData?.location?.trim();
+  const location       = nbKonum && !["ankara, türkiye", "ankara, turkiye", "ankara, turkey", "ankara"].includes(nbKonum.toLowerCase())
+    ? nbKonum
+    : KAYITLI_ADRES;
   const menuBgImage    = nbData?.menuBgImage    || "";
 
   return (
