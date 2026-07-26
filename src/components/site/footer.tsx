@@ -277,6 +277,23 @@ export default function Footer({ lang }: Props) {
       {/* ── Giant scrolling marquee ── */}
       <FooterMarquee lang={lang} />
 
+      {/* ── Kayıtlı iş adresi (her sayfada görünür) ── */}
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="section-container" style={{ paddingTop: 18, paddingBottom: 18 }}>
+          <address style={{
+            fontSize: 13, lineHeight: 1.7, fontStyle: "normal",
+            color: "rgba(255,255,255,0.5)", letterSpacing: "0.02em",
+          }}>
+            <strong style={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>VOGOLAB</strong>
+            {" — "}Safahat Caddesi No: 2/28, Altındağ, 06140 Ankara, Türkiye
+            {" · "}
+            <a href="mailto:info@vogolab.com" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>info@vogolab.com</a>
+            {" · "}
+            <a href="tel:+905077347521" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>+90 507 734 75 21</a>
+          </address>
+        </div>
+      </div>
+
       {/* ── Bottom bar ── */}
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
         <div className="section-container" style={{

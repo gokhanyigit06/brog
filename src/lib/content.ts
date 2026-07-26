@@ -371,8 +371,8 @@ export async function saveAboutContent(data: AboutContent): Promise<void> {
 const CONTACT_DEFAULT: ContactContent = {
   email: "info@vogolab.com",
   phone: "+90 507 734 75 21",
-  address_tr: "Ankara, Türkiye",
-  address_en: "Ankara, Türkiye",
+  address_tr: "Safahat Caddesi No: 2/28, Altındağ, 06140 Ankara, Türkiye",
+  address_en: "Safahat Caddesi No: 2/28, Altindag, 06140 Ankara, Türkiye",
   maps_link: "",
   heroImage: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80",
   image1: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80",

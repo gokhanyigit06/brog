@@ -195,7 +195,9 @@ export default function IletisimClient({ lang }: Props) {
               </span>
             </div>
             <p style={{ fontSize: 15, color: "#374151", lineHeight: 1.6, paddingLeft: 28 }}>
-              {address || "Ankara, Türkiye"}
+              {address || (lang === "tr"
+                ? "Safahat Caddesi No: 2/28, Altındağ, 06140 Ankara, Türkiye"
+                : "Safahat Caddesi No: 2/28, Altindag, 06140 Ankara, Türkiye")}
               {contact?.maps_link && (
                 <>
                   {" "}·{" "}
