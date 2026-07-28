@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { altLanguages } from "@/lib/seo";
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       metadataBase: new URL(SITE_URL),
       title,
       description,
-      alternates: { canonical: url },
+      alternates: altLanguages(lang, `/projeler/${slug}`),
       openGraph: {
         title, description, url, siteName: "Vogolab", type: "article", locale: "tr_TR",
         images: p.imageUrl ? [{ url: p.imageUrl, alt: name }] : [{ url: "/og-teklif.jpg", width: 1200, height: 630 }],

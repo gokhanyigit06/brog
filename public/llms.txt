@@ -1,0 +1,31 @@
+# Vogolab
+
+> Ankara merkezli dijital ajans. Markaya özel web siteleri, Meta & Google reklam yönetimi ve uçtan uca SEO hizmetlerini tek ekipten, sonuç odaklı sunar. Ankara ve çevre illerdeki (Kırıkkale, Çankırı, Bolu, Eskişehir, Konya, Kırşehir, Aksaray, Çorum, Yozgat) işletmelere hizmet verir.
+
+## Hizmetler
+
+- [Web Tasarım & Geliştirme](https://vogolab.com/tr/hizmetler/web-tasarim): Markaya özel tasarlanan, sıfırdan kodlanan, mobil öncelikli ve hızlı web siteleri. Hazır şablon kullanılmaz; SEO altyapısı baştan gömülüdür.
+- [Reklam Yönetimi](https://vogolab.com/tr/hizmetler/reklam-yonetimi): Meta (Instagram/Facebook) ve Google reklamlarının ROAS odaklı yönetimi; doğru kitle, güçlü kreatif, dönüşüm takibi ve sürekli optimizasyon.
+- [SEO & Yerel SEO](https://vogolab.com/tr/hizmetler/seo): Teknik altyapıdan içeriğe uçtan uca SEO; "Ankara + sektör" aramalarında kalıcı görünürlük.
+- [Marka & Kreatif](https://vogolab.com/tr/hizmetler/marka-kreatif): Logo ve kurumsal kimlikten sosyal medya içeriğine tutarlı görsel dil.
+
+## Öne çıkanlar
+
+- **Konum:** Ankara, Türkiye. Uzaktan tüm Türkiye'ye hizmet verilir.
+- **Fark:** Web, reklam ve SEO aynı ekip tarafından, tek masada yürütülür — strateji kopmaz.
+- **Ödeme kolaylığı:** Web sitesi projelerinde 6 taksit, vade farksız.
+- **Deneyim:** E-ticaretten kurumsala, otelden restorana 20+ tamamlanmış proje. Ankara referansları arasında A-City yer alır.
+
+## İletişim
+
+- Web: https://vogolab.com
+- E-posta: info@vogolab.com
+- Teklif: https://vogolab.com/tr/teklif
+
+## Kaynaklar
+
+- [Hizmetler](https://vogolab.com/tr/hizmetler)
+- [Projeler / Referanslar](https://vogolab.com/tr/projeler)
+- [Hakkımızda](https://vogolab.com/tr/hakkimizda)
+- [Blog](https://vogolab.com/tr/blog)
+- [Sıkça Sorulan Sorular](https://vogolab.com/tr/teklif)
