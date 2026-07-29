@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const title = "Ankara Web Tasarım, Reklam ve SEO Ajansı | Vogolab";
   const description =
-    "Ankara merkezli dijital ajans: özel web sitesi, sonuç odaklı Meta & Google reklam yönetimi ve uçtan uca SEO — tek ekipten. Ankara ve çevre illerdeki işletmeler için ücretsiz teklif alın.";
+    "Ankara merkezli dijital ajans: özel web sitesi, sonuç odaklı Meta & Google reklam yönetimi ve uçtan uca SEO. İşletmeniz için ücretsiz teklif alın.";
   const url = `${SITE_URL}/${lang}/teklif`;
   return {
     metadataBase: new URL(SITE_URL),

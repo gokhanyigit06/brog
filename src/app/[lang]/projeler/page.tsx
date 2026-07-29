@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const tr = lang === "tr";
   const title = tr ? "Projeler & Referanslar — Vogolab | Ankara Web Tasarım" : "Projects & References — Vogolab";
   const description = tr
-    ? "Vogolab'ın gerçek işleri: e-ticaretten kurumsala web siteleri, reklam ve SEO projeleri. Ankara ve çevresindeki markalarla ürettiğimiz çalışmaları inceleyin."
+    ? "Vogolab'ın gerçek işleri: e-ticaretten kurumsala web siteleri, reklam ve SEO projeleri. Ankara ve çevresindeki markalarla ürettiğimiz çalışmalar."
     : "Real work by Vogolab: websites, advertising and SEO projects from e-commerce to corporate.";
   return {
     metadataBase: new URL(SITE_URL),

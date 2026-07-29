@@ -28,7 +28,7 @@ export const SERVICE_DETAILS: ServiceDetail[] = [
     nav_tr: "Web Tasarım & Geliştirme", nav_en: "Web Design & Development",
     metaTitle_tr: "Web Tasarım & Geliştirme — Ankara | Vogolab",
     metaTitle_en: "Web Design & Development | Vogolab",
-    metaDesc_tr: "Ankara'da markanıza özel tasarlanıp kodlanan, hızlı ve dönüşüm odaklı web siteleri. İdeal bir web sitesi nasıl olmalı, size nasıl kazandırır ve süreç nasıl işler — gerçek referanslarımızla.",
+    metaDesc_tr: "Ankara'da markanıza özel tasarlanıp kodlanan, hızlı ve dönüşüm odaklı web siteleri. İdeal site nasıl olmalı ve size nasıl kazandırır — gerçek referanslarla.",
     metaDesc_en: "Custom-designed, fast, conversion-focused websites. What an ideal website looks like, how it pays off, and how our process works — with real references.",
     eyebrow_tr: "Web Tasarım & Geliştirme", eyebrow_en: "Web Design & Development",
     h1_tr: "İşletmenizin en çok çalışan elemanı: web siteniz.",
