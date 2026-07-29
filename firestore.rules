@@ -1,0 +1,70 @@
+rules_version = '2';
+
+// ============================================================================
+//  Vogolab — Firestore Güvenlik Kuralları
+// ============================================================================
+//  Bu dosya artık VERSİYON KONTROLÜNDE. Değişiklikler buradan yapılır ve
+//  `firebase deploy --only firestore:rules` ile yayınlanır. Konsolda elle
+//  değiştirmeyin — repo ile konsol ayrışır.
+//
+//  ⚠️  DEPLOY ÖNCESİ OKUYUN — bu kuralları OLDUĞU GİBİ deploy etmek admin
+//      panelinin "Talepler" (leads) ekranını KIRAR. Çünkü:
+//        • Admin, leadleri client SDK ile okuyor (getLeads → getDocs).
+//        • Site'de Firebase Auth YOK; admin yalnız çerezle (proxy) korunuyor,
+//          Firestore bu çerezi göremez.
+//      Bu yüzden "leads okuma kapalı" kuralı hem saldırganı hem admini keser.
+//
+//      DOĞRU SIRA:
+//        1) Admin leads OKU/GÜNCELLE/SİL işlemlerini bir sunucu rotasına taşı
+//           (Firebase Admin SDK — kuralları bypass eder; admin çerezi ile gate'le).
+//        2) Sonra bu kuralları deploy et.
+//      Ara çözüm istenirse: leads create'i açık bırakıp read'i kapatıp admin
+//      inbox'ını geçici feda etmek — bu bir İŞ KARARI, Gökhan onaylamalı.
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── KİŞİSEL VERİ (KVKK) ────────────────────────────────────────────────
+    // İletişim/teklif formları buraya YAZAR (create). Okuma/güncelleme/silme
+    // istemciden TAMAMEN kapalı — kişisel veri (ad, telefon, e-posta, mesaj)
+    // bir daha kimlik doğrulamasız GET ile dışarı sızmasın.
+    // Admin bu koleksiyona sunucudan (Admin SDK) erişmeli.
+    match /leads/{id} {
+      allow create: if isValidLead();
+      allow read, update, delete: if false;
+    }
+
+    // ── KAMUYA AÇIK İÇERİK ──────────────────────────────────────────────────
+    // Site bu koleksiyonları render ediyor → okuma herkese açık.
+    //
+    // ⚠️ YAZMA HÂLÂ AÇIK: admin paneli içeriği client SDK ile yazıyor ve
+    //    Firebase Auth yok. Yani şu an isteyen herkes bu koleksiyonlara
+    //    YAZABİLİR. Bu, leads sızıntısından AYRI, bilinen bir açıktır.
+    //    Kalıcı çözüm: içerik yazımını da Admin SDK'lı sunucu rotasına taşımak
+    //    (yol haritası). O yapılana kadar davranışı bozmamak için açık bırakıldı.
+    match /siteContent/{id} { allow read: if true; allow write: if true; }
+    match /projects/{id}    { allow read: if true; allow write: if true; }
+    match /services/{id}    { allow read: if true; allow write: if true; }
+    match /blog_posts/{id}  { allow read: if true; allow write: if true; }
+
+    // ── VARSAYILAN: her şey kapalı ─────────────────────────────────────────
+    match /{document=**} { allow read, write: if false; }
+  }
+}
+
+// Formdan gelen lead belgesinin yalnız beklenen alanları taşımasını doğrular.
+// (Kötü niyetli devasa/rastgele belge yazımını sınırlar.)
+function isValidLead() {
+  let d = request.resource.data;
+  // Yalnız beklenen alanlar (fazlası reddedilir). Alanlar opsiyonel olabilir —
+  // saveLead boş/undefined alanları eler — bu yüzden tip/boyut kontrolleri
+  // yalnız alan MEVCUTSA uygulanır; böylece gerçek form gönderimi hiç kırılmaz.
+  return d.keys().hasOnly([
+    'name', 'phone', 'email', 'message', 'service', 'source', 'status',
+    'createdAt', 'updatedAt'
+  ])
+  && (!('name' in d)    || (d.name is string    && d.name.size()    < 200))
+  && (!('message' in d) || (d.message is string && d.message.size() < 5000))
+  && (!('email' in d)   || (d.email is string   && d.email.size()   < 320));
+}

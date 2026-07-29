@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  getLeads, updateLead, deleteLead,
-  type Lead, type LeadStatus,
-} from "@/lib/content";
+import type { Lead, LeadStatus } from "@/lib/content";
 import { RefreshCw, Trash2, Phone, MessageCircle, Check, Archive } from "lucide-react";
+
+// Leads artık istemciye kapalı (firestore.rules). Okuma/güncelleme/silme,
+// admin çereziyle korunan /api/admin/leads rotası üzerinden sunucuda yapılır.
+// 401 → oturum düşmüş, girişe yönlendir.
+async function leadsApi(query = "", init?: RequestInit): Promise<Response> {
+  const res = await fetch(`/api/admin/leads${query}`, init);
+  if (res.status === 401) window.location.href = "/admin/login";
+  return res;
+}
 
 const SERVICE_LABEL: Record<string, string> = { web: "Web", reklam: "Reklam", seo: "SEO", hepsi: "Hepsi", diger: "İletişim" };
 const STATUS_LABEL: Record<LeadStatus, string> = { new: "Yeni", read: "Okundu", contacted: "İletişim kuruldu", archived: "Arşiv" };
@@ -39,17 +45,27 @@ export default function LeadsAdmin() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | LeadStatus>("all");
 
-  const load = () => { setLoading(true); getLeads().then((l) => { setLeads(l); setLoading(false); }); };
+  const load = () => {
+    setLoading(true);
+    leadsApi()
+      .then((r) => (r.ok ? r.json() : { leads: [] }))
+      .then((d) => { setLeads(d.leads ?? []); setLoading(false); })
+      .catch(() => setLoading(false));
+  };
   useEffect(() => { load(); }, []);
 
   async function setStatus(id: string, status: LeadStatus) {
-    await updateLead(id, { status });
-    setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));
+    const res = await leadsApi("", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    if (res.ok) setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));
   }
   async function handleDelete(id: string) {
     if (!confirm("Bu talebi silmek istiyor musun?")) return;
-    await deleteLead(id);
-    setLeads((prev) => prev.filter((l) => l.id !== id));
+    const res = await leadsApi(`?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    if (res.ok) setLeads((prev) => prev.filter((l) => l.id !== id));
   }
 
   const shown = filter === "all" ? leads : leads.filter((l) => l.status === filter);
