@@ -13,12 +13,28 @@ function esitMi(a: string, b: string): boolean {
   return fark === 0;
 }
 
+/**
+ * Şifre kapısı açık mı?
+ *
+ * 2026-07-29'da Gökhan kapıyı KAPATTI ("şimdilik kaldıralım, siteye kimse
+ * girmiyor"). Kod silinmedi — geri açmak tek env değişkeni:
+ *     Coolify → brog → DEMO_SIFRE_ZORUNLU = 1
+ * (Şifrenin kendisi zaten DEMO_SIFRE'de duruyor.)
+ *
+ * Kapı KAPALIYKEN /demolar herkese açıktır. Tek koruma `noindex` başlıkları ve
+ * robots.txt — yani arama motoruna düşmez ama adresi bilen görür.
+ */
+export function demoKapisiZorunlu(): boolean {
+  return process.env.DEMO_SIFRE_ZORUNLU === "1";
+}
+
 /** Şifre tanımlı mı? Değilse vitrin AÇILMAZ (env düşerse herkese açılmasın). */
 export function demoYapilandirildi(): boolean {
   return Boolean(process.env.DEMO_SIFRE);
 }
 
 export function demoYetkili(authorization: string | null | undefined): boolean {
+  if (!demoKapisiZorunlu()) return true; // kapı bilerek kapatılmış
   const sifre = process.env.DEMO_SIFRE;
   if (!sifre) return false;
   const baslik = authorization || "";
