@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { altLanguages } from "@/lib/seo";
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
@@ -49,11 +50,11 @@ export default async function ProjectDetailPage({
   // Veriyi server'da çek → h1 ve içerik SSR HTML'inde hazır gelir (crawler & <noscript>
   // görür). Client artık useEffect ile fetch etmiyor, bu veriyi başlangıç durumu alıyor.
   const project = await getProjectBySlug(slug);
-  const others = project
-    ? (await getProjects())
-        .filter((x) => x.id !== project.id && x.id !== slug)
-        .slice(0, 2)
-    : [];
+  // Proje yoksa gerçek 404 (soft-200 yerine) → markalı [lang]/not-found render olur.
+  if (!project) notFound();
+  const others = (await getProjects())
+    .filter((x) => x.id !== project.id && x.id !== slug)
+    .slice(0, 2);
 
   return (
     <>

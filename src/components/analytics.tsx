@@ -1,11 +1,27 @@
+"use client";
+
 import Script from "next/script";
+import { useEffect, useState } from "react";
+import { CONSENT_EVENT, readConsent } from "@/lib/consent";
 
 /**
- * Meta Pixel + GA4. Her ikisi de env değişkeniyle guard'lı:
- * ID tanımlı değilse hiçbir script yüklenmez (mevcut sayfalar etkilenmez).
- * .env.local: NEXT_PUBLIC_META_PIXEL_ID, NEXT_PUBLIC_GA_ID
+ * Meta Pixel + GA4 — YALNIZ çerez onayı verildiyse yüklenir (KVKK/GDPR).
+ * Onay yoksa hiçbir script enjekte edilmez. Onay banner'ı (CookieConsent)
+ * kararı yazınca CONSENT_EVENT ile burası tetiklenir ve script'ler yüklenir.
+ * ID'ler env ile guard'lı: tanımlı değilse ilgili script atlanır.
  */
 export default function Analytics() {
+  const [granted, setGranted] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setGranted(readConsent() === "granted");
+    sync();
+    window.addEventListener(CONSENT_EVENT, sync);
+    return () => window.removeEventListener(CONSENT_EVENT, sync);
+  }, []);
+
+  if (!granted) return null;
+
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   // GA ölçüm kimliği halka açık bir değerdir; env yoksa gerçek kimliğe düşer
   const gaId = process.env.NEXT_PUBLIC_GA_ID || "G-7JD8Y701H5";
