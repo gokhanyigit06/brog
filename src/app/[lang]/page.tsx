@@ -34,8 +34,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ? "Vogolab — Ankara Web Tasarım, Reklam & SEO Ajansı"
     : "Vogolab — Web Design, Ads & SEO Agency in Ankara";
   const description = tr
-    ? "Ankara merkezli dijital ajans Vogolab: markaya özel web siteleri, Meta & Google reklam yönetimi ve uçtan uca SEO — tek ekipten, sonuç odaklı. Ankara ve çevre illerdeki işletmeler için ücretsiz teklif."
-    : "Ankara-based digital agency Vogolab: custom websites, Meta & Google ad management and end-to-end SEO — one team, results-focused. Free proposal for businesses in Ankara and beyond.";
+    ? "Ankara merkezli dijital ajans Vogolab: markaya özel web siteleri, Meta & Google reklam yönetimi ve uçtan uca SEO. Tek ekipten sonuç odaklı büyüme."
+    : "Ankara-based digital agency Vogolab: custom websites, Meta & Google ad management and end-to-end SEO — one team, results-focused.";
   return {
     metadataBase: new URL(SITE_URL),
     title,

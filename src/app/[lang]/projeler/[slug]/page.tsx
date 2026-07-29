@@ -17,12 +17,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     const p = await getProjectBySlug(slug);
     if (!p) return { title: "Proje | Vogolab" };
     const name = (p.brandName || p.title || "").split(/[–—]/)[0].trim();
-    const title = `${name} — ${p.category || "Proje"} | Vogolab Referansları`;
+    const title = `${name} — ${p.category || "Proje"} | Vogolab`;
     const rawDesc = (lang === "tr" ? p.description_tr : p.description_en) || p.description_tr || "";
     const fallbackDesc = lang === "tr"
       ? `${name} için ${p.category || "dijital"} çalışmamız. Vogolab'ın Ankara merkezli ekibiyle ürettiği gerçek işleri inceleyin.`
       : `Our ${p.category || "digital"} work for ${name}. Explore real projects by Vogolab.`;
-    const description = (rawDesc.replace(/\s+/g, " ").trim() || fallbackDesc).slice(0, 158);
+    const description = (rawDesc.replace(/\s+/g, " ").trim() || fallbackDesc).slice(0, 155);
     const url = `${SITE_URL}/${lang}/projeler/${slug}`;
     return {
       metadataBase: new URL(SITE_URL),
