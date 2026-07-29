@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { altLanguages } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { type Locale } from "@/i18n";
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       metadataBase: new URL(SITE_URL),
       title,
       description,
-      alternates: { canonical: url },
+      alternates: altLanguages(lang, `/blog/${slug}`),
       openGraph: {
         title, description, url, siteName: "Vogolab", type: "article", locale: "tr_TR",
         publishedTime: post.publishedAt || post.createdAt,

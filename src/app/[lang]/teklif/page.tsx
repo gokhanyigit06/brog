@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { altLanguages } from "@/lib/seo";
 import { type Locale } from "@/i18n";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       "ankara dijital ajans", "ankara web tasarım", "ankara reklam ajansı", "ankara seo ajansı",
       "google ads yönetimi ankara", "meta reklam yönetimi", "web sitesi yaptırma ankara", "vogolab",
     ],
-    alternates: { canonical: url },
+    alternates: altLanguages(lang, "/teklif"),
     openGraph: {
       title,
       description,

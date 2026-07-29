@@ -1,4 +1,5 @@
 import { type Locale } from "@/i18n";
+import { altLanguages } from "@/lib/seo";
 import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
 import IletisimClient from "./iletisim-client";
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     metadataBase: new URL(SITE_URL),
     title,
     description,
-    alternates: { canonical: `${SITE_URL}/${lang}/iletisim` },
+    alternates: altLanguages(lang, "/iletisim"),
   };
 }
 
