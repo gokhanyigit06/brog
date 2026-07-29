@@ -3,15 +3,13 @@ import {
   doc,
   getDoc,
   getDocs,
-  setDoc,
-  updateDoc,
-  deleteDoc,
   query,
   where,
   orderBy,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import type { BlogPost } from "@/types/blog";
+import { adminSet, adminUpdate, adminAdd, adminDelete } from "@/lib/admin-write";
 
 const COLLECTION = "blog_posts";
 
@@ -46,7 +44,7 @@ export async function getPostById(id: string): Promise<BlogPost | null> {
 
 // ─── Save / create post ───────────────────────────────────────────────────────
 export async function savePost(post: BlogPost): Promise<void> {
-  await setDoc(doc(db, COLLECTION, post.id), {
+  await adminSet(COLLECTION, post.id, {
     ...post,
     updatedAt: new Date().toISOString(),
   });
@@ -57,7 +55,7 @@ export async function updatePost(
   id: string,
   data: Partial<BlogPost>
 ): Promise<void> {
-  await updateDoc(doc(db, COLLECTION, id), {
+  await adminUpdate(COLLECTION, id, {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -65,12 +63,12 @@ export async function updatePost(
 
 // ─── Delete post ──────────────────────────────────────────────────────────────
 export async function deletePost(id: string): Promise<void> {
-  await deleteDoc(doc(db, COLLECTION, id));
+  await adminDelete(COLLECTION, id);
 }
 
 // ─── Publish / unpublish ──────────────────────────────────────────────────────
 export async function setPublished(id: string, published: boolean): Promise<void> {
-  await updateDoc(doc(db, COLLECTION, id), {
+  await adminUpdate(COLLECTION, id, {
     published,
     publishedAt: published ? new Date().toISOString() : null,
     updatedAt: new Date().toISOString(),
