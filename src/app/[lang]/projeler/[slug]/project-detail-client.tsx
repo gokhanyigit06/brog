@@ -251,20 +251,30 @@ function MiniCard({ project, lang }: { project: Project; lang: string }) {
 /* ────────────────────────────────────────────────────────
    Main page component
 ──────────────────────────────────────────────────────── */
-interface Props { slug: string; lang: string }
+interface Props {
+  slug: string;
+  lang: string;
+  // Server tarafında çekilen başlangıç verisi — verildiğinde h1/içerik SSR'da render
+  // edilir ve client fetch atlanır. Geriye dönük uyumluluk için opsiyonel.
+  initialProject?: Project | null;
+  initialOthers?: Project[];
+}
 
-export default function ProjectDetailClient({ slug, lang }: Props) {
-  const [project, setProject] = useState<Project | null>(null);
-  const [others, setOthers]   = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function ProjectDetailClient({ slug, lang, initialProject, initialOthers }: Props) {
+  const hasInitial = initialProject !== undefined;
+  const [project, setProject] = useState<Project | null>(initialProject ?? null);
+  const [others, setOthers]   = useState<Project[]>(initialOthers ?? []);
+  const [loading, setLoading] = useState(!hasInitial);
 
   useEffect(() => {
+    // Server verisi geldiyse tekrar fetch etme — SSR HTML zaten dolu.
+    if (hasInitial) return;
     Promise.all([getProjectBySlug(slug), getProjects()]).then(([p, all]) => {
       setProject(p);
       setOthers(all.filter((x) => x.id !== p?.id && x.id !== slug).slice(0, 2));
       setLoading(false);
     });
-  }, [slug]);
+  }, [slug, hasInitial]);
 
   if (loading) return (
     <main style={{ background: "#fff", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
