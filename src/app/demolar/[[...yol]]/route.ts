@@ -55,22 +55,34 @@ export async function GET(
   }
 
   // /demolar → vitrin sayfası
-  const bagil = yol.length === 0 ? "index.html" : yol.join("/");
-  const nesne = `demolar/${bagil}`;
+  const istenen = yol.length === 0 ? "index.html" : yol.join("/");
+
+  // Klasör adresleri de açılmalı: /demolar/stack-n-snack → .../index.html
+  // (2026-07-29: galeriden tıklayınca sorun yoktu ama uzantısız adres —
+  //  yani müşteriye paylaşılan doğal adres — "bulunamadı" veriyordu.)
+  const adaylar = istenen.includes(".")
+    ? [istenen]
+    : [istenen, `${istenen}/index.html`, `${istenen}.html`];
 
   let veri: Buffer;
+  let bagil = istenen;
   try {
-    const dosya = adminBucket().file(nesne);
-    const [varMi] = await dosya.exists();
-    if (!varMi) {
+    const kova = adminBucket();
+    let bulunan: string | null = null;
+    for (const aday of adaylar) {
+      const [varMi] = await kova.file(`demolar/${aday}`).exists();
+      if (varMi) { bulunan = aday; break; }
+    }
+    if (!bulunan) {
       return new Response("Bu örnek bulunamadı.", {
         status: 404,
         headers: { "content-type": "text/plain; charset=utf-8", ...DEMO_BASLIKLARI },
       });
     }
-    [veri] = await dosya.download();
+    bagil = bulunan;
+    [veri] = await kova.file(`demolar/${bulunan}`).download();
   } catch (hata) {
-    console.error("[demolar] okunamadı:", nesne, hata);
+    console.error("[demolar] okunamadı:", istenen, hata);
     return new Response("Demo dosyası okunamadı.", {
       status: 500,
       headers: { "content-type": "text/plain; charset=utf-8" },
