@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// ============================================================================
+//  Vogolab — Firebase Storage Güvenlik Kuralları
+// ============================================================================
+//  Bu dosya VERSİYON KONTROLÜNDE. `firebase deploy --only storage` ile yayınlanır.
+//  Konsolda elle değiştirmeyin — repo ile konsol ayrışır.
+//
+//  ── NEDEN BÖYLE YAZILDI ────────────────────────────────────────────────────
+//  Kural "demolar HARİÇ her şey" biçiminde, klasör klasör SAYILARAK değil.
+//  Admin paneli 11 ayrı önekle yükleme yapıyor (projects, hero, hero/cards,
+//  navbar, menu, showcase, why, blog, about, contact, client-logos,
+//  teklif-vitrin) ve bir kısmı kodda DEĞİŞKEN (`${storagePath}`). Önekler tek
+//  tek yazılsaydı, ileride yeni bir admin sayfası eklendiğinde yükleme sessizce
+//  kırılırdı. İlk segmente bakan tek bir koşul bu riski tamamen kaldırır.
+// ============================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ── DEMO VİTRİNİ — istemciye TAMAMEN kapalı ──────────────────────────────
+    // demolar/ altındaki dosyalar müşteriye özel tasarım örnekleridir ve
+    // vogolab.com/demolar adresinde ŞİFRE arkasında gösterilir. Buraya istemci
+    // erişimi açık olsaydı, Storage adresini bilen şifreyi atlayıp dosyayı
+    // doğrudan indirebilirdi (kova listelenebilir olduğu için adresler de
+    // keşfedilebilir). Sunucu bunları Admin SDK ile okur — Admin SDK kuralları
+    // bypass ettiği için aşağıdaki "if false" siteyi etkilemez.
+    //
+    // Kural yapısı: aşağıdaki genel eşleşme ilk segmenti kontrol eder ve
+    // 'demolar' ise izin VERMEZ. Storage'da izinler OR'lanır — yani demolar'ı
+    // ayrı bir match ile reddetmek İŞE YARAMAZ, genel kural yine açardı.
+
+    // Kök seviyesindeki dosyalar (klasörsüz).
+    match /{dosya} {
+      allow read: if dosya != 'demolar';
+      allow write: if dosya != 'demolar';
+    }
+
+    // Klasörlü her yol — ilk segment 'demolar' ise erişim yok.
+    match /{ilkKlasor}/{kalan=**} {
+      allow read: if ilkKlasor != 'demolar';
+
+      // ⚠️  AÇIK KALDI — BİLEREK, GEÇİCİ.
+      //     Burası bugünkü canlı davranışın aynısı: yazma herkese açık.
+      //     Kapatmak (if false) ŞU AN admin panelinin görsel yüklemesini KIRAR:
+      //     panel görselleri istemci SDK'sıyla yüklüyor (src/lib/upload.ts,
+      //     src/lib/content.ts, admin/projeler) ve sitede Firebase Auth YOK —
+      //     yani `request.auth != null` de çalışmaz.
+      //
+      //     Doğru çözüm `leads` ve `içerik` ile aynı kalıp: yükleme sunucuya
+      //     taşınacak (Admin SDK + admin çerezi), sonra burası `if false` olacak.
+      //     O iş yapılana kadar bu satır bilinen bir açıktır:
+      //     adresi bilen herkes bu kovaya dosya yükleyebilir ve silebilir.
+      allow write: if ilkKlasor != 'demolar';
+    }
+  }
+}

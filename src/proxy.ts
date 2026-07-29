@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth";
+import { demoYetkili, demoReddet } from "@/lib/demo-kapisi";
 
 const locales = ["tr", "en"];
 const defaultLocale = "tr";
@@ -15,65 +16,17 @@ function getLocale(request: NextRequest): string {
   return defaultLocale;
 }
 
-// ── Demo vitrini kapısı ──────────────────────────────────────────────────────
-// /demolar müşteriye gösterilen tasarım örnekleridir; herkese açık DEĞİLDİR.
-// Kapı burada, yani SUNUCUDA: adresi bilen bile şifresiz tek bir dosya alamaz.
-// (İstemci tarafı bir şifre ekranı perde olurdu — dosya adresi doğrudan çekilir.)
-const DEMO_KULLANICI = () => process.env.DEMO_KULLANICI || "vogolab";
-
-function esitMi(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let fark = 0;
-  for (let i = 0; i < a.length; i++) fark |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return fark === 0;
-}
-
-function demoKapisi(request: NextRequest): NextResponse | null {
-  const sifre = process.env.DEMO_SIFRE;
-  // Şifre tanımlı değilse AÇMA. Env düşerse vitrin herkese açılmasın.
-  if (!sifre) {
-    return new NextResponse("Demo vitrini yapılandırılmadı (DEMO_SIFRE yok).", {
-      status: 503,
-      headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" },
-    });
-  }
-  const baslik = request.headers.get("authorization") || "";
-  if (baslik.startsWith("Basic ")) {
-    try {
-      const cozulmus = atob(baslik.slice(6));
-      const ayrac = cozulmus.indexOf(":");
-      if (ayrac > 0) {
-        const kullanici = cozulmus.slice(0, ayrac);
-        const gelenSifre = cozulmus.slice(ayrac + 1);
-        if (esitMi(kullanici, DEMO_KULLANICI()) && esitMi(gelenSifre, sifre)) return null;
-      }
-    } catch {
-      // bozuk base64 → aşağıdaki 401
-    }
-  }
-  return new NextResponse("Bu sayfa için giriş gerekiyor.", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="VOGOLAB - Tasarim Ornekleri"',
-      "content-type": "text/plain; charset=utf-8",
-      "x-robots-tag": "noindex, nofollow, noarchive",
-      "cache-control": "no-store",
-    },
-  });
-}
-
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Demo vitrini — her şeyden ÖNCE. Aşağıdaki "uzantılı yolu atla" kuralına
-  // düşerse görseller kapının dışında kalırdı.
+  // ── Demo vitrini kapısı — her şeyden ÖNCE ──────────────────────────────────
+  // /demolar müşteriye gösterilen tasarım örnekleridir; herkese açık DEĞİLDİR.
+  // Kapı burada, yani SUNUCUDA: adresi bilen bile şifresiz tek bir dosya alamaz.
+  // Bu blok aşağıdaki "uzantılı yolu atla" kuralından ÖNCE olmalı, yoksa
+  // görseller kapının dışında kalır.
   if (pathname === "/demolar" || pathname.startsWith("/demolar/")) {
-    const kapi = demoKapisi(request);
-    if (kapi) return kapi;
-    if (pathname === "/demolar" || pathname === "/demolar/") {
-      const url = request.nextUrl.clone();
-      url.pathname = "/demolar/index.html";
-      return NextResponse.rewrite(url);
+    if (!demoYetkili(request.headers.get("authorization"))) {
+      return demoReddet() as unknown as NextResponse;
     }
     const cevap = NextResponse.next();
     cevap.headers.set("x-robots-tag", "noindex, nofollow, noarchive");

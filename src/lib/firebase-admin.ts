@@ -1,6 +1,7 @@
 import "server-only";
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 
 // Firebase Admin SDK — YALNIZ sunucuda çalışır ve Firestore güvenlik kurallarını
 // BYPASS eder. Bu yüzden `leads` koleksiyonu istemciye kapalı olsa da (bkz.
@@ -29,3 +30,10 @@ const app: App =
   getApps().length > 0 ? getApps()[0] : initializeApp({ credential: loadCredential() });
 
 export const adminDb = getFirestore(app);
+
+// Storage: demo vitrini dosyaları buradan okunur. Admin SDK güvenlik kurallarını
+// bypass ettiği için `demolar/` istemciye tamamen kapalı olabiliyor (storage.rules).
+export const adminBucket = () =>
+  getStorage(app).bucket(
+    process.env.FIREBASE_STORAGE_BUCKET || "brog-1acb3.firebasestorage.app"
+  );
