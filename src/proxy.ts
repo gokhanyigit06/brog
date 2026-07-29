@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-auth";
+import { demoYetkili, demoReddet } from "@/lib/demo-kapisi";
 
 const locales = ["tr", "en"];
 const defaultLocale = "tr";
@@ -17,6 +18,20 @@ function getLocale(request: NextRequest): string {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // ── Demo vitrini kapısı — her şeyden ÖNCE ──────────────────────────────────
+  // /demolar müşteriye gösterilen tasarım örnekleridir; herkese açık DEĞİLDİR.
+  // Kapı burada, yani SUNUCUDA: adresi bilen bile şifresiz tek bir dosya alamaz.
+  // Bu blok aşağıdaki "uzantılı yolu atla" kuralından ÖNCE olmalı, yoksa
+  // görseller kapının dışında kalır.
+  if (pathname === "/demolar" || pathname.startsWith("/demolar/")) {
+    if (!demoYetkili(request.headers.get("authorization"))) {
+      return demoReddet() as unknown as NextResponse;
+    }
+    const cevap = NextResponse.next();
+    cevap.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
+    return cevap;
+  }
 
   // Admin panel — çerez tabanlı oturum (leadler kişisel veri içerir).
   // Giriş: /admin/login → /api/admin/login imzalı httpOnly çerez bırakır.
@@ -71,5 +86,9 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|mp4|webm)).*)",
+    // /demolar AYRICA yazılmalı: yukarıdaki desen görsel uzantılarını dışarıda
+    // bırakıyor, yani demo görselleri kapının dışında kalır ve şifresiz çekilirdi.
+    "/demolar",
+    "/demolar/:path*",
   ],
 };
