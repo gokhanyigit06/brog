@@ -7,19 +7,20 @@ rules_version = '2';
 //  `firebase deploy --only firestore:rules` ile yayınlanır. Konsolda elle
 //  değiştirmeyin — repo ile konsol ayrışır.
 //
-//  ⚠️  DEPLOY ÖNCESİ OKUYUN — bu kuralları OLDUĞU GİBİ deploy etmek admin
-//      panelinin "Talepler" (leads) ekranını KIRAR. Çünkü:
-//        • Admin, leadleri client SDK ile okuyor (getLeads → getDocs).
-//        • Site'de Firebase Auth YOK; admin yalnız çerezle (proxy) korunuyor,
-//          Firestore bu çerezi göremez.
-//      Bu yüzden "leads okuma kapalı" kuralı hem saldırganı hem admini keser.
+//  ── DURUM (2026-07-29) ─────────────────────────────────────────────────────
+//  İstemciden Firestore'a YAZILMIYOR. Admin panelinin bütün yazma işlemleri
+//  sunucu rotalarından geçiyor (Firebase Admin SDK, admin çerezi ile korumalı):
+//        • leads   → src/app/api/admin/leads/route.ts
+//        • içerik  → src/app/api/admin/content/route.ts
+//  Sitede Firebase Auth yok; admin yalnız çerezle korunuyor ve Firestore o
+//  çerezi göremiyor — bu yüzden koruma KURALDA değil, SUNUCUDA kurulmuştur.
 //
-//      DOĞRU SIRA:
-//        1) Admin leads OKU/GÜNCELLE/SİL işlemlerini bir sunucu rotasına taşı
-//           (Firebase Admin SDK — kuralları bypass eder; admin çerezi ile gate'le).
-//        2) Sonra bu kuralları deploy et.
-//      Ara çözüm istenirse: leads create'i açık bırakıp read'i kapatıp admin
-//      inbox'ını geçici feda etmek — bu bir İŞ KARARI, Gökhan onaylamalı.
+//  Tek istisna: iletişim/teklif formunun `leads` create'i. Onu ziyaretçi
+//  gönderiyor, admin çerezi yok — bu yüzden istemcide kalmalı ve kural
+//  alan doğrulamasıyla (isValidLead) sınırlıyor.
+//
+//  ⚠️  Bir yazma "izin reddedildi" veriyorsa çözüm kuralı gevşetmek DEĞİL,
+//      o çağrıyı sunucu rotasına taşımaktır.
 // ============================================================================
 
 service cloud.firestore {
@@ -38,15 +39,25 @@ service cloud.firestore {
     // ── KAMUYA AÇIK İÇERİK ──────────────────────────────────────────────────
     // Site bu koleksiyonları render ediyor → okuma herkese açık.
     //
-    // ⚠️ YAZMA HÂLÂ AÇIK: admin paneli içeriği client SDK ile yazıyor ve
-    //    Firebase Auth yok. Yani şu an isteyen herkes bu koleksiyonlara
-    //    YAZABİLİR. Bu, leads sızıntısından AYRI, bilinen bir açıktır.
-    //    Kalıcı çözüm: içerik yazımını da Admin SDK'lı sunucu rotasına taşımak
-    //    (yol haritası). O yapılana kadar davranışı bozmamak için açık bırakıldı.
-    match /siteContent/{id} { allow read: if true; allow write: if true; }
-    match /projects/{id}    { allow read: if true; allow write: if true; }
-    match /services/{id}    { allow read: if true; allow write: if true; }
-    match /blog_posts/{id}  { allow read: if true; allow write: if true; }
+    // ✅ YAZMA KAPATILDI — 2026-07-29.
+    //    Öncesinde "allow write: if true" idi: admin paneli içeriği client SDK
+    //    ile yazıyordu ve sitede Firebase Auth yok. Bu, adresi bilen HERKESİN
+    //    ajansın kendi sitesinin içeriğini, portföyünü ve blog yazılarını
+    //    DEĞİŞTİREBİLMESİ demekti. Admin şifresi burada koruma sağlamaz —
+    //    şifre paneli korur; Firestore'a REST üzerinden panelden hiç geçmeden
+    //    erişilir ve kuralı uygulayan Google'ın sunucusudur.
+    //
+    //    Çözüm `leads` ile AYNI kalıp: yazma sunucuya taşındı.
+    //      • rota   : src/app/api/admin/content/route.ts  (Admin SDK + admin çerezi)
+    //      • istemci: src/lib/admin-write.ts              (adminSet/Update/Add/Delete)
+    //      • çağrılar: src/lib/content.ts · src/lib/blog.ts
+    //
+    //    ⚠️ Bu kuralı geri açmayın. Admin panelinde "kaydedilemedi" görülürse
+    //    sebep kural değil, sunucudaki gizli değişkendir (servis hesabı).
+    match /siteContent/{id} { allow read: if true; allow write: if false; }
+    match /projects/{id}    { allow read: if true; allow write: if false; }
+    match /services/{id}    { allow read: if true; allow write: if false; }
+    match /blog_posts/{id}  { allow read: if true; allow write: if false; }
 
     // ── VARSAYILAN: her şey kapalı ─────────────────────────────────────────
     match /{document=**} { allow read, write: if false; }

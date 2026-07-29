@@ -1,12 +1,9 @@
 import {
   doc,
   getDoc,
-  setDoc,
   collection,
-  getDocs,
   addDoc,
-  updateDoc,
-  deleteDoc,
+  getDocs,
   serverTimestamp,
   query,
   orderBy,
@@ -14,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./firebase";
+import { adminSet, adminUpdate, adminAdd, adminDelete } from "@/lib/admin-write";
 
 // ─────────────────────────────────────────────
 // UTILS
@@ -177,7 +175,7 @@ export async function getHeroContent(): Promise<HeroContent> {
 }
 
 export async function saveHeroContent(data: HeroContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "hero"), {
+  await adminSet("siteContent", "hero", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -219,7 +217,7 @@ export async function getNavbarContent(): Promise<NavbarContent> {
 }
 
 export async function saveNavbarContent(data: NavbarContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "navbar"), {
+  await adminSet("siteContent", "navbar", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -248,7 +246,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 }
 
 export async function saveSiteSettings(data: SiteSettings): Promise<void> {
-  await setDoc(doc(db, "siteContent", "settings"), {
+  await adminSet("siteContent", "settings", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -273,23 +271,23 @@ export async function getFeaturedProjects(): Promise<Project[]> {
 }
 
 export async function addProject(data: Omit<Project, "id">): Promise<string> {
-  const ref = await addDoc(collection(db, "projects"), {
+  const yeniId = await adminAdd("projects", {
     ...data,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
-  return ref.id;
+  return yeniId;
 }
 
 export async function updateProject(id: string, data: Partial<Project>): Promise<void> {
-  await updateDoc(doc(db, "projects", id), {
+  await adminUpdate("projects", id, {
     ...data,
     updatedAt: new Date().toISOString(),
   });
 }
 
 export async function deleteProject(id: string): Promise<void> {
-  await deleteDoc(doc(db, "projects", id));
+  await adminDelete("projects", id);
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
@@ -321,22 +319,22 @@ export async function getServices(): Promise<Service[]> {
 }
 
 export async function addService(data: Omit<Service, "id">): Promise<string> {
-  const ref = await addDoc(collection(db, "services"), {
+  const yeniId = await adminAdd("services", {
     ...data,
     createdAt: new Date().toISOString(),
   });
-  return ref.id;
+  return yeniId;
 }
 
 export async function updateService(id: string, data: Partial<Service>): Promise<void> {
-  await updateDoc(doc(db, "services", id), {
+  await adminUpdate("services", id, {
     ...data,
     updatedAt: new Date().toISOString(),
   });
 }
 
 export async function deleteService(id: string): Promise<void> {
-  await deleteDoc(doc(db, "services", id));
+  await adminDelete("services", id);
 }
 
 // ─────────────────────────────────────────────
@@ -358,7 +356,7 @@ export async function getAboutContent(): Promise<AboutContent> {
 }
 
 export async function saveAboutContent(data: AboutContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "about"), {
+  await adminSet("siteContent", "about", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -386,7 +384,7 @@ export async function getContactContent(): Promise<ContactContent> {
 }
 
 export async function saveContactContent(data: ContactContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "contact"), {
+  await adminSet("siteContent", "contact", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -466,7 +464,7 @@ export async function getShowcaseContent(): Promise<ShowcaseContent> {
 }
 
 export async function saveShowcaseContent(data: ShowcaseContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "showcase"), {
+  await adminSet("siteContent", "showcase", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -493,7 +491,7 @@ export async function getMarqueeContent(): Promise<MarqueeContent> {
 }
 
 export async function saveMarqueeContent(data: MarqueeContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "marquee"), {
+  await adminSet("siteContent", "marquee", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -540,7 +538,7 @@ export async function getProjectsContent(): Promise<ProjectsContent> {
 }
 
 export async function saveProjectsContent(data: ProjectsContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "projects"), {
+  await adminSet("siteContent", "projects", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -590,7 +588,7 @@ export async function getWhyContent(): Promise<WhyContent> {
 }
 
 export async function saveWhyContent(data: WhyContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "why"), {
+  await adminSet("siteContent", "why", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -625,7 +623,7 @@ export async function getSiteConfig(): Promise<SiteConfig> {
 }
 
 export async function saveSiteConfig(data: SiteConfig): Promise<void> {
-  await setDoc(doc(db, "siteContent", "siteConfig"), {
+  await adminSet("siteContent", "siteConfig", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -699,7 +697,7 @@ export async function getServicesContent(): Promise<ServicesContent> {
 }
 
 export async function saveServicesContent(data: ServicesContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "services"), {
+  await adminSet("siteContent", "services", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -745,7 +743,7 @@ export async function getFaqContent(): Promise<FaqContent> {
 }
 
 export async function saveFaqContent(data: FaqContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "faq"), {
+  await adminSet("siteContent", "faq", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -777,6 +775,10 @@ export async function saveLead(
 ): Promise<string> {
   // Firestore undefined alan kabul etmez (örn. boş bırakılan opsiyonel mesaj)
   const clean = Object.fromEntries(Object.entries(data).filter(([, v]) => v !== undefined));
+  // 🔴 BU ÇAĞRI BİLEREK İSTEMCİDE KALIR. Formu dolduran ziyaretçinin admin
+  // çerezi yoktur; sunucu rotasına yönlendirilirse form 401 alır ve KIRILIR.
+  // firestore.rules `leads` için yalnız `create`e izin veriyor (alan
+  // doğrulamalı); okuma/güncelleme/silme kapalı ve admin API'sinden geçiyor.
   const ref = await addDoc(collection(db, "leads"), {
     ...clean,
     status: "new" as LeadStatus,
@@ -792,15 +794,23 @@ export async function getLeads(): Promise<Lead[]> {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Lead));
 }
 
+// leads'in KENDİ admin rotası var (/api/admin/leads). Aşağıdaki iki yardımcı
+// geriye dönük uyumluluk için duruyor ve o rotaya gider — içerik API'sine
+// DEĞİL, çünkü içerik rotası `leads` koleksiyonunu bilerek kabul etmiyor.
 export async function updateLead(id: string, patch: Partial<Lead>): Promise<void> {
-  await updateDoc(doc(db, "leads", id), {
-    ...patch,
-    updatedAt: new Date().toISOString(),
+  const r = await fetch("/api/admin/leads", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, ...patch }),
   });
+  if (!r.ok) throw new Error(`Güncellenemedi (HTTP ${r.status})`);
 }
 
 export async function deleteLead(id: string): Promise<void> {
-  await deleteDoc(doc(db, "leads", id));
+  const r = await fetch(`/api/admin/leads?id=${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+  if (!r.ok) throw new Error(`Silinemedi (HTTP ${r.status})`);
 }
 
 // ─────────────────────────────────────────────
@@ -827,7 +837,7 @@ export async function getClientLogos(): Promise<ClientLogosContent> {
 }
 
 export async function saveClientLogos(data: ClientLogosContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "clientLogos"), {
+  await adminSet("siteContent", "clientLogos", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
@@ -864,7 +874,7 @@ export async function getTeklifShowcase(): Promise<TeklifShowcaseContent> {
 }
 
 export async function saveTeklifShowcase(data: TeklifShowcaseContent): Promise<void> {
-  await setDoc(doc(db, "siteContent", "teklifShowcase"), {
+  await adminSet("siteContent", "teklifShowcase", {
     ...data,
     updatedAt: new Date().toISOString(),
   });
