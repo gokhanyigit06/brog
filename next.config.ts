@@ -4,6 +4,22 @@ const ORCHESTRA_URL =
   process.env.ORCHESTRA_URL ||
   "https://vogolab-orchestra-production.up.railway.app";
 
+// Tüm sayfalarda uygulanan güvenlik başlıkları. CSP bilinçli olarak burada YOK:
+// GA4 / Meta Pixel / Firebase inline+harici script kullanıyor, sıkı bir CSP bunları
+// kırar. CSP ayrı bir adımda önce Report-Only ile test edilerek eklenmeli.
+const SECURITY_HEADERS = [
+  // Yalnız HTTPS — 2 yıl, alt alan adları dahil, preload listesine uygun.
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+  // Clickjacking koruması (CSP frame-ancestors'ın öncülü — eski tarayıcılar için).
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  // MIME sniffing kapalı.
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  // Çapraz kaynağa yalnız origin sız — referrer gizliliği.
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  // Kullanılmayan güçlü API'leri kapat.
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
+];
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -12,6 +28,24 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "api.microlink.io" },
       { protocol: "https", hostname: "**.googleusercontent.com" },
     ],
+  },
+  async headers() {
+    return [
+      { source: "/:path*", headers: SECURITY_HEADERS },
+    ];
+  },
+  async redirects() {
+    return [
+      // www → apex, kalıcı (308). Tek canonical host; link değeri apex'te toplanır.
+      // Not: Orchestra'ya proxy'lenen yollar (/ads, /studio, /portal-static) da apex'e
+      // taşınır; bunlar host bazlı değil path bazlı yönlendiğinden sorun olmaz.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.vogolab.com" }],
+        destination: "https://vogolab.com/:path*",
+        permanent: true,
+      },
+    ];
   },
   async rewrites() {
     return [

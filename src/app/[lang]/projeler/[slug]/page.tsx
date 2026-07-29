@@ -5,7 +5,7 @@ import Navbar from "@/components/site/navbar";
 import Footer from "@/components/site/footer";
 import StickyCta from "@/components/site/sticky-cta";
 import ProjectDetailClient from "./project-detail-client";
-import { getProjectBySlug } from "@/lib/content";
+import { getProjectBySlug, getProjects } from "@/lib/content";
 
 export const revalidate = 60; // ISR: 60 sn önbellek — admin değişiklikleri en geç 1 dk içinde yansır
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vogolab.com";
@@ -46,10 +46,24 @@ export default async function ProjectDetailPage({
 }) {
   const { lang, slug } = await params;
 
+  // Veriyi server'da çek → h1 ve içerik SSR HTML'inde hazır gelir (crawler & <noscript>
+  // görür). Client artık useEffect ile fetch etmiyor, bu veriyi başlangıç durumu alıyor.
+  const project = await getProjectBySlug(slug);
+  const others = project
+    ? (await getProjects())
+        .filter((x) => x.id !== project.id && x.id !== slug)
+        .slice(0, 2)
+    : [];
+
   return (
     <>
       <Navbar lang={lang} lightBg />
-      <ProjectDetailClient slug={slug} lang={lang} />
+      <ProjectDetailClient
+        slug={slug}
+        lang={lang}
+        initialProject={project}
+        initialOthers={others}
+      />
       <Footer lang={lang} />
       <StickyCta lang={lang} />
     </>
