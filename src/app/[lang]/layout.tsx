@@ -4,6 +4,7 @@ import { locales } from "@/i18n";
 import "../globals.css";
 import LenisProvider from "@/components/providers/lenis-provider";
 import Analytics from "@/components/analytics";
+import CookieConsent from "@/components/cookie-consent";
 
 // Bu, kamuya açık sitenin KÖK layout'udur (app/layout.tsx kaldırıldı).
 // <html lang> artık server'da doğru dile ayarlanıyor — /en sayfaları için de.
@@ -45,6 +46,7 @@ export default async function LangLayout({
     <html lang={lang}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LenisProvider>{children}</LenisProvider>
+        <CookieConsent lang={lang} />
         <Analytics />
       </body>
     </html>

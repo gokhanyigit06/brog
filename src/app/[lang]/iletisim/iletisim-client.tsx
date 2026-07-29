@@ -121,6 +121,7 @@ export default function IletisimClient({ lang }: Props) {
                 : "Let's connect to create something curated, immersive, and deeply personal together."}
             </p>
 
+            <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} noValidate>
             <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
               {/* Honeypot — insanlar görmez, botlar doldurur */}
               <input
@@ -148,7 +149,7 @@ export default function IletisimClient({ lang }: Props) {
                 </div>
               ) : (
                 <button
-                  onClick={handleSend}
+                  type="submit"
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8,
                     background: "transparent",
@@ -169,6 +170,7 @@ export default function IletisimClient({ lang }: Props) {
                 </button>
               )}
             </div>
+            </form>
           </div>
         </div>
       </div>
